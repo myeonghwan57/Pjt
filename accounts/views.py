@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import CustumUserCreationForm
+from .forms import CustumUserCreationForm, CustumUserChangoForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import get_user_model, get_user
@@ -63,3 +63,17 @@ def delete(request, pk):
     else:
         messages.warning(request, "삭제는 본인만 가능합니다.")
     return redirect("accounts:index")
+
+
+def update(request):
+    if request.method == "POST":
+        form = CustumUserChangoForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("accounts:detail", request.user.pk)
+    else:
+        form = CustumUserChangoForm(instance=request.user)
+    context = {
+        "form": form,
+    }
+    return render(request, "accounts/signup.html", context)
