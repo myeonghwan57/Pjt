@@ -32,7 +32,9 @@ html,body{
   align-items: center;
 }
 .post_best{
+  display: flex;
   flex-direction: row;
+  justify-content: space-around;
 }
 .post_profile_img{
   height: 40px;
@@ -43,6 +45,7 @@ html,body{
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  margin-top: 30px;
 }
 .post_write_box{
   border: 2px solid black;
@@ -53,8 +56,7 @@ html,body{
   align-items: center;
   justify-content: space-around;
   border-radius: 30px;
-
-
+}
 .main_color1 {
   color:  #7689DE;
 }
