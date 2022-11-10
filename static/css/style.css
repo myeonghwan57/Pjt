@@ -1,4 +1,16 @@
-.login_btn {
+html,body{
+  width: 100%;height: 100%;
+}
+.wrapper{
+  height: auto;
+  min-height: 100%;
+  padding-bottom: 150px;
+}
+.footer{
+  position: relative;
+  transform: translateY(-100%);
+}
+.login_btn{
   background-color:  #7689DE;
   color: white;
 }
