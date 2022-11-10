@@ -23,7 +23,7 @@
 
   <body>
     <!-- Navbar -->
-    <div>
+    <div class='wrapper'>
       <div class="container">
         <nav class="navbar navbar-expand-lg">
           <div class="container-fluid">
@@ -56,15 +56,16 @@
 
       <!-- 본문 content block -->
       {% block content %}{% endblock content %}
-
-      <!-- Footer -->
-      <footer class="bg-light position-relative bottom-0 sticky-bottom" style="height:200px; bottom: 0;">
-        <div class="container">
-          <p class="pt-5">[11조 구ㅎ11조] 강동현 김명환 김지영 김현정 이진욱</p>
-          <p>Copyright © 2022 All rights reserved. Contact webmaster for more information.</p>
-        </div>
-      </footer>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer bg-light" style="height:150px; bottom: 0;">
+      <div class="container">
+        <p class="pt-5">[11조 구ㅎ11조] 강동현 김명환 김지영 김현정 이진욱</p>
+        <p>Copyright © 2022 All rights reserved. Contact webmaster for more information.</p>
+      </div>
+    </footer>
+
   </body>
 
 </html>
