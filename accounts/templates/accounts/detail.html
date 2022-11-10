@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-  <h1>My Page</h1>
-  {% if user.profile %}
-    <img src="{{ user.profile.url }}" alt="{{ user.profile }}" style='width:200px;height:200px;'>
-  {% else %}
-    <img src="{% static '/images/profile/user.png'%}" alt="user">
-  {% endif %}
-  <div class="">
-    <p>이름:{{ user.full_name}}
+  <div class="container">
+    <h1 class="main_color1 fw-bold mt-2">마이페이지</h1>
+    {% if user.profile %}
+      <img src="{{ user.profile.url }}" alt="{{ user.profile }}" style='width:100px;height:100px;'>
+    {% else %}
+      <img src="{% static '/images/profile/user.png'%}" alt="user">
+    {% endif %}
+  
+    <p>이름:{{ user.full_name }}
     </p>
     <a href="{% url 'accounts:delete' user.pk %}">삭제</a>
     <a href="{% url 'accounts:update' %}">수정</a>
