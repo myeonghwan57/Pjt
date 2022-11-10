@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% for post in posts %}
+<hr>
+<div>
+  <p> 제목:{{post.title}}</p>
+</div>
+
+<hr>
+{% endfor %}
+
+<a href="{% url 'posts:create' %}"> 글 쓰기</a>
+
+{% endblock content %}
