@@ -8,6 +8,7 @@
   <img src="{{ post.image.url }}" alt="{{post.image}}">
   {% else %}
   {% endif %}
+  <p> 조회수 : {{ post.hits }}</p>
   <p> 제목:{{post.title}}</p>
   <p> 내용:{{post.content}}</p>
   <a href="{% url 'posts:update' post.pk %}"><button class="btn btn-success">수정 </button>

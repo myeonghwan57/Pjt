@@ -3,6 +3,7 @@ from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.http import HttpResponseForbidden, JsonResponse
 from django.contrib.auth.decorators import login_required
+from datetime import date, datetime, timedelta
 # Create your views here.
 
 def index(request):
@@ -32,13 +33,30 @@ def create(request):
 def detail(request, post_pk):
     post = Post.objects.get(pk=post_pk)
     comment_form = CommentForm()
-    
+    expire_date,now = datetime.now(), datetime.now()
+    expire_date += timedelta(days=1)
+    expire_date = expire_date.replace(hour=0, minute=0, second=0, microsecond=0)
+    expire_date -= now
+    max_age = expire_date.total_seconds()
+    cookie_value = request.COOKIES.get('hitboard','_')
+
+
     context = {
         "post": post,
         "comment_form": comment_form,
         "comments": post.comment_set.all(),
     }
-    return render(request, "posts/detail.html", context)
+
+    response = render(request, "posts/detail.html", context)
+
+    if f'_{post_pk}_' not in cookie_value:
+        cookie_value += f'{post_pk}_'
+        response.set_cookie('hitboard', value=cookie_value, max_age=max_age, httponly=True)
+        post.hits += 1
+        post.save()
+    
+    return response
+
 
 @login_required
 def update(request, post_pk):
@@ -98,7 +116,7 @@ def comments_delete(request, post_pk, comment_pk):
     else:
         return HttpResponseForbidden()
 
-@login_required
+
 def like(request,post_pk):
     post = Post.objects.get(pk=post_pk)
 
