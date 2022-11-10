@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from .models import Post, Comment
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, ReCommentForm
 from django.http import HttpResponseForbidden, JsonResponse
 from django.contrib.auth.decorators import login_required
 from datetime import date, datetime, timedelta
@@ -33,6 +33,8 @@ def create(request):
 def detail(request, post_pk):
     post = Post.objects.get(pk=post_pk)
     comment_form = CommentForm()
+    recomment_form = ReCommentForm()
+
     expire_date,now = datetime.now(), datetime.now()
     expire_date += timedelta(days=1)
     expire_date = expire_date.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -45,6 +47,7 @@ def detail(request, post_pk):
         "post": post,
         "comment_form": comment_form,
         "comments": post.comment_set.all(),
+        "recomment_form":recomment_form,
     }
 
     response = render(request, "posts/detail.html", context)
@@ -105,6 +108,31 @@ def comments_create(request,post_pk):
             comment.user = request.user
             comment.save()
         return redirect("posts:detail", post.pk)
+
+@login_required
+def recomments_create(request,post_pk,comment_pk):
+    post = Post.objects.get(pk=post_pk)
+    if request.user.is_authenticated:
+        recomment_form = ReCommentForm(request.POST)
+        if recomment_form.is_valid():
+            recomment = recomment_form.save(commit=False)
+            recomment.article = post
+            recomment.user = request.user
+            recomment.parent_comment_id = comment_pk
+            recomment.save()
+        
+        
+        return redirect("posts:detail", post.pk)
+
+@login_required
+def recomments_delete(request, post_pk, recomment_pk):
+    recomment = Comment.objects.get(pk=recomment_pk)
+
+    if request.user == recomment.user:
+        recomment.delete()
+        return redirect("posts:detail", post_pk)
+    else:
+        return HttpResponseForbidden()
     
 @login_required
 def comments_delete(request, post_pk, comment_pk):

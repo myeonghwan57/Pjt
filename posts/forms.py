@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, TextInput
 from .models import Post,Comment
 
 class PostForm(ModelForm):
@@ -17,4 +17,17 @@ class CommentForm(ModelForm):
         fields = ('content',)
         labels={
             'content':'댓글 내용',
+        }
+
+class ReCommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('content',)
+        labels = {
+            'content': '',
+        }
+        widgets = {
+            'content': TextInput(attrs={
+                'placeholder': '답글 내용을 입력해 주세요.',
+            })
         }
