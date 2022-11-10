@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
+{% load django_bootstrap5 %}
 {% block content %}
 
 {% for post in posts %}
 <hr>
-<div>
-  <p> 제목:{{post.title}}</p>
-</div>
+<a href="{% url 'posts:detail' post.pk %}">
+  <div>
+    <p> 제목:{{post.title}}</p>
+  </div>
+</a>
 
 <hr>
 {% endfor %}
