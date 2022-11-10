@@ -1,18 +1,41 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
+{% load static %}
+
 {% block content %}
-  {% if request.resolver_match.url_name == 'signup' %}
-    <h1>회원가입</h1>
-  {% else %}
-    <h1>회원정보수정</h1>
-  {% endif %}
-  <form action="" method='POST' enctype="multipart/form-data">
-    {% csrf_token %}
-    {% bootstrap_form form %}
+  <div class="container">
     {% if request.resolver_match.url_name == 'signup' %}
-      <input type="submit" value='회원가입' class='btn btn-primary'>
+      <h1 class="fw-bold mt-2 mb-3 main_color1">회원가입</h1>
+      <p class="main_color2">구ㅎ11조에 오신 것을 환영합니다. 보다 더 좋은 서비스를 누리기 위한 회원가입이 필요합니다!</p>
     {% else %}
-      <input type="submit" value='수정' class='btn btn-primary'>
+    <h1 class="fw-bold mt-2 mb-3 main_color1">회원정보 수정</h1>
     {% endif %}
-  </form>
+    <div class="container-fluid">
+      <form action="" method='POST' enctype="multipart/form-data">
+        {% csrf_token %}
+        <!--{% bootstrap_form form %}-->
+        {% if request.resolver_match.url_name == 'signup' %}
+          <div class="container">
+            <div class="login_page">
+              <img src="{% static '/images/logo.png' %}" style="width:100px;height:100px;">
+              <h1 class='my-4' style='color:#7689DE'>회원가입</h1>
+              <form action="" method='POST'>
+                {% csrf_token %}
+                <div style="width:400px;">
+                  <input class="form-control my-4" type="text" name="username" autofocus="autofocus" autocapitalize="none" maxlength="150" placeholder="아이디" required="required" id="id_username">
+                  <input class="form-control my-4" type="password" name="password" placeholder="비밀번호" required="required" id="id_password">
+                </div>
+                <div class='text-center'>
+                  <button type="submit" class="btn login_btn ">로그인
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        {% else %}
+          <input type="submit" value='수정' class='btn login_btn'>
+        {% endif %}
+      </form>
+    </div>
+  </div>
 {% endblock content %}
