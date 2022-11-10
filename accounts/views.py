@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import CustumUserCreationForm, CustumUserChangoForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm
+from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import get_user_model, get_user, update_session_auth_hash
@@ -15,13 +16,15 @@ def index(request):
 
 def signup(request):
     if request.method == "POST":
-        form = CustumUserCreationForm(request.POST, request.FILES)
+        form = CustomUserCreationForm(request.POST, request.FILES)
+        print("signup 테스트2")
         if form.is_valid():
             user = form.save()
             auth_login(request, user)
             return redirect("articles:index")
     else:
-        form = CustumUserCreationForm()
+        print("signup 테스트4")
+        form = CustomUserCreationForm()
     context = {
         "form": form,
     }
@@ -68,12 +71,12 @@ def delete(request, pk):
 
 def update(request):
     if request.method == "POST":
-        form = CustumUserChangoForm(request.POST, request.FILES, instance=request.user)
+        form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect("accounts:detail", request.user.pk)
     else:
-        form = CustumUserChangoForm(instance=request.user)
+        form = CustomUserChangeForm(instance=request.user)
     context = {
         "form": form,
     }

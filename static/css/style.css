@@ -14,14 +14,22 @@ html,body{
   background-color:  #7689DE;
   color: white;
 }
-.signup_btn{
+.signup_btn {
   background-color:  #A9DCE3;
   color: white;
 
 }
-.login_page{
+.login_page {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 50px auto;
+}
+
+.main_color1 {
+  color:  #7689DE;
+}
+
+.main_color2 {
+  color:  #A9DCE3;
 }
