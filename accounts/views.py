@@ -42,6 +42,7 @@ def login(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
+            messages.success(request, "로그인 되었습니다.")
             return redirect(request.GET.get("next") or "articles:index")
     else:
         form = AuthenticationForm()

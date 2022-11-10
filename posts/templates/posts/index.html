@@ -57,15 +57,18 @@
         </a>
       </div>
     </div>
-    {% for post in posts %}
-      <hr>
-      <a href="{% url 'posts:detail' post.pk %}">
-        <div>
-          <p>
-            제목:{{post.title}}</p>
-        </div>
-      </a>
-      <hr>
-    {% endfor %}
+    <div></div>
+    <div>
+      {% for post in posts %}
+        <hr>
+        <a href="{% url 'posts:detail' post.pk %}">
+          <div>
+            <p>
+              제목:{{post.title}}</p>
+          </div>
+        </a>
+        <hr>
+      {% endfor %}
+    </div>
   </div>
 {% endblock content %}
