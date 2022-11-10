@@ -4,8 +4,7 @@
 {% block content %}
   <div class="container">
     <div class="login_page">
-      <img src="{% static '/images/logo.png'%}" style="width:100px;height:100px;">
-      <h1 class='my-4' style='color:#7689DE'>로그인 하기</h1>
+      <h1 class="fw-bold main_color1"><img src="{% static '/images/logo.png'%}" style="width:100px;height:100px;">LOGIN</h1>
       <form action="" method='POST'>
         {% csrf_token %}
         <div style="width:400px;">
@@ -13,7 +12,7 @@
           <input class="form-control my-4" type="password" name="password" placeholder="비밀번호" required="required" id="id_password">
         </div>
         <div class='text-center'>
-          <button type="submit" class="btn login_btn ">로그인
+          <button type="submit" class="btn login_btn">로그인
           </button>
         </div>
       </form>

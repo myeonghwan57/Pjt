@@ -27,7 +27,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     article = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    # parent_comment = models.ForeignKey('self', on_delete=models.CASCADE,  related_name='recomment', null=True) - 대댓글 기능 구현시 주석 해제
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE,  related_name='recomment', null=True)
 
 
 # # 이미지 업로드 경로 # 다중 이미지 기능 구현시 주석 해제
