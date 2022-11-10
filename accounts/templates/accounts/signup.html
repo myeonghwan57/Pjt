@@ -19,23 +19,7 @@
           <form action="{% url 'accounts:signup' %}" method='POST' enctype="multipart/form-data">
             {% csrf_token %}
             <div style="width:400px;">
-              <label class="main_color1 fw-bold">아이디</label>
-              <input class="form-control my-2 mb-4" type="text" name="username" autofocus="autofocus" autocapitalize="none" maxlength="150" placeholder="아이디" required="required" id="username">
-              <label class="main_color1 fw-bold">비밀번호</label>
-              <span class="form-text">
-                8자리 이상 / 영문, 숫자, 특수문자 각 1개 이상 포함
-              </span>
-              <input class="form-control my-2 mb-4" type="password" name="password1" placeholder="비밀번호" required="required" id="password1" value="{{ form.password1.value|default_if_none:'' }}">
-              <label class="main_color1 fw-bold">비밀번호 확인</label>
-              <input class="form-control my-2 mb-4" type="password" name="password2" placeholder="비밀번호 확인" required="required" id="password2" value="{{ form.password2.value|default_if_none:'' }}">
-              {% comment %} <label class="main_color1 fw-bold">Github 주소</label>
-              <input class="form-control my-2 mb-4" type="text" name="username" autofocus="autofocus" autocapitalize="none" maxlength="150" placeholder="github.com/qwer1234" required="required" id="user_github">
-              <label class="main_color1 fw-bold">경력</label>
-              <span class="form-text">
-                신입일 경우 0을 입력해주세요.
-              </span>
-              <input class="form-control my-2 mb-4" type="text" name="username" autofocus="autofocus" autocapitalize="none" maxlength="150" placeholder="#년차"
-               required="required" id="user_career"> {% endcomment %}
+              {% bootstrap_form form %}
             </div>
             <div class='text-center'>
               <button type="submit" class="btn login_btn">회원가입
