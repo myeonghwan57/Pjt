@@ -1,18 +1,32 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
+{% load static %}
 {% block content %}
-
-{% for post in posts %}
-<hr>
-<a href="{% url 'posts:detail' post.pk %}">
-  <div>
-    <p> 제목:{{post.title}}</p>
+  <div class='post_index'>
+    <h2 class='my-4' style='color:#7689DE'>
+      <img src="{% static '/images/crown.png' %}" alt="" style="width:70px; height:70px;">현재 커뮤니티 인기글</h2>
+    {% for post in posts %}
+      <hr>
+      <a href="{% url 'posts:detail' post.pk %}">
+        <div>
+          <p>
+            제목:{{post.title}}</p>
+        </div>
+      </a>
+      <hr>
+    {% endfor %}
+    <div class='post_write'>
+      {% if user.profile %}
+        <a href="{%url 'accounts:detail' user.pk%}"><img class="post_profile_img" src="{{ user.profile.url }}" alt="{{ user.profile }}" style='width:200px;height:200px;'></a>
+      {% else %}
+        <a href="{%url 'accounts:detail' user.pk%}"><img class="post_profile_img" src="{% static '/images/profile/user.png'%}" alt="user"></a>
+      {% endif %}
+      <div class='post_write_box'>
+        <a class="text-decoration-none text-dark" href="{% url 'posts:create' %}">면접 본 후기, 면접 본 회사에 대한 의견을 자유롭게 작성해보세요!</a>
+        <a href="{% url 'posts:create' %}">
+          <i class="bi bi-pencil-fill"></i>
+        </a>
+      </div>
+    </div>
   </div>
-</a>
-
-<hr>
-{% endfor %}
-
-<a href="{% url 'posts:create' %}"> 글 쓰기</a>
-
 {% endblock content %}
