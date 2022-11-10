@@ -8,7 +8,7 @@ class User(AbstractUser):
 
     follow = models.ManyToManyField("self", symmetrical=False, related_name="followers")
     profile = ProcessedImageField(
-        upload_to="images/profile",
+        upload_to="static/images/profile",
         blank=True,
         processors=[Thumbnail(100, 100)],
         format="JPEG",

@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
   <h1>My Page</h1>
-  <img src="{{ user.image.url }}" alt="{{ user.image }}">
+  {% if user.profile %}
+    <img src="{{ user.profile.url }}" alt="{{ user.profile }}" style='width:200px;height:200px;'>
+  {% else %}
+    <img src="{% static '/images/profile/user.png'%}" alt="user">
+  {% endif %}
   <div class="">
     <p>이름:{{ user.full_name}}
     </p>
     <a href="{% url 'accounts:delete' user.pk %}">삭제</a>
-
+    <a href="{% url 'accounts:update' %}">수정</a>
   </div>
 {% endblock content %}
