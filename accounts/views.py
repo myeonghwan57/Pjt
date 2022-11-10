@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from .forms import CustumUserCreationForm, CustumUserChangoForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.contrib.auth import get_user_model, get_user
+from django.contrib.auth import get_user_model, get_user, update_session_auth_hash
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 
 # Create your views here.
 
@@ -60,9 +60,10 @@ def delete(request, pk):
     user = get_user_model().objects.get(pk=pk)
     if request.user == user:
         user.delete()
+        auth_logout(request)
     else:
         messages.warning(request, "삭제는 본인만 가능합니다.")
-    return redirect("accounts:index")
+    return redirect("accounts:detail", pk)
 
 
 def update(request):
@@ -77,3 +78,18 @@ def update(request):
         "form": form,
     }
     return render(request, "accounts/signup.html", context)
+
+
+def change_password(request):
+    if request.method == "POST":
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return redirect("articles:index")
+    else:
+        form = PasswordChangeForm(request.user)
+    context = {
+        "form": form,
+    }
+    return render(request, "accounts/passwordchange.html", context)
