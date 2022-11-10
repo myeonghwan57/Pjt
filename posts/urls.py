@@ -11,6 +11,8 @@ urlpatterns = [
     path("<int:post_pk>/delete", views.delete, name="delete"),
     path("<int:post_pk>/comments/", views.comments_create, name="comments_create"),
     path("<int:post_pk>/comments/<int:comment_pk>/delete/", views.comments_delete, name="comments_delete"),
-    path('<int:post_pk>/like/',views.like,name='like')# 즐겨찾기
+    path('<int:post_pk>/like/',views.like,name='like'),
+    path("<int:post_pk>/recomments/<int:comment_pk>", views.recomments_create, name="recomments_create"),
+    path("<int:post_pk>/recomments/<int:recomment_pk>/delete", views.recomments_delete, name="recomments_delete"),
 
 ]
