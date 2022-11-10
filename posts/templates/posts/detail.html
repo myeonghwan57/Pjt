@@ -1,12 +1,23 @@
 {% extends 'base.html' %}
+{% load django_bootstrap5 %}
 {% block content %}
 
 <hr>
 <div>
+  {% if post.image %}
+  <img src="{{ post.image.url }}" alt="{{post.image}}">
+  {% else %}
+  {% endif %}
   <p> 제목:{{post.title}}</p>
   <p> 내용:{{post.content}}</p>
-  <a href="{% url 'posts:update' %}"> 글 수정</a>
-  <a href="{% url 'posts:delete' %}"> 글 삭제</a>
+  <a href="{% url 'posts:update' post.pk %}"><button class="btn btn-success">수정 </button>
+  </a>
+  <br>
+  <form action="{% url 'posts:delete' post.pk %}" method='POST' >
+    {% csrf_token %}
+    <input type="submit" value='삭제' class="btn btn-danger" >
+  </form>
+
 </div>
 
 <hr>
@@ -15,10 +26,11 @@
 
 {% if user.is_authenticated %}
   {% if request.user in post.like.all %}
-  <button type="button" style="opacity: 0.8;" data-post-id='{{ post.pk }}' id='fav-btn' class="btn btn-secondary bi bi-star-fill" ></button>
+  <button type="button" style="opacity: 0.8;" data-post-id='{{ post.pk }}' id='fav-btn' class="btn btn-secondary bi bi-star-fill" >
   {% else %}
-  <button type="button"  id='fav-btn' data-post-id='{{ post.pk }}' style="opacity: 0.8;" class=" btn btn-secondary bi bi-star" >  </button>
+  <button type="button"  id='fav-btn' data-post-id='{{ post.pk }}' style="opacity: 0.8;" class=" btn btn-secondary bi bi-star" >
   {% endif %}
+  </button>
 
   <span id='fav-count' class="text-center">{{ post.like.count }}</span>
   <span class="text-center">즐겨찾기</span>
@@ -41,7 +53,7 @@
   </form>
   {% endif %}
   <hr class="my-3">
-</div>
+</div>  
 {% endfor %}
 <div class="px-3 my-3">
   <form action="{% url 'posts:comments_create' post.pk %}" method="POST" class="border border-5 rounded p-3" style="background-color:whitesmoke;">
@@ -55,27 +67,27 @@
 
 {% block script %}
 <script>
-  const favBtn = document.querySelector('#fav-btn')
+const favBtn = document.querySelector('#fav-btn')
   
-  favBtn.addEventListener('click', function (event) {
-    console.log(event.target.dataset)
-    console.log(event.target.dataset.postId)
-    
-    axios({
-      method:'get',
-      url:`/${event.target.dataset.postId}/like/`
-    })
-    .then(response => {
-      if (response.data.is_likes === true) { // 즐찾 했으면
-        event.target.classList.add('bi-star-fill')
-        event.target.classList.remove('bi-star')
-      } else {
-        event.target.classList.add('bi-star')
-        event.target.classList.remove('bi-star-fill')
-      }
-      const favCount = document.querySelector('#fav-count')
-      favCount.innerText = response.data.likes_count
-    })
+favBtn.addEventListener('click', function (event) {
+  console.log(event.target.dataset)
+  console.log(event.target.dataset.postId)
+  
+  axios({
+    method:'get',
+    url:`http://localhost:8000/posts/${event.target.dataset.postId}/like/`
   })
+  .then(response => {
+    if (response.data.is_likes === true) { // 즐찾 했으면
+      event.target.classList.add('bi-star-fill')
+      event.target.classList.remove('bi-star')
+    } else {
+      event.target.classList.add('bi-star')
+      event.target.classList.remove('bi-star-fill')
+    }
+    const favCount = document.querySelector('#fav-count')
+    favCount.innerText = response.data.likes_count
+  })
+})
 </script>
 {% endblock script %}
