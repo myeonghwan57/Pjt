@@ -1,9 +1,11 @@
 from django.shortcuts import render,redirect
-from .models import Post, Comment
-from .forms import PostForm, CommentForm, ReCommentForm
+from .models import Post, Comment, MultipleImage
+from .forms import PostForm, CommentForm, ReCommentForm, ImageFormSet
 from django.http import HttpResponseForbidden, JsonResponse
 from django.contrib.auth.decorators import login_required
 from datetime import date, datetime, timedelta
+from django.db import transaction
+
 # Create your views here.
 
 def index(request):
@@ -16,16 +18,26 @@ def index(request):
 def create(request):
     if request.method == "POST":
         post_form = PostForm(request.POST)
-        if post_form.is_valid():
-            form = post_form.save(commit=False)
-            form.user = request.user
-            form.save()
-            return redirect("posts:index")
+        image_formset = ImageFormSet(request.POST, request.FILES)
+        
+        if post_form.is_valid() and image_formset.is_valid():
+            post = post_form.save(commit=False)
+            post.user = request.user
+            with transaction.atomic():
+
+                post.save()
+                image_formset.instance = post
+                image_formset.save()
+                return redirect("posts:index")
 
     else:
         post_form = PostForm()
+        image_formset = ImageFormSet()
 
-    context = {"post_form": post_form}
+    context = {
+        "post_form": post_form,
+        'image_formset':image_formset,
+    }
 
     return render(request, "posts/create.html", context)
 
@@ -68,17 +80,21 @@ def update(request, post_pk):
 
         if request.method == "POST":
             post_form = PostForm(request.POST, instance=post)
-            if post_form.is_valid():
-                form = post_form.save(commit=False)
-                form.user = request.user
-                form.save()
+            image_formset = ImageFormSet(request.POST, request.FILES, instance=post)
+
+            if post_form.is_valid() and image_formset.is_valid():
+                post_form.save()
+                image_formset.save()
                 return redirect("posts:detail", post.pk)
 
         else:
             post_form = PostForm(instance=post)
+            image_formset = ImageFormSet(instance=post)
 
-        context = {"post_form": post_form}
-
+        context = {
+            "post_form": post_form,
+            'image_formset':image_formset,
+        }
         return render(request, "posts/update.html", context)
 
     else:

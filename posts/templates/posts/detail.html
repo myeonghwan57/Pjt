@@ -4,9 +4,10 @@
 
 <hr>
 <div>
-  {% if post.image %}
-  <img src="{{ post.image.url }}" alt="{{post.image}}">
-  {% else %}
+  {% if post.image_set %}
+  {% for image in post.image_set.all %}
+  	<img src="{{ image.file.url }}" class="card-img-top" alt="{{ image.file.image }}" style="width: 300px; height: 300px;">
+  {% endfor %}  {% else %}
   {% endif %}
   <p> 조회수 : {{ post.hits }}</p>
   <p> 제목:{{post.title}}</p>
