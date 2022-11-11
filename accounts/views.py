@@ -130,7 +130,7 @@ def github_login(request):
         ) # 👈 사용자가 승인을 누르면, redirect_uri 경로로 redirect 됩니다.
     except SocialLoginException as error:
         messages.error(request, error)
-        return redirect("accounts:index")
+        return redirect("posts:index")
 
 def github_login_callback(request):
     load_dotenv()
@@ -198,10 +198,10 @@ def github_login_callback(request):
             user.save()
             messages.success(request, f"{user.email} logged in with Github")
         auth_login(request, user, backend='social_core.backends.github.GithubOAuth2')
-        return redirect(reverse("accounts:index"))
+        return redirect(reverse("posts:index"))
     except GithubException as error:
         messages.error(request, error)
-        return redirect(reverse("accounts:index"))
+        return redirect(reverse("posts:index"))
     except SocialLoginException as error:
         messages.error(request, error)
-        return redirect(reverse("accounts:index"))
+        return redirect(reverse("posts:index"))
