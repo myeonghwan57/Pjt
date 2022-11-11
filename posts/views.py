@@ -5,14 +5,24 @@ from django.http import HttpResponseForbidden, JsonResponse
 from django.contrib.auth.decorators import login_required
 from datetime import date, datetime, timedelta
 from django.db import transaction
+from django.db.models import Count
 
 # Create your views here.
 
 def index(request):
     posts = Post.objects.all()
-    context = {"posts": posts}
+    sort = request.GET.get('sort','') #url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
 
-    return render(request, "posts/index.html", context)
+    if sort == 'likes':
+        posts_sort = Post.objects.annotate(like_count=Count('like')).order_by('-like_count', '-created_at')
+        return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,})
+    elif sort == 'comments':
+        posts_sort = Post.objects.annotate(comment_count=Count('comment')).order_by('-comment_count', '-created_at')
+        return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,})
+    
+    else:
+        posts_sort = Post.objects.order_by('-created_at')
+        return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,})
 
 @login_required
 def create(request):
