@@ -13,11 +13,17 @@
         </div>
         <div class='text-center'>
           <div>
-          <button type="submit" class="btn login_btn">로그인</button>
-          <a class="btn signup_btn" href="{% url 'articles:index' %}">홈으로 돌아가기</a>
-          <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
-            Login for google
-          </a>
+            <button type="submit" class="btn login_btn">로그인</button>
+            <a class="btn signup_btn" href="{% url 'articles:index' %}">홈으로 돌아가기</a>
+          </div>
+          <div>
+            <h2 class="main_color1 fw-bold mt-5">
+            Social 로그인
+            </h2>
+            <a href="{% url 'social:begin' 'google-oauth2' %}">
+              <img src="{% static '/images/google.png'%}" style="width:50px;height:50px;">
+            </a>
+          </div>
         </div>
       </form>
     </div>
