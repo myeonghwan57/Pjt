@@ -25,7 +25,7 @@ class ReCommentForm(ModelForm):
         model = Comment
         fields = ('content',)
         labels = {
-            'content': '',
+            'content': '답글 내용',
         }
         widgets = {
             'content': TextInput(attrs={

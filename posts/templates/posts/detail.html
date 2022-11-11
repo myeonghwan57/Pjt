@@ -1,123 +1,159 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
+{% load static %}
 {% block content %}
+  <div class='container'>
+    <div>
+      <div class='d-flex justify-content-between'>
+        <div>
+          <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+          <a class='text-decoration-none text-muted' href="#">{{post.user.username}}</a>
+        </div>
+        <p class='text-center'>
+          조회수 :
+          {{ post.hits }}
+        </p>
+      </div>
 
-<hr>
-<div>
-  {% if post.image_set %}
-  {% for image in post.image_set.all %}
-  	<img src="{{ image.file.url }}" class="card-img-top" alt="{{ image.file.image }}" style="width: 300px; height: 300px;">
-  {% endfor %}  {% else %}
-  {% endif %}
-  <p> 조회수 : {{ post.hits }}</p>
-  <p> 제목:{{post.title}}</p>
-  <p> 내용:{{post.content}}</p>
-  <a href="{% url 'posts:update' post.pk %}"><button class="btn btn-success">수정 </button>
-  </a>
-  <br>
-  <form action="{% url 'posts:delete' post.pk %}" method='POST' >
-    {% csrf_token %}
-    <input type="submit" value='삭제' class="btn btn-danger" >
-  </form>
+      <h3>{{post.title}}</h3>
 
-</div>
+      <div class='mt-5'>
+        <!-- 이미지 -->
+        {% if post.image_set %}
+          {% for image in post.image_set.all %}
+            <img src="{{ image.file.url }}" class="card-img-top" alt="{{ image.file.image }}" style="width: 300px; height: 300px;">
+          {% endfor %}
+        {% else %}
+        {% endif %}
+      </div>
+      <h5 class='text-muted mt-5'>{{post.content}}</h5>
+      <div class='d-flex justify-content-between mt-5'>
+        <p>{{post.created_at}}</p>
+        {% if request.user == post.user %}
+          <div class='d-flex'>
+            <a href="{% url 'posts:update' post.pk %}">
+              <button class="btn post_detail_comment_btn">수정
+              </button>
+            </a>
+            <form action="{% url 'posts:delete' post.pk %}" method='POST'>
+              {% csrf_token %}
+              <input type="submit" value='삭제' class="btn btn-danger">
+            </form>
+          </div>
+        {% else %}
+        {% endif %}
+      </div>
+      <!-- 즐겨찾기 -->
+      {% if user.is_authenticated %}
+        {% if request.user in post.like.all %}
+          <button type="button" style="opacity: 0.8;" data-post-id='{{ post.pk }}' id='fav-btn' class="btn post_detail_bookmark_btn bi bi-star-fill"></button>
+        {% else %}
+          <button type="button" id='fav-btn' data-post-id='{{ post.pk }}' style="opacity: 0.8;" class=" btn post_detail_bookmark_btn bi bi-star"></button>
+        {% endif %}
 
-<hr>
-
-<!-- 좋아요 -->
-
-{% if user.is_authenticated %}
-  {% if request.user in post.like.all %}
-  <button type="button" style="opacity: 0.8;" data-post-id='{{ post.pk }}' id='fav-btn' class="btn btn-secondary bi bi-star-fill" >
-  {% else %}
-  <button type="button"  id='fav-btn' data-post-id='{{ post.pk }}' style="opacity: 0.8;" class=" btn btn-secondary bi bi-star" >
-  {% endif %}
-  </button>
-
-  <span id='fav-count' class="text-center">{{ post.like.count }}</span>
-  <span class="text-center">즐겨찾기</span>
-{% endif %}
-
-
-
-
-<!-- 댓글 -->
-
-{% for comment in comments %}
-{% if comment.parent_comment == NULL %}
-<div class="d-flex px-3 border-top border-bottom" style="height: 5rem;">
-  <div class="col-2 align-self-center">{{comment.user}}</div>
-  <div class="col-8 align-self-center">{{comment.content}}</div>
-  {% if request.user == comment.user %}
-
-  <form action="{% url 'posts:comments_delete' post.pk comment.pk %}" method="POST" class="align-self-center">
-    {% csrf_token %}
-    <input class="" type="submit" value="삭제"> 
-  </form>
-  {% endif %}
-  <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapse{{comment.pk}}" role="button">
-    대댓글
-  </a>
-
-  <hr class="my-3">
-</div>
-
-<!-- 대댓글 반복 -->
-{% for recom in comment.recomment.all %}
-<div class="d-flex px-3 border-top border-bottom" style="height: 5rem; margin-left: 1%;">
-  <a href="{% url 'accounts:detail' recom.user.pk %}" style="text-decoration:none" class="text-dark">{{ recom.user.username }}</a>
-    {{ recom.content }}
-</div>
-<form action="{% url 'posts:recomments_delete' post.pk recom.pk %}" method="POST" class="align-self-center">
-  {% csrf_token %}
-  <input class="" type="submit" value="삭제"> 
-</form>
-{% endfor %}
-
-<div class="px-3 my-3 collapse" id="collapse{{comment.pk}}">
-  <form action="{% url 'posts:recomments_create' post.pk comment.pk %}" method="POST" class="border border-5 rounded p-3" style="background-color:whitesmoke;">
-    {% csrf_token %}
-    {% bootstrap_form recomment_form %}
-    <div class="text-end"><input class="btn btn-primary" type="submit" value="대댓글 작성"></a>
+        <span id='fav-count' class="text-center">{{ post.like.count }}</span>
+        <span class="text-center">즐겨찾기</span>
+      {% endif %}
     </div>
-  </form>
-</div>
-{% else %}
-{% endif %}
-{% endfor %}
-<div class="px-3 my-3">
-  <form action="{% url 'posts:comments_create' post.pk %}" method="POST" class="border border-5 rounded p-3" style="background-color:whitesmoke;">
-    {% csrf_token %}
-    {% bootstrap_form comment_form %}
-    <div class="text-end"><input class="btn btn-primary" type="submit" value="댓글 작성"></a>
+    <hr>
+    <!-- 댓글 -->
+    {% for comment in comments %}
+      {% if comment.parent_comment == NULL %}
+        <div class="d-flex justify-content-between">
+          <a style="text-decoration:none" class="col-1 align-self-center text-center text-dark" href="{%url 'accounts:detail' comment.user.pk%}">{{comment.user}}</a>
+          <div class="col-8 align-self-center">{{comment.content}}</div>
+          <div class='d-flex align-self-center'>
+            <div>
+              <a class="btn post_detail_recomment_btn" data-bs-toggle="collapse" href="#collapse{{comment.pk}}" role="button">
+                답글달기
+              </a>
+            </div>
+            {% if request.user == comment.user %}
+              <form action="{% url 'posts:comments_delete' post.pk comment.pk %}" method="POST" class="align-self-center">
+                {% csrf_token %}
+                <input class="btn btn-primary" type="submit" value="삭제">
+              </form>
+            {% endif %}
+          </div>
+        </div>
+        <hr>
+
+        <!-- 대댓글 반복 -->
+        {% for recom in comment.recomment.all %}
+          <div class='d-flex justify-content-between'>
+            <div class="col-1 align-self-center text-center ms-5">
+              <i class="bi bi-arrow-return-right"></i>
+              <a href="{% url 'accounts:detail' recom.user.pk %}" style="text-decoration:none" class="text-dark col-1">{{ recom.user.username }}</a>
+            </div>
+            <div class="col-8 align-self-center">
+              {{ recom.content }}
+            </div>
+            <div class='d-flex align-self-center'>
+              {% if request.user == recom.user %}
+                <form action="{% url 'posts:recomments_delete' post.pk recom.pk %}" method="POST" class="align-self-center">
+                  {% csrf_token %}
+                  <input class="btn btn-primary" type="submit" value="삭제">
+                </form>
+              {% endif %}
+            </div>
+          </div>
+          <hr>
+        {% endfor %}
+        <div class="px-3 my-3 collapse" id="collapse{{comment.pk}}">
+          <form action="{% url 'posts:recomments_create' post.pk comment.pk %}" method="POST" class="border border-5 rounded p-3" style="background-color:whitesmoke;">
+            {% csrf_token %}
+            {% bootstrap_form recomment_form %}
+            <div class="text-end">
+              <input class="btn post_detail_recomment_btn " type="submit" value="답글 작성">
+            </div>
+          </form>
+        </div>
+      {% else %}
+      {% endif %}
+    {% endfor %}
+    <div class="px-3 my-3">
+      <form action="{% url 'posts:comments_create' post.pk %}" method="POST" class="border border-5 rounded p-3" style="background-color:whitesmoke;">
+        {% csrf_token %}
+        {% bootstrap_form comment_form %}
+        <div class="text-end"><input class="btn post_detail_comment_btn" type="submit" value="댓글 작성">
+        </div>
+      </form>
     </div>
-  </form>
-</div>
+  </div>
+
 {% endblock content %}
 
 {% block script %}
-<script>
-const favBtn = document.querySelector('#fav-btn')
-  
-favBtn.addEventListener('click', function (event) {
-  console.log(event.target.dataset)
-  console.log(event.target.dataset.postId)
-  
-  axios({
-    method:'get',
-    url:`http://localhost:8000/posts/${event.target.dataset.postId}/like/`
-  })
-  .then(response => {
-    if (response.data.is_likes === true) { // 즐찾 했으면
-      event.target.classList.add('bi-star-fill')
-      event.target.classList.remove('bi-star')
-    } else {
-      event.target.classList.add('bi-star')
-      event.target.classList.remove('bi-star-fill')
-    }
-    const favCount = document.querySelector('#fav-count')
-    favCount.innerText = response.data.likes_count
-  })
-})
-</script>
+  <script>
+    const favBtn = document.querySelector('#fav-btn')
+
+    favBtn.addEventListener('click', function (event) {
+      console.log(event.target.dataset)
+      console.log(event.target.dataset.postId)
+
+      axios({method: 'get', url: `http://localhost:8000/posts/${event.target.dataset.postId}/like/`}).then(response => {
+        if (response.data.is_likes === true) { // 즐찾 했으면
+          event
+            .target
+            .classList
+            .add('bi-star-fill')
+          event
+            .target
+            .classList
+            .remove('bi-star')
+        } else {
+          event
+            .target
+            .classList
+            .add('bi-star')
+          event
+            .target
+            .classList
+            .remove('bi-star-fill')
+        }
+        const favCount = document.querySelector('#fav-count')
+        favCount.innerText = response.data.likes_count
+      })
+    })
+  </script>
 {% endblock script %}
