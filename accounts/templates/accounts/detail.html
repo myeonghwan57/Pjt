@@ -3,28 +3,34 @@
 {% block content %}
   <div class="container mt-3">
     <h1 class="main_color1 fw-bold mt-3 mb-3 text-center">마이페이지</h1>
+    <hr>
 
-    <div class="row mt-5 text-center">
+    <div class="row mt-5">
       <!-- 왼쪽 화면 -->
-      <div class="col-5" style="border: 1px solid">
-        <h2 class="main_color2mb-3 fw-bold">나의 프로필</h2>
-        <p>
+      <div class="col-5">
+        <h2 class="main_color2 mb-3 fw-bold text-center">나의 프로필</h2>
+        <p class="text-center">
           {% if user.profile %}
             <img style='height:200px;width:200px;' src="{{ user.profile.url }}" alt="{{ user.profile }}">
           {% else %}
             <img style='height:200px;width:200px;' src="{% static '/images/profile/user.png'%}" alt="user">
           {% endif %}
         </p>
-        <div style="margin: 0 auto; width:50%; border: 1px solid;">
+        <div style="margin: 0 auto; width:50%;">
           <p>
             <span class="main_color1">이름: </span>
             <span>{{ user.username }}</span>
           </p>
+          
           <p><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}"></p>
-          <p class="main_color2 fw-bold"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}"> {{ user.email }}</p>
+          {% if user.email %}
+            <p class="main_color2 fw-bold"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}"> {{ user.email }}</p>
+          {% else %}
+            <p class="main_color2"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}"> 이메일 주소를 등록해주세요.</p>
+          {% endif %}
         </div>
         {% if user.career == 0 %}
-          <p class="text-center">경력: 신입</p>
+          <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/0.png'%}"> 신입 개발자</p>
           <p>
             <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
             <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
@@ -33,10 +39,10 @@
             <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
           </p>
         {% else %}
-          <p class="text-center">경력: {{ user.career }}년차</p>
-          <p>
+          <div>
             <!-- 1~4년차 -->
             {% if user.career > 0 and user.career < 5 %}
+            <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/1.png'%}">{{ user.career }}년 경력, 초급 개발자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
@@ -44,6 +50,7 @@
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 5~8년차 -->
             {% elif user.career > 4 and user.career < 9 %}
+              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/2.png'%}"> {{ user.career }}년 경력, 중급 개발자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
@@ -51,6 +58,7 @@
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 9~12년차 -->
             {% elif user.career > 8 and user.career < 13 %}
+              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/3.png'%}"> {{ user.career }}년 경력, 고급 개발자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
@@ -58,6 +66,7 @@
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 13~16년차 -->
             {% elif user.career > 12 and user.career < 17 %}
+            <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/4.png'%}"> {{ user.career }}년 경력, 고급 개발자/관리자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
@@ -65,36 +74,42 @@
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 17년 이상 -->
             {% else %}
+            <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/5.png'%}"> {{ user.career }}년 경력, 고급 개발자/관리자/임원</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
             {% endif %}
-          </p>
+          </div>
         {% endif %}
         </div>
       
       <!-- 오른쪽 화면 -->
-      <div class="col-7" style="border: 1px solid">
-        {% comment %} 이것은 user post를 출력하는 for문입니다 {% endcomment %}
-        <h3>post</h3>
-        {% for post in posts %}
-        <a href="{% url 'posts:detail' post.pk%}">
-          {{post.title}}
-        </a>
-          <br>
-        {% endfor %}
-        
-        {% comment %} 이것은 user comment를 출력하는 for문입니다 {% endcomment %}
-        <h3>comment</h3>
-
-        {% for comment in comments %}
-        <a href="{% url 'posts:detail' comment.article.pk%}">
-          {{comment.content}}
-        </a>
-        <br>
+      <div class="col-6 ms-5" style="border: 1px solid">
+        <div style="height:50%;">
+          <h4 class="main_color2 fw-bold">{{ user.username }}님이 작성한 글 목록</h3>
+          {% for post in posts %}
+          <span>{{ forloop.counter }}번째 글:</span>
+          <span>
+            <a href="{% url 'posts:detail' post.pk%}">
+              {{ post.title }}
+            </a>
+          </span>
+            <br>
           {% endfor %}
+        </div>
+        
+        <div style="height:50%;">
+          <h4 class="main_color2 fw-bold">{{ user.username }}님이 작성한 댓글 목록</h3>
+
+          {% for comment in comments %}
+          <a href="{% url 'posts:detail' comment.article.pk%}">
+            {{ forloop.counter }}번째 댓글: {{ comment.content }}
+          </a>
+          <br>
+            {% endfor %}
+          </div>
         </div>
       </div>
 
