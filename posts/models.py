@@ -24,19 +24,6 @@ class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE,  related_name='recomment', null=True)
 
-def path_image_path(instance, filename):
-    #{instance.content} => {instance.post.content}
-    return f'posts/{instance.post.content}/{filename}'
-
-class Image(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    file = ProcessedImageField(
-        upload_to = path_image_path,
-        processors = [ResizeToFill(200,200)],
-        format = 'JPEG',
-        options = {'quality':90},
-    )
-
 # # 이미지 업로드 경로 # 다중 이미지 기능 구현시 주석 해제
 # def image_upload_path(instance, filename):
 #     return f'{instance.post.id}/{filename}'
@@ -51,3 +38,7 @@ class Image(models.Model):
 
 #     class Meta:
 #         db_table = 'post_image'
+
+class Photo(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)

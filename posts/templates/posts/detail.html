@@ -4,11 +4,13 @@
 
 <hr>
 <div>
-  {% if post.image_set %}
-  {% for image in post.image_set.all %}
-  	<img src="{{ image.file.url }}" class="card-img-top" alt="{{ image.file.image }}" style="width: 300px; height: 300px;">
-  {% endfor %}  {% else %}
-  {% endif %}
+  <div class="d-flex">
+    {% for photo in post.photo_set.all%}
+    <img src="{{photo.image.url}}" width="300">
+    {% endfor %}
+  </div>
+
+
   <p> 조회수 : {{ post.hits }}</p>
   <p> 제목:{{post.title}}</p>
   <p> 내용:{{post.content}}</p>
