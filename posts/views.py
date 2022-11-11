@@ -1,42 +1,54 @@
 from django.shortcuts import render,redirect
-from .models import Post, Comment
-from .forms import PostForm, CommentForm, ReCommentForm, ImageFormSet
+from .models import Post, Comment, Photo
+from .forms import PostForm, CommentForm, ReCommentForm
 from django.http import HttpResponseForbidden, JsonResponse
 from django.contrib.auth.decorators import login_required
 from datetime import date, datetime, timedelta
 from django.db import transaction
+from django.db.models import Count
 
 # Create your views here.
 
 def index(request):
     posts = Post.objects.all()
-    context = {"posts": posts}
+    sort = request.GET.get('sort','') #url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
 
-    return render(request, "posts/index.html", context)
+    if sort == 'likes':
+        posts_sort = Post.objects.annotate(like_count=Count('like')).order_by('-like_count', '-created_at')
+        return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,})
+    elif sort == 'comments':
+        posts_sort = Post.objects.annotate(comment_count=Count('comment')).order_by('-comment_count', '-created_at')
+        return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,})
+    
+    else:
+        posts_sort = Post.objects.order_by('-created_at')
+        return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,})
 
 @login_required
 def create(request):
     if request.method == "POST":
-        post_form = PostForm(request.POST)
-        image_formset = ImageFormSet(request.POST, request.FILES)
-        
-        if post_form.is_valid() and image_formset.is_valid():
+        post_form = PostForm(request.POST)        
+        if post_form.is_valid():
             post = post_form.save(commit=False)
             post.user = request.user
-            with transaction.atomic():
+            post.save()
+            for img in request.FILES.getlist('imgs'):
+                # Photo 객체를 하나 생성한다.
+                photo = Photo()
+                # 외래키로 현재 생성한 Post의 기본키를 참조한다.
+                photo.post = post
+                # imgs로부터 가져온 이미지 파일 하나를 저장한다.
+                photo.image = img
+                # 데이터베이스에 저장
+                photo.save()
 
-                post.save()
-                image_formset.instance = post
-                image_formset.save()
-                return redirect("posts:index")
+            return redirect("posts:index")
 
     else:
         post_form = PostForm()
-        image_formset = ImageFormSet()
 
     context = {
         "post_form": post_form,
-        'image_formset':image_formset,
     }
 
     return render(request, "posts/create.html", context)
@@ -77,23 +89,21 @@ def detail(request, post_pk):
 def update(request, post_pk):
     post = Post.objects.get(pk=post_pk)
     if post.user == request.user:
+        print(request.FILES)
 
         if request.method == "POST":
             post_form = PostForm(request.POST, instance=post)
-            image_formset = ImageFormSet(request.POST, request.FILES, instance=post)
+            if post_form.is_valid():
+                post = post_form.save(commit=False)
+                post.save()
 
-            if post_form.is_valid() and image_formset.is_valid():
-                post_form.save()
-                image_formset.save()
                 return redirect("posts:detail", post.pk)
 
         else:
             post_form = PostForm(instance=post)
-            image_formset = ImageFormSet(instance=post)
 
         context = {
             "post_form": post_form,
-            'image_formset':image_formset,
         }
         return render(request, "posts/update.html", context)
 

@@ -7,9 +7,7 @@
   <form action="" method="POST" class="" enctype="multipart/form-data">
     {% csrf_token %}
     {% bootstrap_form post_form %}
-    {{ image_formset }}
-
-    <div class="text-end"><input class="btn btn-primary" type="submit" value="수정">
+    <div class="text-end"><input class="btn btn-primary" type="submit" value="수정"></div>
   </form>
   
 </div>

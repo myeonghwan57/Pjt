@@ -1,5 +1,5 @@
 from django.forms import ModelForm, TextInput
-from .models import Post,Comment,Image
+from .models import Post,Comment
 from django import forms
 
 class PostForm(ModelForm):
@@ -35,9 +35,4 @@ class ReCommentForm(ModelForm):
 
 
 
-class ImageForm(ModelForm):
-    class Meta:
-        model = Image
-        fields = ['file',]
 
-ImageFormSet = forms.inlineformset_factory(Post, Image, form=ImageForm, extra=5)
