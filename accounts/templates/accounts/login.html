@@ -12,8 +12,8 @@
           <input class="form-control my-4" type="password" name="password" placeholder="비밀번호" required="required" id="id_password">
         </div>
         <div class='text-center'>
-          <button type="submit" class="btn login_btn">로그인
-          </button>
+          <button type="submit" class="btn login_btn">로그인</button>
+          <a class="btn signup_btn" href="{% url 'articles:index' %}">홈으로 돌아가기</a>
           <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
             Login for google
           </a>

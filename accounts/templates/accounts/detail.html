@@ -2,17 +2,100 @@
 {% load static %}
 {% block content %}
   <div class="container">
-    <h1 class="main_color1 fw-bold mt-2">마이페이지</h1>
-    {% if user.profile %}
-      <img src="{{ user.profile.url }}" alt="{{ user.profile }}" style='width:100px;height:100px;'>
-    {% else %}
-      <img src="{% static '/images/profile/user.png'%}" alt="user">
-    {% endif %}
+    <h1 class="main_color1 fw-bold mt-3 mb-3">마이페이지</h1>
+    <div class="mt-5 text-center">
+      {% if user.profile %}
+        <img style='height:200px;width:200px;' src="{{ user.profile.url }}" alt="{{ user.profile }}">
+      {% else %}
+        <img style='height:200px;width:200px;' src="{% static '/images/profile/user.png'%}" alt="user">
+      {% endif %}
+    </div>
+
+    <!-- 왼쪽 화면 -->
+    <span style="width:30%;">
+      <p>이름:
+        {{ user.username }}</p>
+      <p>Github 주소:</p>
+      {% if user.career == 0 %}
+        <p>경력: 신입</p>
+        <p>
+          <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+          <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+          <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+          <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+          <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+        </p>
+      {% else %}
+        <p>경력:
+          {{ user.career }}년차</p>
+        <p>
+          <!-- 1~4년차 -->
+          {% if user.career > 0 and user.career < 5 %}
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+            <!-- 5~8년차 -->
+          {% elif user.career > 4 and user.career < 9 %}
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+            <!-- 9~12년차 -->
+          {% elif user.career > 8 and user.career < 13 %}
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+            <!-- 13~16년차 -->
+          {% elif user.career > 12 and user.career < 17 %}
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
+            <!-- 17년 이상 -->
+          {% else %}
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+            <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
+          {% endif %}
+        </p>
+      {% endif %}
+    </span>
+    <span>
+      test
+    </span>
+
+  {% comment %} 이것은 user post를 출력하는 for문입니다 {% endcomment %}
+  <h3>post</h3>
+    {% for post in posts %}
+    <a href="{% url 'posts:detail' post.pk%}">
+      {{post.title}}
+    </a>
+      <br>
+    {% endfor %}
+    
+  {% comment %} 이것은 user comment를 출력하는 for문입니다 {% endcomment %}
+  <h3>comment</h3>
   
-    <p>이름:{{ user.full_name }}
+  {% for comment in comments %}
+  <a href="{% url 'posts:detail' comment.article.pk%}">
+    {{comment.content}}
+  </a>
+      <br>
+    {% endfor %}
+    <!-- 버튼 그룹 -->
+    <p class="text-center">
+      <a class="btn btn-outline-primary" href="{% url 'accounts:update' %}">수정</a>
+      <a class="btn btn-outline-success" href="{% url 'accounts:change_password' %}">비밀번호 변경</a>
+      <a class="btn login_btn" href="{% url 'articles:index' %}">홈으로 돌아가기</a>
+      <a class="btn btn-outline-danger" href="{% url 'accounts:delete' user.pk %}">회원탈퇴</a>
     </p>
-    <a href="{% url 'accounts:delete' user.pk %}">삭제</a>
-    <a href="{% url 'accounts:update' %}">수정</a>
-    <a href="{% url 'accounts:change_password' %}">비밀번호 변경</a>
   </div>
 {% endblock content %}

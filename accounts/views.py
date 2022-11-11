@@ -12,19 +12,16 @@ from . import forms, models
 from .exception import GithubException,SocialLoginException
 from dotenv import load_dotenv
 from django.urls import reverse
+from posts.models import Post, Comment
 # Create your views here.
-
-
-def index(request):
-    return render(request, "accounts/index.html")
-
-
 def signup(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
-            auth_login(request, user)
+            auth_login(
+                request, user, backend="django.contrib.auth.backends.ModelBackend"
+            )
             return redirect("articles:index")
     else:
         form = CustomUserCreationForm()
@@ -36,8 +33,12 @@ def signup(request):
 
 def detail(request, pk):
     user = get_user_model().objects.get(pk=pk)
+    posts = user.post_set.all()
+    comments = user.comment_set.all()
     context = {
         "user": user,
+        "posts": posts,
+        "comments": comments,
     }
     return render(request, "accounts/detail.html", context)
 
@@ -70,7 +71,7 @@ def delete(request, pk):
         auth_logout(request)
     else:
         messages.warning(request, "삭제는 본인만 가능합니다.")
-    return redirect("accounts:detail", pk)
+    return redirect("articles:index")
 
 
 def update(request):
