@@ -17,13 +17,11 @@ def index(request):
 def signup(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST, request.FILES)
-        print("signup 테스트2")
         if form.is_valid():
             user = form.save()
             auth_login(request, user)
             return redirect("articles:index")
     else:
-        print("signup 테스트4")
         form = CustomUserCreationForm()
     context = {
         "form": form,
@@ -44,6 +42,7 @@ def login(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
+            messages.success(request, "로그인 되었습니다.")
             return redirect(request.GET.get("next") or "articles:index")
     else:
         form = AuthenticationForm()

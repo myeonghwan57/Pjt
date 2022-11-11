@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import get_user_model
+from django.forms import TextInput
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -10,6 +11,11 @@ class CustomUserCreationForm(UserCreationForm):
             "password1",
             "password2",
         )
+        widgets = {
+            "username": TextInput(attrs={
+                'style': 'color:red;'
+            }),
+        }
 
 
 class CustomUserChangeForm(UserChangeForm):

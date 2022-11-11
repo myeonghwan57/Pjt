@@ -4,17 +4,46 @@
 {% block content %}
   <div class='post_index'>
     <h2 class='my-4' style='color:#7689DE'>
-      <img src="{% static '/images/crown.png' %}" alt="" style="width:70px; height:70px;">현재 커뮤니티 인기글</h2>
-    {% for post in posts %}
-      <hr>
-      <a href="{% url 'posts:detail' post.pk %}">
-        <div>
-          <p>
-            제목:{{post.title}}</p>
+      <img src="{% static '/images/crown.png' %}" alt="" style="width:70px; height:70px;">현재 커뮤니티 인기글
+    </h2>
+    <div class='post_best container'>
+      <div class="card" style="">
+        <div class="card-body" style="width:400px;height:300px;">
+          <h5 class="card-title fw-bold">글 제목이 들어가는 부분</h5>
+          <div class='d-flex align-items-center justify-content-end my-3'>
+            <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+            <a class='text-decoration-none text-muted' href="#">작성자</a>
+          </div>
+          <a href="#">
+            <p class="card-text">글의 내용</p>
+          </a>
         </div>
-      </a>
-      <hr>
-    {% endfor %}
+      </div>
+      <div class="card" style="">
+        <div class="card-body" style="width:400px;height:300px;">
+          <h5 class="card-title fw-bold">글 제목이 들어가는 부분</h5>
+          <div class='d-flex align-items-center justify-content-end my-3'>
+            <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+            <a class='text-decoration-none text-muted' href="#">작성자</a>
+          </div>
+          <a href="#">
+            <p class="card-text">글의 내용</p>
+          </a>
+        </div>
+      </div>
+      <div class="card" style="">
+        <div class="card-body" style="width:400px;height:300px;">
+          <h5 class="card-title fw-bold">글 제목이 들어가는 부분</h5>
+          <div class='d-flex align-items-center justify-content-end my-3'>
+            <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+            <a class='text-decoration-none text-muted' href="#">작성자</a>
+          </div>
+          <a href="#">
+            <p class="card-text">글의 내용</p>
+          </a>
+        </div>
+      </div>
+    </div>
     <div class='post_write'>
       {% if user.profile %}
         <a href="{%url 'accounts:detail' user.pk%}"><img class="post_profile_img" src="{{ user.profile.url }}" alt="{{ user.profile }}" style='width:200px;height:200px;'></a>
@@ -27,6 +56,19 @@
           <i class="bi bi-pencil-fill"></i>
         </a>
       </div>
+    </div>
+    <div></div>
+    <div>
+      {% for post in posts %}
+        <hr>
+        <a href="{% url 'posts:detail' post.pk %}">
+          <div>
+            <p>
+              제목:{{post.title}}</p>
+          </div>
+        </a>
+        <hr>
+      {% endfor %}
     </div>
   </div>
 {% endblock content %}
