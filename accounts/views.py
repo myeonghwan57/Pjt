@@ -6,7 +6,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import get_user_model, get_user, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
-import matplotlib.pyplot as plt
+from posts.models import Post, Comment
 
 # Create your views here.
 def signup(request):
@@ -14,7 +14,9 @@ def signup(request):
         form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
-            auth_login(request, user)
+            auth_login(
+                request, user, backend="django.contrib.auth.backends.ModelBackend"
+            )
             return redirect("articles:index")
     else:
         form = CustomUserCreationForm()
@@ -26,8 +28,12 @@ def signup(request):
 
 def detail(request, pk):
     user = get_user_model().objects.get(pk=pk)
+    posts = user.post_set.all()
+    comments = user.comment_set.all()
     context = {
         "user": user,
+        "posts": posts,
+        "comments": comments,
     }
     return render(request, "accounts/detail.html", context)
 
@@ -60,7 +66,7 @@ def delete(request, pk):
         auth_logout(request)
     else:
         messages.warning(request, "삭제는 본인만 가능합니다.")
-    return redirect("accounts:detail", pk)
+    return redirect("articles:index")
 
 
 def update(request):
