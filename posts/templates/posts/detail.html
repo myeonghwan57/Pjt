@@ -14,6 +14,7 @@
   <p> 조회수 : {{ post.hits }}</p>
   <p> 제목:{{post.title}}</p>
   <p> 내용:{{post.content}}</p>
+  {% if reuqest.user == post.user %}
   <a href="{% url 'posts:update' post.pk %}"><button class="btn btn-success">수정 </button>
   </a>
   <br>
@@ -21,6 +22,8 @@
     {% csrf_token %}
     <input type="submit" value='삭제' class="btn btn-danger" >
   </form>
+  {% endif %}
+
 
 </div>
 
@@ -66,14 +69,15 @@
 
 <!-- 대댓글 반복 -->
 {% for recom in comment.recomment.all %}
-<div class="d-flex px-3 border-top border-bottom" style="height: 5rem; margin-left: 1%;">
+<div class="d-flex px-3 border-top border-bottom" style="height: 5rem; margin-left: 2%;">
   <a href="{% url 'accounts:detail' recom.user.pk %}" style="text-decoration:none" class="text-dark">{{ recom.user.username }}</a>
-    {{ recom.content }}
+  <div class="mx-5">{{ recom.content }}</div>
+  <form action="{% url 'posts:recomments_delete' post.pk recom.pk %}" method="POST" class="align-self-center">
+    {% csrf_token %}
+    <input class="" type="submit" value="삭제"> 
+  </form>
 </div>
-<form action="{% url 'posts:recomments_delete' post.pk recom.pk %}" method="POST" class="align-self-center">
-  {% csrf_token %}
-  <input class="" type="submit" value="삭제"> 
-</form>
+
 {% endfor %}
 
 <div class="px-3 my-3 collapse" id="collapse{{comment.pk}}">
