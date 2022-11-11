@@ -63,9 +63,9 @@
       <div class='col-9'>
         {% for post in posts_sort %}
           <hr>
-          <div>
+          <div class='px-4'>
             <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
-            <a class='text-decoration-none text-muted' href="#">작성자</a>
+            <a class='text-decoration-none text-muted' href="#">{{post.user.username}}</a>
             <a class='text-decoration-none' href="{% url 'posts:detail' post.pk %}">
               <h3 class='text-dark'>{{post.title}}</h3>
               <p class='post_content text-muted'>{{post.content}}</p>
