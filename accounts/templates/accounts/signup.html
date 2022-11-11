@@ -27,9 +27,16 @@
             </div>
           </form>
         
-        {% else %}
-          <input type="submit" value='수정' class='btn login_btn'>
-        {% endif %}
+          {% else %}
+          <form action="{% url 'accounts:update' %}" method='POST' enctype="multipart/form-data">
+            {% csrf_token %}
+            <div style="width:400px;" class="main_color1">
+              {% bootstrap_form form %}
+            </div>
+            <input type="submit" value='수정' class='btn login_btn'>
+            <a class="btn signup_btn" href="{% url 'articles:index' %}">취소</a>
+          </form>
+          {% endif %}
+        </div>
       </div>
-    </div>
-{% endblock content %}
+  {% endblock content %}

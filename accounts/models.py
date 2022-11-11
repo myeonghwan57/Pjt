@@ -15,6 +15,19 @@ class User(AbstractUser):
         options={"quality": 95},
     )
 
+    LOGIN_EMAIL = "email"
+    LOGIN_GITHUB = "github"
+
+    LOGIN_CHOICES = (
+        (LOGIN_EMAIL, "Email"),
+        (LOGIN_GITHUB, "Github"),
+    )
+
+    login_method = models.CharField(
+        max_length=6, choices=LOGIN_CHOICES, default=LOGIN_EMAIL
+    )
+
     @property
     def full_name(self):
         return f"{self.last_name}{self.first_name}"
+
