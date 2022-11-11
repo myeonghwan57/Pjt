@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm, CustomUserChangeForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm, CheckPasswordForm
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -59,16 +59,6 @@ def logout(request):
     return redirect("articles:index")
 
 
-def delete(request, pk):
-    user = get_user_model().objects.get(pk=pk)
-    if request.user == user:
-        user.delete()
-        auth_logout(request)
-    else:
-        messages.warning(request, "삭제는 본인만 가능합니다.")
-    return redirect("articles:index")
-
-
 def update(request):
     if request.method == "POST":
         form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
@@ -96,3 +86,31 @@ def change_password(request):
         "form": form,
     }
     return render(request, "accounts/passwordchange.html", context)
+
+
+def delete_checker(request, pk):
+    user = get_user_model().objects.get(pk=pk)
+    if request.method == "POST":
+        password_form = CheckPasswordForm("request.user", request.POST)
+
+        if password_form.is_valid():
+            request.user.delete()
+            logout(request)
+            messages.success(request, "회원탈퇴완료")
+            return redirect("accounts:login")
+    else:
+        password_form = CheckPasswordForm(request.user)
+    context = {
+        "password_form": password_form,
+    }
+    return render(request, "accounts/pw_check.html", context)
+
+
+# def delete(request, pk):
+#     user = get_user_model().objects.get(pk=pk)
+#     if request.user == user:
+#         user.delete()
+#         auth_logout(request)
+#     else:
+#         messages.warning(request, "삭제는 본인만 가능합니다.")
+#     return redirect("articles:index")

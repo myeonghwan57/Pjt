@@ -95,7 +95,26 @@
       <a class="btn btn-outline-primary" href="{% url 'accounts:update' %}">수정</a>
       <a class="btn btn-outline-success" href="{% url 'accounts:change_password' %}">비밀번호 변경</a>
       <a class="btn login_btn" href="{% url 'articles:index' %}">홈으로 돌아가기</a>
-      <a class="btn btn-outline-danger" href="{% url 'accounts:delete' user.pk %}">회원탈퇴</a>
+      <!-- Button trigger modal -->
+<button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  회원탈퇴
+</button>
     </p>
   </div>
+  
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">정말로 탈퇴하시겠습니까?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="text-center">
+        <Button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</Button>
+        <a class="btn btn-primary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content %}
