@@ -93,10 +93,11 @@ def change_password(request):
     }
     return render(request, "accounts/passwordchange.html", context)
 
+
 def delete_checker(request, pk):
-    user = get_user_model().objects.get(pk=pk)
+    user = request.user
     if request.method == "POST":
-        password_form = CheckPasswordForm("request.user", request.POST)
+        password_form = CheckPasswordForm(request.user, request.POST)
 
         if password_form.is_valid():
             request.user.delete()
@@ -126,12 +127,13 @@ def github_login(request):
             raise SocialLoginException("User already logged in")
         client_id = os.environ.get("GITHUB_ID")
         redirect_uri = "http://127.0.0.1:8000/accounts/login/github/callback"
-        return redirect(    
+        return redirect(
             f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user"
-        ) # 👈 사용자가 승인을 누르면, redirect_uri 경로로 redirect 됩니다.
+        )  # 👈 사용자가 승인을 누르면, redirect_uri 경로로 redirect 됩니다.
     except SocialLoginException as error:
         messages.error(request, error)
         return redirect("articles:index")
+
 
 def github_login_callback(request):
     load_dotenv()
@@ -203,6 +205,7 @@ def github_login_callback(request):
             user.set_unusable_password()
             user.save()
             messages.success(request, f"{user.email} logged in with Github")
+
         auth_login(request, user, backend='social_core.backends.github.GithubOAuth2')
         return redirect(reverse("articles:index"))
     except GithubException as error:
