@@ -5,6 +5,7 @@
 {% block content %}
   <div class="container">
     <div class="login_page">
+
       {% if request.resolver_match.url_name == 'signup' %}
         <h1 class="fw-bold mt-2 mb-4 main_color1"><img src="{% static '/images/logo.png'%}" style="width:100px;height:100px;">회원가입</h1>
       {% else %}
