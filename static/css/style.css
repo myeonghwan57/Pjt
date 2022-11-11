@@ -66,3 +66,11 @@ html,body{
   justify-content: space-around;
   border-radius: 30px;
 }
+
+.post_content{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100px;
+  height: 20px;
+}
