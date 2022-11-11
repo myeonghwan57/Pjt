@@ -4,3 +4,7 @@ class SocialLoginException(Exception):
 
 class GithubException(Exception):
     pass
+
+
+class OverlapException(Exception):
+    pass
