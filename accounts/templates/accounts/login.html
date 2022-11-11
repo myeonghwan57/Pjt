@@ -21,4 +21,12 @@
       </form>
     </div>
   </div>
+
+  <div class="social-login mt-4">
+    <button class="button bg-gray-700 text-white">
+      <a href="{% url 'accounts:github-login' %}">
+        <i class="fab fa-github mr-2"></i>Login with Github
+      </a>
+    </button>
+  </div>
 {% endblock content %}
