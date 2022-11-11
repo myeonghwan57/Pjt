@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Post, Comment, MultipleImage
+from .models import Post, Comment
 from .forms import PostForm, CommentForm, ReCommentForm, ImageFormSet
 from django.http import HttpResponseForbidden, JsonResponse
 from django.contrib.auth.decorators import login_required
