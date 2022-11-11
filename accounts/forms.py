@@ -10,15 +10,25 @@ class CustomUserCreationForm(UserCreationForm):
             "username",
             "password1",
             "password2",
+            "career",
         )
-        widgets = {
-            "username": TextInput(attrs={
-                'style': 'color:red;'
-            }),
+        labels = {
+            'career': '경력(년차)',
+        }
+        help_texts = {
+            'career': '신입일 경우 0을 입력해주세요.',
         }
 
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = get_user_model()
-        fields = ("first_name", "last_name", "profile",)
+        fields = (
+            "username",
+            "profile",
+            "career",
+        )
+        labels = {
+            'profile': '프로필 사진',
+            'career': '경력(년차)',
+        }

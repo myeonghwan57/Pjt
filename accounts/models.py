@@ -14,6 +14,7 @@ class User(AbstractUser):
         format="JPEG",
         options={"quality": 95},
     )
+    career = models.IntegerField(default=0)
 
     @property
     def full_name(self):
