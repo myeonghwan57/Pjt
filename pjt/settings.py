@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "articles",
     "posts",
     "imagekit",
+    "rest_framework",
     "django_bootstrap5",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -43,6 +44,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # social
+    "social_django",
 ]
 
 MIDDLEWARE = [
@@ -52,8 +55,26 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    # social
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
+# social
+AUTHENTICATION_BACKENDS = (
+    "social_core.backends.google.GoogleOAuth2",  # <-- 구글
+    "django.contrib.auth.backends.ModelBackend",  # <-- Django 시스템 사용자로 로그인
+)
+
+LOGIN_URL = "/auth/login/google-oauth2/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+SOCIAL_AUTH_URL_NAMESPACE = "social"
+# 아래 두개는 키분리 필수
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = (
+    "340738760028-gfruul255kk67hnucn8sk7anifavghbu.apps.googleusercontent.com"
+)
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
 ROOT_URLCONF = "pjt.urls"
 
@@ -70,6 +91,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # social
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect",
             ],
         },
     },

@@ -46,8 +46,8 @@ html,body{
 }
 
 .post_profile_img{
-  height: 40px;
-  width: 40px;
+  height: 30px;
+  width: 30px;
 }
 .post_write{
   width: 700px;
@@ -65,4 +65,23 @@ html,body{
   align-items: center;
   justify-content: space-around;
   border-radius: 30px;
+}
+.post_list{
+  width: 100%;
+}
+.post_content{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  height: 45px;
+}
+.post_detail_comment_btn{
+  background-color: #7689DE;
+  color: white;
+}
+.post_detail_recomment_btn{
+  background-color: #A9DCE3;
+}
+.post_detail_bookmark_btn{
+  background-color: #A9DCE3;
 }

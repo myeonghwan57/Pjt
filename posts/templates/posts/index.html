@@ -2,49 +2,48 @@
 {% load django_bootstrap5 %}
 {% load static %}
 {% block content %}
-  <div class='post_index'>
+  <div class='post_index container'>
     <h2 class='my-4' style='color:#7689DE'>
       <img src="{% static '/images/crown.png' %}" alt="" style="width:70px; height:70px;">현재 커뮤니티 인기글
     </h2>
-    <div class='post_best container'>
-      <div class="card" style="">
-        <div class="card-body" style="width:400px;height:300px;">
-          <h5 class="card-title fw-bold">글 제목이 들어가는 부분</h5>
-          <div class='d-flex align-items-center justify-content-end my-3'>
-            <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
-            <a class='text-decoration-none text-muted' href="#">작성자</a>
+    <!-- 현재 인기 게시글-->
+    <div class='row' style="width:100%;">
+      <div class='col-4'>
+        <div class="card " style="">
+          <div class="card-body text-center" style="height:150px;">
+            <h5 class="card-title fw-bold">글 제목이 들어가는 부분</h5>
+            <div class='d-flex align-items-center justify-content-end my-3'>
+              <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+              <a class='text-decoration-none text-muted' href="#">작성자</a>
+            </div>
           </div>
-          <a href="#">
-            <p class="card-text">글의 내용</p>
-          </a>
         </div>
       </div>
-      <div class="card" style="">
-        <div class="card-body" style="width:400px;height:300px;">
-          <h5 class="card-title fw-bold">글 제목이 들어가는 부분</h5>
-          <div class='d-flex align-items-center justify-content-end my-3'>
-            <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
-            <a class='text-decoration-none text-muted' href="#">작성자</a>
+      <div class='col-4'>
+        <div class="card " style="">
+          <div class="card-body text-center" style="height:150px;">
+            <h5 class="card-title fw-bold">글 제목이 들어가는 부분</h5>
+            <div class='d-flex align-items-center justify-content-end my-3'>
+              <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+              <a class='text-decoration-none text-muted' href="#">작성자</a>
+            </div>
           </div>
-          <a href="#">
-            <p class="card-text">글의 내용</p>
-          </a>
         </div>
       </div>
-      <div class="card" style="">
-        <div class="card-body" style="width:400px;height:300px;">
-          <h5 class="card-title fw-bold">글 제목이 들어가는 부분</h5>
-          <div class='d-flex align-items-center justify-content-end my-3'>
-            <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
-            <a class='text-decoration-none text-muted' href="#">작성자</a>
+      <div class='col-4'>
+        <div class="card" style="">
+          <div class="card-body text-center" style="height:150px;">
+            <h5 class="card-title fw-bold">글 제목이 들어가는 부분</h5>
+            <div class='d-flex align-items-center justify-content-end my-3'>
+              <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+              <a class='text-decoration-none text-muted' href="#">작성자</a>
+            </div>
           </div>
-          <a href="#">
-            <p class="card-text">글의 내용</p>
-          </a>
         </div>
       </div>
     </div>
-    <div class='post_write'>
+
+    <div class='post_write mt-5'>
       {% if user.profile %}
         <a href="{%url 'accounts:detail' user.pk%}"><img class="post_profile_img" src="{{ user.profile.url }}" alt="{{ user.profile }}" style='width:200px;height:200px;'></a>
       {% else %}
@@ -57,18 +56,59 @@
         </a>
       </div>
     </div>
-    <div></div>
-    <div>
-      {% for post in posts %}
-        <hr>
-        <a href="{% url 'posts:detail' post.pk %}">
-          <div>
-            <p>
-              제목:{{post.title}}</p>
+    <div class='post_list row justify-content-end my-3'>
+      <div class="col-3">
+        <div>검색어 순위</div>
+      </div>
+      <div class='col-9'>
+        {% for post in posts_sort %}
+          <hr>
+          <div class='px-4'>
+            <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+            <a class='text-decoration-none text-muted' href="#">{{post.user.username}}</a>
+            <a class='text-decoration-none' href="{% url 'posts:detail' post.pk %}">
+              <h3 class='text-dark'>{{post.title}}</h3>
+              <p class='post_content text-muted'>{{post.content}}</p>
+            </a>
           </div>
-        </a>
-        <hr>
-      {% endfor %}
+          <hr>
+        {% endfor %}
+      </div>
     </div>
   </div>
+  <select id="sort-select" onchange="location = this.value;">
+    <option class="sort-date" value="?sort=date">최신순</option>
+    <option class="sort-likes" value="?sort=likes">좋아요순</option>
+    <option class="sort-comments" value="?sort=comments">댓글순</option>
+  </select>
+
+  <script>
+        // get url query string
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    };
+    // 정렬방식 셀렉트 박스 유지
+    $(document).ready(function(){
+      var sort = getUrlParameter('sort');
+      if(sort == 'likes'){
+        $('.sort-likes').prop('selected', 'selected')
+      }else if(sort == 'comments'){
+        $('.sort-comments').prop('selected', 'selected')
+      }else{
+        $('.sort-date').prop('selected', 'selected')
+      }
+    });
+  </script>
 {% endblock content %}
+

@@ -5,9 +5,10 @@
 
 <div class="container my-5">
 
-  <form action="" method="POST" class="">
+  <form action="" method="POST" class="" enctype="multipart/form-data">
     {% csrf_token %}
     {% bootstrap_form post_form %}
+    <input type="file" name="imgs" multiple>
     <div class="text-end"><input class="btn btn-primary" type="submit" value="작성"></div>
   </form>
   
