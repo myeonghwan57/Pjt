@@ -89,22 +89,42 @@ def detail(request, post_pk):
 @login_required
 def update(request, post_pk):
     post = Post.objects.get(pk=post_pk)
+    photo_list = post.photo_set.all() # post의 이미지를 photo_list에 받아온다.
     if post.user == request.user:
-        print(request.FILES)
-
         if request.method == "POST":
-            post_form = PostForm(request.POST, instance=post)
+            post_form = PostForm(request.POST, request.FILES, instance=post)
             if post_form.is_valid():
                 post = post_form.save(commit=False)
                 post.save()
 
-                return redirect("posts:detail", post.pk)
+                if request.FILES.getlist('imgs'): # 만약 이미지를 입력했다면
+                    for i in photo_list: # photo_list를 반복하면서 이미지를 모두 삭제한다.
+                        i.delete()
+                    # 이미지를 모두 삭제하고 다시 추가함.
+                    for img in request.FILES.getlist('imgs'): 
+                        # Photo 객체를 하나 생성한다.
+                        photo = Photo()
+                        # 외래키로 현재 생성한 Post의 기본키를 참조한다.
+                        photo.post = post
+                        # imgs로부터 가져온 이미지 파일 하나를 저장한다.
+                        photo.image = img
+                        # 데이터베이스에 저장
+                        photo.save()
+                    return redirect("posts:detail", post.pk)
+
+                else: # 만약 이미지가 입력되지 않았다면
+                    if request.POST.getlist('image-clear'): # 입력된 이미지를 삭제할건지 체크여부 확인
+                        for i in photo_list:
+                            i.delete()                        
+
+                    return redirect("posts:detail", post.pk)
 
         else:
             post_form = PostForm(instance=post)
 
         context = {
             "post_form": post_form,
+            "photo_list":photo_list,
         }
         return render(request, "posts/update.html", context)
 
