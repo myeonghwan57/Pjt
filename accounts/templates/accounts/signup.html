@@ -5,27 +5,25 @@
 {% block content %}
   <div class="container">
     <div class="login_page">
-    {% if request.resolver_match.url_name == 'signup' %}
-    <h1 class="fw-bold mt-2 mb-4 main_color1"><img src="{% static '/images/logo.png'%}" style="width:100px;height:100px;">회원가입</h1>
-    {% else %}
-      <h1 class="fw-bold mt-2 mb-4 main_color1"><img src="{% static '/images/logo.png'%}" style="width:100px;height:100px;">회원정보 수정</h1>
-    {% endif %}
-      <form action="" method='POST' enctype="multipart/form-data">
-      </form>
-        {% csrf_token %}
-        {% if request.resolver_match.url_name == 'signup' %}
-          <form action="{% url 'accounts:signup' %}" method='POST' enctype="multipart/form-data">
-            {% csrf_token %}
-            <div style="width:400px;" class="main_color1">
-              {% bootstrap_form form %}
-            </div>
-            <div class='text-center'>
-              <button type="submit" class="btn login_btn">회원가입</button>
-              <a class="btn signup_btn" href="{% url 'articles:index' %}">취소</a>
-            </div>
-          </form>
-        
-        {% else %}
+
+      {% if request.resolver_match.url_name == 'signup' %}
+        <h1 class="fw-bold mt-2 mb-4 main_color1"><img src="{% static '/images/logo.png'%}" style="width:100px;height:100px;">회원가입</h1>
+      {% else %}
+        <h1 class="fw-bold mt-2 mb-4 main_color1"><img src="{% static '/images/logo.png'%}" style="width:100px;height:100px;">회원정보 수정</h1>
+      {% endif %}
+      {% if request.resolver_match.url_name == 'signup' %}
+        <form action="{% url 'accounts:signup' %}" method='POST' enctype="multipart/form-data">
+          {% csrf_token %}
+          <div style="width:400px;" class="main_color1">
+            {% bootstrap_form form %}
+          </div>
+          <div class='text-center'>
+            <button type="submit" class="btn login_btn">회원가입</button>
+            <a class="btn signup_btn" href="{% url 'articles:index' %}">취소</a>
+          </div>
+        </form>
+
+      {% else %}
         <form action="{% url 'accounts:update' %}" method='POST' enctype="multipart/form-data">
           {% csrf_token %}
           <div style="width:400px;" class="main_color1">
@@ -34,7 +32,7 @@
           <input type="submit" value='수정' class='btn login_btn'>
           <a class="btn signup_btn" href="{% url 'articles:index' %}">취소</a>
         </form>
-        {% endif %}
-      </div>
+      {% endif %}
     </div>
+  </div>
 {% endblock content %}

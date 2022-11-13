@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     "articles",
     "posts",
     "imagekit",
-    "rest_framework",
     "django_bootstrap5",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -62,8 +61,9 @@ MIDDLEWARE = [
 ]
 # social
 AUTHENTICATION_BACKENDS = (
-    "social_core.backends.google.GoogleOAuth2",  # <-- 구글
+    'social_core.backends.github.GithubOAuth2', # <-- 깃허브
     "django.contrib.auth.backends.ModelBackend",  # <-- Django 시스템 사용자로 로그인
+    "social_core.backends.google.GoogleOAuth2",  # <-- 구글
 )
 
 LOGIN_URL = "/auth/login/google-oauth2/"

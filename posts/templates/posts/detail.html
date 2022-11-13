@@ -19,9 +19,14 @@
 
       <div class='mt-5'>
         <!-- 이미지 -->
-        {% for photo in post.photo_set.all%}
-          <img src="{{photo.image.url}}" width="300">
-        {% endfor %}
+
+        {% if post.photo_set %}
+          {% for photo in post.photo_set.all %}
+            <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.image.image }}" style="width: 300px; height: 300px;">
+          {% endfor %}
+        {% else %}
+        {% endif %}
+
       </div>
       <h5 class='text-muted mt-5'>{{post.content}}</h5>
       <div class='d-flex justify-content-between mt-5'>
