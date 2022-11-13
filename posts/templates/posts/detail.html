@@ -6,8 +6,8 @@
     <div>
       <div class='d-flex justify-content-between'>
         <div>
-          <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
-          <a class='text-decoration-none text-muted' href="#">{{post.user.username}}</a>
+          <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+          <a class='text-decoration-none text-muted' href="{%url 'accounts:detail' post.user.pk%}">{{post.user.username}}</a>
         </div>
         <p class='text-center'>
           조회수 :
@@ -19,12 +19,9 @@
 
       <div class='mt-5'>
         <!-- 이미지 -->
-        {% if post.image_set %}
-          {% for image in post.image_set.all %}
-            <img src="{{ image.file.url }}" class="card-img-top" alt="{{ image.file.image }}" style="width: 300px; height: 300px;">
-          {% endfor %}
-        {% else %}
-        {% endif %}
+        {% for photo in post.photo_set.all%}
+          <img src="{{photo.image.url}}" width="300">
+        {% endfor %}
       </div>
       <h5 class='text-muted mt-5'>{{post.content}}</h5>
       <div class='d-flex justify-content-between mt-5'>

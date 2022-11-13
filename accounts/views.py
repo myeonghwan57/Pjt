@@ -6,7 +6,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import get_user_model, get_user, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
-import matplotlib.pyplot as plt
+
 
 # Create your views here.
 def signup(request):

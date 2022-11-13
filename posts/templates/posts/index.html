@@ -44,11 +44,6 @@
     </div>
 
     <div class='post_write mt-5'>
-      {% if user.profile %}
-        <a href="{%url 'accounts:detail' user.pk%}"><img class="post_profile_img" src="{{ user.profile.url }}" alt="{{ user.profile }}" style='width:200px;height:200px;'></a>
-      {% else %}
-        <a href="{%url 'accounts:detail' user.pk%}"><img class="post_profile_img" src="{% static '/images/profile/user.png'%}" alt="user"></a>
-      {% endif %}
       <div class='post_write_box'>
         <a class="text-decoration-none text-dark" href="{% url 'posts:create' %}">면접 본 후기, 면접 본 회사에 대한 의견을 자유롭게 작성해보세요!</a>
         <a href="{% url 'posts:create' %}">
@@ -56,59 +51,74 @@
         </a>
       </div>
     </div>
+
     <div class='post_list row justify-content-end my-3'>
       <div class="col-3">
         <div>검색어 순위</div>
       </div>
       <div class='col-9'>
+        <div class='custom_select' style="float: right;">
+          <select id="sort-select" onchange="location = this.value;">
+            <option class="custom_option sort-date" value="?sort=date">최신순</option>
+            <option class="custom_option sort-likes" value="?sort=likes">좋아요순</option>
+            <option class="custom_option sort-comments" value="?sort=comments">댓글순</option>
+          </select>
+        </div>
         {% for post in posts_sort %}
-          <hr>
-          <div class='px-4'>
-            <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
-            <a class='text-decoration-none text-muted' href="#">{{post.user.username}}</a>
-            <a class='text-decoration-none' href="{% url 'posts:detail' post.pk %}">
-              <h3 class='text-dark'>{{post.title}}</h3>
-              <p class='post_content text-muted'>{{post.content}}</p>
-            </a>
+          <div>
+            <div class='px-4'>
+              <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+              <a class='text-decoration-none text-muted' href="{%url 'accounts:detail' post.user.pk%}">{{post.user.username}}</a>
+              <a class='text-decoration-none' href="{% url 'posts:detail' post.pk %}">
+                <h3 class='text-dark mt-3'>{{post.title}}</h3>
+                <p class='post_content text-muted'>{{post.content}}</p>
+              </a>
+              <div class='d-flex justify-content-between'>
+                <p class='post_info'>{{post.created_at}}
+                </p>
+                <p class='post_info'>
+                  <i class="bi bi-eye"></i>{{post.hits}}
+                  <i class="bi bi-hand-thumbs-up"></i>{{post.like.count}}
+                </p>
+              </div>
+            </div>
           </div>
           <hr>
+
         {% endfor %}
       </div>
     </div>
   </div>
-  <select id="sort-select" onchange="location = this.value;">
-    <option class="sort-date" value="?sort=date">최신순</option>
-    <option class="sort-likes" value="?sort=likes">좋아요순</option>
-    <option class="sort-comments" value="?sort=comments">댓글순</option>
-  </select>
 
   <script>
-        // get url query string
+    // get url query string
     var getUrlParameter = function getUrlParameter(sParam) {
-        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-            sURLVariables = sPageURL.split('&'),
-            sParameterName,
-            i;
+      var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
 
-        for (i = 0; i < sURLVariables.length; i++) {
-            sParameterName = sURLVariables[i].split('=');
+      for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
 
-            if (sParameterName[0] === sParam) {
-                return sParameterName[1] === undefined ? true : sParameterName[1];
-            }
+        if (sParameterName[0] === sParam) {
+          return sParameterName[1] === undefined
+            ? true
+            : sParameterName[1];
         }
+      }
     };
     // 정렬방식 셀렉트 박스 유지
-    $(document).ready(function(){
+    $(document).ready(function () {
       var sort = getUrlParameter('sort');
-      if(sort == 'likes'){
+      if (sort == 'likes') {
         $('.sort-likes').prop('selected', 'selected')
-      }else if(sort == 'comments'){
+      } else if (sort == 'comments') {
         $('.sort-comments').prop('selected', 'selected')
-      }else{
+      } else {
         $('.sort-date').prop('selected', 'selected')
       }
     });
   </script>
-{% endblock content %}
 
+{% endblock content %}

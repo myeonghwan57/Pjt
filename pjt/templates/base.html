@@ -61,7 +61,7 @@
           </div>
         </nav>
         {% if request.user.is_authenticated %}
-        <span><a href="{% url 'accounts:detail' user.pk %}">{{ user.username }}</a>님, 어서오세요!</span>
+        <span><a class='text-decoration-none'href="{% url 'accounts:detail' request.user.pk %}">{{ request.user.username }}</a>님, 어서오세요!</span>
         {% else %}
         <span>방문해주셔서 감사합니다! 서비스를 이용하시려면 <a href="{% url 'accounts:signup' %} ">회원가입</a> 또는 <a href="{% url 'accounts:login' %} ">로그인</a>을 해주세요. 😎</span>
         {% endif %}
