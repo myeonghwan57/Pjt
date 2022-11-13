@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "social_django",
     "accounts",
     "articles",
     "posts",
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # social
-    "social_django",
+    
 ]
 
 MIDDLEWARE = [

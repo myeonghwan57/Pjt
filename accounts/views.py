@@ -6,6 +6,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import get_user_model, get_user, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+
 import os, requests
 from django.core.files.base import ContentFile
 from . import forms, models
@@ -14,6 +15,7 @@ from dotenv import load_dotenv
 from django.urls import reverse
 from posts.models import Post, Comment
 from .models import User
+
 # Create your views here.
 def signup(request):
     if request.method == "POST":
