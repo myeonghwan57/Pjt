@@ -184,15 +184,14 @@ def github_login_callback(request):
         # if bio is None:
         #     raise GithubException("Can't get bio from profile_request")
 
-        check_users = User.objects.all()
-        overlap = False
+        # overlap = False
 
-        for i in check_users:
-            if i.username == username:
-                overlap = True
+        # for i in check_users:
+        #     if i.username == username:
+        #         overlap = True
 
-        if overlap == True:
-            raise OverlapException("가입된 아이디가 있습니다.")
+        # if overlap == True:
+        #     raise OverlapException("가입된 아이디가 있습니다.")
 
         try:
             user = models.User.objects.get(username=username)
