@@ -44,16 +44,16 @@
           </div>
         {% endif %}
       </div>
-      <!-- 즐겨찾기 -->
+      <!-- 좋아요 -->
       {% if user.is_authenticated %}
         {% if request.user in post.like.all %}
-          <button type="button" style="opacity: 0.8;" data-post-id='{{ post.pk }}' id='fav-btn' class="btn post_detail_bookmark_btn bi bi-star-fill"></button>
+          <button type="button" style="opacity: 0.8;" data-post-id='{{ post.pk }}' id='fav-btn' class="btn post_detail_bookmark_btn bi bi-hand-thumbs-up-fill"></button>
         {% else %}
-          <button type="button" id='fav-btn' data-post-id='{{ post.pk }}' style="opacity: 0.8;" class=" btn post_detail_bookmark_btn bi bi-star"></button>
+          <button type="button" id='fav-btn' data-post-id='{{ post.pk }}' style="opacity: 0.8;" class=" btn post_detail_bookmark_btn bi bi-hand-thumbs-up"></button>
         {% endif %}
 
         <span id='fav-count' class="text-center">{{ post.like.count }}</span>
-        <span class="text-center">즐겨찾기</span>
+        <span class="text-center">좋아요</span>
       {% endif %}
     </div>
     <hr>
@@ -137,20 +137,20 @@
           event
             .target
             .classList
-            .add('bi-star-fill')
+            .add('bi-hand-thumbs-up-fill')
           event
             .target
             .classList
-            .remove('bi-star')
+            .remove('bi-hand-thumbs-up')
         } else {
           event
             .target
             .classList
-            .add('bi-star')
+            .add('bi-hand-thumbs-up')
           event
             .target
             .classList
-            .remove('bi-star-fill')
+            .remove('bi-hand-thumbs-up-fill')
         }
         const favCount = document.querySelector('#fav-count')
         favCount.innerText = response.data.likes_count
