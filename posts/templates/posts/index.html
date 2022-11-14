@@ -6,53 +6,38 @@
     <h2 class='my-4' style='color:#7689DE'>
       <img src="{% static '/images/crown.png' %}" alt="" style="width:70px; height:70px;">현재 커뮤니티 인기글
     </h2>
-    <form action="" method="POST">
+    <form class='my-3' action="" method="POST">
       {% csrf_token %}
-      <input class="btn btn-primary" name="tag" type="submit" value="전체">
-      <input class="btn btn-primary" name="tag" type="submit" value="커리어">
-      <input class="btn btn-primary" name="tag" type="submit" value="이직">
-      <input class="btn btn-primary" name="tag" type="submit" value="회사생활">
-      <input class="btn btn-primary" name="tag" type="submit" value="일상">
-      <input class="btn btn-primary" name="tag" type="submit" value="개발">
-      <input class="btn btn-primary" name="tag" type="submit" value="마케팅">
-      <input class="btn btn-primary" name="tag" type="submit" value="HR"> 
+      <input class="btn custom_option mx-1" name="tag" type="submit" value="전체">
+      <input class="btn custom_option mx-1" name="tag" type="submit" value="커리어">
+      <input class="btn custom_option mx-1" name="tag" type="submit" value="이직">
+      <input class="btn custom_option mx-1" name="tag" type="submit" value="회사생활">
+      <input class="btn custom_option mx-1" name="tag" type="submit" value="일상">
+      <input class="btn custom_option mx-1" name="tag" type="submit" value="개발">
+      <input class="btn custom_option mx-1" name="tag" type="submit" value="마케팅">
+      <input class="btn custom_option mx-1" name="tag" type="submit" value="질문">
+      <input class="btn custom_option mx-1" name="tag" type="submit" value="HR">
+      <input class="btn custom_option mx-1" name="tag" type="submit" value="기타">
     </form>
 
     <!-- 현재 인기 게시글-->
+
     <div class='row' style="width:100%;">
-      <div class='col-4'>
-        <div class="card " style="">
-          <div class="card-body text-center" style="height:150px;">
-            <h5 class="card-title fw-bold">글 제목이 들어가는 부분</h5>
-            <div class='d-flex align-items-center justify-content-end my-3'>
-              <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
-              <a class='text-decoration-none text-muted' href="#">작성자</a>
+      {% for instance in instances %}
+        <div class='col-4'>
+          <div class="card " style="">
+            <div class="card-body text-center" style="height:150px;">
+              <h5 class="card-title fw-bold" style="height:70%">
+                <a class='text-decoration-none' href=" {% url 'posts:detail' instance.pk %} ">{{instance.title}}</a>
+              </h5>
+              <div class='d-flex align-items-center justify-content-end my-3'>
+                <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+                <a class='text-decoration-none text-muted' href="{%url 'accounts:detail' instance.user.pk%}">{{instance.user.username}}</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class='col-4'>
-        <div class="card " style="">
-          <div class="card-body text-center" style="height:150px;">
-            <h5 class="card-title fw-bold">글 제목이 들어가는 부분</h5>
-            <div class='d-flex align-items-center justify-content-end my-3'>
-              <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
-              <a class='text-decoration-none text-muted' href="#">작성자</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class='col-4'>
-        <div class="card" style="">
-          <div class="card-body text-center" style="height:150px;">
-            <h5 class="card-title fw-bold">글 제목이 들어가는 부분</h5>
-            <div class='d-flex align-items-center justify-content-end my-3'>
-              <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
-              <a class='text-decoration-none text-muted' href="#">작성자</a>
-            </div>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
 
     <div class='post_write mt-5'>
@@ -76,9 +61,9 @@
             <option class="custom_option sort-comments" value="?sort=comments">댓글순</option>
           </select>
         </div>
-        <div>
+        <div class='box'>
           {% for post in posts_sort %}
-            <div class='px-4'>
+            <div id='box_item' class='px-4'>
               <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
               <a class='text-decoration-none text-muted' href="{%url 'accounts:detail' post.user.pk%}">{{post.user.username}}</a>
               <a class='text-decoration-none' href="{% url 'posts:detail' post.pk %}">
@@ -135,27 +120,27 @@
   </script>
 
   <script>
-    $(document).ready(function(){
-       
-       $(".return-top").hide(); // 탑 버튼 숨김
-       $(function () {
-                     
-         $(window).scroll(function () {
-           if ($(this).scrollTop() > 100) { // 스크롤 내릴 표시
-             $('.return-top').fadeIn();
-           } else {
-             $('.return-top').fadeOut();
-           }
-         });
-                    
-         $('.return-top').click(function () {
-           $('body,html').animate({
-             scrollTop: 0
-           }, 10);  // 탑 이동 스크롤 속도
-           return false;
-         });
-       });
-     
-     });
+    $(document).ready(function () {
+
+      $(".return-top").hide(); // 탑 버튼 숨김
+      $(function () {
+
+        $(window).scroll(function () {
+          if ($(this).scrollTop() > 100) { // 스크롤 내릴 표시
+            $('.return-top').fadeIn();
+          } else {
+            $('.return-top').fadeOut();
+          }
+        });
+
+        $('.return-top').click(function () {
+          $('body,html').animate({
+            scrollTop: 0
+          }, 10); // 탑 이동 스크롤 속도
+          return false;
+        });
+      });
+
+    });
   </script>
 {% endblock content %}

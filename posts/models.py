@@ -6,6 +6,18 @@ from django.conf import settings
 
 # Create your models here.
 class Post(models.Model):
+    tag_choices=(
+        ('전체','전체'),
+        ('커리어','커리어'),
+        ('이직','이직'),
+        ('회사생활','회사생활'),
+        ('일상','일상'),
+        ('개발','개발'),
+        ('마케팅','마케팅'),
+        ('질문','질문'),
+        ('HR','HR'),
+        ('기타','기타'),
+    )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=""
     )
@@ -14,7 +26,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="like_posts")
     hits = models.PositiveBigIntegerField(default=1, verbose_name="조회수")
-    tag = models.CharField(max_length=50)
+    tag = models.CharField(max_length=50, choices=tag_choices)
 
 
 class Comment(models.Model):
