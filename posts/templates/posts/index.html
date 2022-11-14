@@ -3,9 +3,42 @@
 {% load static %}
 {% block content %}
   <div class='post_index container'>
-    <h2 class='my-4' style='color:#7689DE'>
+    <h2 class='mt-4' style='color:#7689DE'>
       <img src="{% static '/images/crown.png' %}" alt="" style="width:70px; height:70px;">현재 커뮤니티 인기글
     </h2>
+
+    <!-- 현재 인기 게시글-->
+    <div class='row p-5 rounded' style="width:100%; background-color: #A9DCE3;">
+      {% for instance in instances %}
+        <div class='col-4'>
+          <div class="card " style="">
+            <div class="card-body text-center" style="height:150px;">
+              <h5 class="card-title fw-bold" style="height:60%">
+                <a class='text-decoration-none' href=" {% url 'posts:detail' instance.pk %} ">{{instance.title}}</a>
+              </h5>
+              <div class='d-flex align-items-center justify-content-end my-3'>
+                {% if user.profile %}
+                  <a href="{%url 'accounts:detail' instance.user.pk%}"><img class='post_profile_img mx-1' src="{{ user.profile.url }}" alt=""></a>
+                {% else %}
+                  <a href="{%url 'accounts:detail' instance.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+                {% endif %}
+                <a class='text-decoration-none text-muted' href="{%url 'accounts:detail' instance.user.pk%}">{{instance.user.username}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <!--게시글 작성 -->
+    <div class='post_write my-4'>
+      <div class='post_write_box'>
+        <a class="text-decoration-none text-dark" href="{% url 'posts:create' %}">면접 본 후기, 면접 본 회사에 대한 의견을 자유롭게 작성해보세요!</a>
+        <a href="{% url 'posts:create' %}">
+          <i class="bi bi-pencil-fill"></i>
+        </a>
+      </div>
+    </div>
+    <!--태그별 -->
     <form class='my-3' action="" method="POST">
       {% csrf_token %}
       <input class="btn custom_option mx-1" name="tag" type="submit" value="전체">
@@ -20,39 +53,12 @@
       <input class="btn custom_option mx-1" name="tag" type="submit" value="기타">
     </form>
 
-    <!-- 현재 인기 게시글-->
-
-    <div class='row' style="width:100%;">
-      {% for instance in instances %}
-        <div class='col-4'>
-          <div class="card " style="">
-            <div class="card-body text-center" style="height:150px;">
-              <h5 class="card-title fw-bold" style="height:70%">
-                <a class='text-decoration-none' href=" {% url 'posts:detail' instance.pk %} ">{{instance.title}}</a>
-              </h5>
-              <div class='d-flex align-items-center justify-content-end my-3'>
-                <a href="#"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
-                <a class='text-decoration-none text-muted' href="{%url 'accounts:detail' instance.user.pk%}">{{instance.user.username}}</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-
-    <div class='post_write mt-5'>
-      <div class='post_write_box'>
-        <a class="text-decoration-none text-dark" href="{% url 'posts:create' %}">면접 본 후기, 면접 본 회사에 대한 의견을 자유롭게 작성해보세요!</a>
-        <a href="{% url 'posts:create' %}">
-          <i class="bi bi-pencil-fill"></i>
-        </a>
-      </div>
-    </div>
-
     <div class='post_list row justify-content-end my-3'>
+      <hr>
       <div class="col-3">
         <div>검색어 순위</div>
       </div>
+      <!--게시글 목록 -->
       <div class='col-9'>
         <div class='custom_select' style="float: right;">
           <select id="sort-select" onchange="location = this.value;">
@@ -64,7 +70,11 @@
         <div class='box'>
           {% for post in posts_sort %}
             <div id='box_item' class='px-4'>
-              <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+              {% if user.profile %}
+                <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{{ user.profile.url }}" alt=""></a>
+              {% else %}
+                <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+              {% endif %}
               <a class='text-decoration-none text-muted' href="{%url 'accounts:detail' post.user.pk%}">{{post.user.username}}</a>
               <a class='text-decoration-none' href="{% url 'posts:detail' post.pk %}">
                 <h3 class='text-dark mt-3'>{{post.title}}</h3>
