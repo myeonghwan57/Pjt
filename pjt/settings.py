@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # social
-    
 ]
 
 MIDDLEWARE = [
@@ -61,7 +60,7 @@ MIDDLEWARE = [
 ]
 # social
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.github.GithubOAuth2', # <-- 깃허브
+    "social_core.backends.github.GithubOAuth2",  # <-- 깃허브
     "django.contrib.auth.backends.ModelBackend",  # <-- Django 시스템 사용자로 로그인
     "social_core.backends.google.GoogleOAuth2",  # <-- 구글
 )
@@ -77,6 +76,16 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = (
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
+SOCIAL_AUTH_PIPELINE = (
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.social_user",
+    "social_core.pipeline.user.create_user",
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+    "social_core.pipeline.user.user_details",
+    "accounts.pipelines.save_login_method",
+)
 ROOT_URLCONF = "pjt.urls"
 
 TEMPLATES = [

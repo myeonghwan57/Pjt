@@ -18,19 +18,23 @@
         </p>
         <div style="margin: 0 auto; width:50%;">
           <p>
-            <span class="main_color1">이름: </span>
+            <span class="main_color1">이름:
+            </span>
             <span>{{ user.username }}</span>
           </p>
-          
+
           <p><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}"></p>
           {% if user.email %}
-            <p class="main_color2 fw-bold"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}"> {{ user.email }}</p>
+            <p class="main_color2 fw-bold"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}">
+              {{ user.email }}</p>
           {% else %}
-            <p class="main_color2"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}"> 이메일 주소를 등록해주세요.</p>
+            <p class="main_color2"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}">
+              이메일 주소를 등록해주세요.</p>
           {% endif %}
         </div>
         {% if user.career == 0 %}
-          <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/0.png'%}"> 신입 개발자</p>
+          <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/0.png'%}">
+            신입 개발자</p>
           <p>
             <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
             <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
@@ -42,7 +46,7 @@
           <div>
             <!-- 1~4년차 -->
             {% if user.career > 0 and user.career < 5 %}
-            <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/1.png'%}">{{ user.career }}년 경력, 초급 개발자</p>
+              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/1.png'%}">{{ user.career }}년 경력, 초급 개발자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
@@ -50,7 +54,8 @@
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 5~8년차 -->
             {% elif user.career > 4 and user.career < 9 %}
-              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/2.png'%}"> {{ user.career }}년 경력, 중급 개발자</p>
+              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/2.png'%}">
+                {{ user.career }}년 경력, 중급 개발자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
@@ -58,7 +63,8 @@
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 9~12년차 -->
             {% elif user.career > 8 and user.career < 13 %}
-              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/3.png'%}"> {{ user.career }}년 경력, 고급 개발자</p>
+              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/3.png'%}">
+                {{ user.career }}년 경력, 고급 개발자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
@@ -66,7 +72,8 @@
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 13~16년차 -->
             {% elif user.career > 12 and user.career < 17 %}
-            <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/4.png'%}"> {{ user.career }}년 경력, 고급 개발자/관리자</p>
+              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/4.png'%}">
+                {{ user.career }}년 경력, 고급 개발자/관리자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
@@ -74,7 +81,8 @@
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 17년 이상 -->
             {% else %}
-            <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/5.png'%}"> {{ user.career }}년 경력, 고급 개발자/관리자/임원</p>
+              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/5.png'%}">
+                {{ user.career }}년 경력, 고급 개발자/관리자/임원</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
@@ -83,62 +91,66 @@
             {% endif %}
           </div>
         {% endif %}
-        </div>
-      
+      </div>
+
       <!-- 오른쪽 화면 -->
       <div class="col-6 ms-5" style="border: 1px solid">
         <div style="height:50%;">
           <h4 class="main_color2 fw-bold">{{ user.username }}님이 작성한 글 목록</h3>
           {% for post in posts %}
-          <span>{{ forloop.counter }}번째 글:</span>
-          <span>
-            <a href="{% url 'posts:detail' post.pk%}">
-              {{ post.title }}
-            </a>
-          </span>
+            <span>{{ forloop.counter }}번째 글:</span>
+            <span>
+              <a href="{% url 'posts:detail' post.pk%}">
+                {{ post.title }}
+              </a>
+            </span>
             <br>
           {% endfor %}
         </div>
-        
+
         <div style="height:50%;">
           <h4 class="main_color2 fw-bold">{{ user.username }}님이 작성한 댓글 목록</h3>
 
           {% for comment in comments %}
-          <a href="{% url 'posts:detail' comment.article.pk%}">
-            {{ forloop.counter }}번째 댓글: {{ comment.content }}
-          </a>
-          <br>
-            {% endfor %}
-          </div>
+            <a href="{% url 'posts:detail' comment.article.pk%}">
+              {{ forloop.counter }}번째 댓글:
+              {{ comment.content }}
+            </a>
+            <br>
+          {% endfor %}
         </div>
       </div>
+    </div>
 
-  
     <!-- 버튼 그룹 -->
     <p class="text-center mt-4">
       <a class="btn btn-outline-primary" href="{% url 'accounts:update' %}">수정</a>
       <a class="btn btn-outline-success" href="{% url 'accounts:change_password' %}">비밀번호 변경</a>
       <a class="btn login_btn" href="{% url 'articles:index' %}">홈으로 돌아가기</a>
       <!-- Button trigger modal -->
-<button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  회원탈퇴
-</button>
+      <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        회원탈퇴
+      </button>
     </p>
   </div>
-  
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">정말로 탈퇴하시겠습니까?</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="text-center">
-        <Button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</Button>
-        <a class="btn btn-primary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">정말로 탈퇴하시겠습니까?</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="text-center">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+          {% if request.user.login_method == 'email' %}
+            <a class="btn btn-primary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
+          {% else %}
+            <a class="btn btn-primary" href="{% url 'accounts:delete' request.user.pk%}">예</a>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
-</div>
 {% endblock content %}

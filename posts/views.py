@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from datetime import date, datetime, timedelta
 from django.db import transaction
 from django.db.models import Count
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
 
 # Create your views here.
 
@@ -14,16 +14,21 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 def index(request):
     posts = Post.objects.all()
     sort = request.GET.get('sort','') #url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
-    
+
+    if request.method == 'POST':
+        posts = Post.objects.filter(tag__contains = request.POST.get('tag'))
+        if request.POST.get('tag') == '전체':
+            posts = Post.objects.all()
+
     if sort == 'likes':
-        posts_sort = Post.objects.annotate(like_count=Count('like')).order_by('-like_count', '-created_at')
+        posts_sort = posts.annotate(like_count=Count('like')).order_by('-like_count', '-created_at')
         return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,})
     elif sort == 'comments':
-        posts_sort = Post.objects.annotate(comment_count=Count('comment')).order_by('-comment_count', '-created_at')
+        posts_sort = posts.annotate(comment_count=Count('comment')).order_by('-comment_count', '-created_at')
         return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,})
     
     else:
-        posts_sort = Post.objects.order_by('-created_at')
+        posts_sort = posts.order_by('-created_at')
         return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,})
 
 @login_required
