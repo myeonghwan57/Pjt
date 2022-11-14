@@ -7,12 +7,14 @@ from datetime import date, datetime, timedelta
 from django.db import transaction
 from django.db.models import Count
 
+
 # Create your views here.
 
 @login_required
 def index(request):
     posts = Post.objects.all()
     sort = request.GET.get('sort','') #url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
+
     if request.method == 'POST':
         posts = Post.objects.filter(tag__contains = request.POST.get('tag'))
         if request.POST.get('tag') == '전체':
