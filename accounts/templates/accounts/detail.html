@@ -2,39 +2,41 @@
 {% load static %}
 {% block content %}
   <div class="container mt-3">
-    <h1 class="main_color1 fw-bold mt-3 mb-3 text-center">마이페이지</h1>
+    <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;"> 마이페이지</h1>
     <hr>
 
     <div class="row mt-5">
       <!-- 왼쪽 화면 -->
       <div class="col-5">
-        <h2 class="main_color2 mb-3 fw-bold text-center">나의 프로필</h2>
+        <h4 class="main_color2 mb-3 fw-bold text-center">나의 프로필</h4>
         <p class="text-center">
           {% if user.profile %}
-            <img style='height:200px;width:200px;' src="{{ user.profile.url }}" alt="{{ user.profile }}">
+            <img style='height:180px;width:180px;' src="{{ user.profile.url }}" alt="{{ user.profile }}">
           {% else %}
-            <img style='height:200px;width:200px;' src="{% static '/images/profile/user.png'%}" alt="user">
+            <img style='height:180px;width:180px;' src="{% static '/images/profile/user.png'%}" alt="user">
           {% endif %}
         </p>
         <div style="margin: 0 auto; width:50%;">
           <p>
-            <span class="main_color1">이름:
-            </span>
-            <span>{{ user.username }}</span>
+            <img style='height:30px;width:30px;' src="{% static '/images/id.png'%}">
+            <span class="main_color1 align-middle fw-bold"> {{ user.username }}</span>
           </p>
 
-          <p><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}"></p>
-          {% if user.email %}
-            <p class="main_color2 fw-bold"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}">
-              {{ user.email }}</p>
+          <!-- Github 주소 등록 부분 수정 필요 -->
+          {% if user.github %}
+          <p class="main_color1 fw-bold"><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}"> {{ user.github }}</p>
           {% else %}
-            <p class="main_color2"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}">
-              이메일 주소를 등록해주세요.</p>
+          <p><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}"><a href="{% url 'accounts:update' %}" style="text-decoration: none;" class="main_color2"> Github 주소를 등록해주세요.</a></p>
+          {% endif %}
+
+          {% if user.email %}
+            <p class="main_color1 fw-bold"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}"> {{ user.email }}</p>
+          {% else %}
+            <p class="main_color2"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}"><a href="{% url 'accounts:update' %}" style="text-decoration: none;" class="main_color2"> 이메일 주소를 등록해주세요.</a></p>
           {% endif %}
         </div>
         {% if user.career == 0 %}
-          <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/0.png'%}">
-            신입 개발자</p>
+          <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/0.png'%}"> 신입 개발자</p>
           <p>
             <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
             <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
@@ -46,7 +48,7 @@
           <div>
             <!-- 1~4년차 -->
             {% if user.career > 0 and user.career < 5 %}
-              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/1.png'%}">{{ user.career }}년 경력, 초급 개발자</p>
+            <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/1.png'%}">{{ user.career }}년 경력, 초급 개발자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
@@ -54,8 +56,7 @@
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 5~8년차 -->
             {% elif user.career > 4 and user.career < 9 %}
-              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/2.png'%}">
-                {{ user.career }}년 경력, 중급 개발자</p>
+              <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/2.png'%}"> {{ user.career }}년 경력, 중급 개발자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
@@ -63,8 +64,7 @@
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 9~12년차 -->
             {% elif user.career > 8 and user.career < 13 %}
-              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/3.png'%}">
-                {{ user.career }}년 경력, 고급 개발자</p>
+              <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/3.png'%}"> {{ user.career }}년 경력, 고급 개발자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
@@ -72,8 +72,7 @@
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 13~16년차 -->
             {% elif user.career > 12 and user.career < 17 %}
-              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/4.png'%}">
-                {{ user.career }}년 경력, 고급 개발자/관리자</p>
+            <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/4.png'%}"> {{ user.career }}년 경력, 고급 개발자/관리자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
@@ -81,8 +80,7 @@
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 17년 이상 -->
             {% else %}
-              <p class="text-center fw-bold mt-3"><img style='height:60px;width:60px;' src="{% static '/images/5.png'%}">
-                {{ user.career }}년 경력, 고급 개발자/관리자/임원</p>
+            <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/5.png'%}"> {{ user.career }}년 경력, 고급 개발자/관리자/임원</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
@@ -94,30 +92,31 @@
       </div>
 
       <!-- 오른쪽 화면 -->
-      <div class="col-6 ms-5" style="border: 1px solid">
+      <div class="col-6 ms-5">
         <div style="height:50%;">
-          <h4 class="main_color2 fw-bold">{{ user.username }}님이 작성한 글 목록</h3>
+          <h5 class="main_color2 fw-bold">{{ user.username }}님이 작성한 글: 총 {{ user.post_set.count }}개</h5>
           {% for post in posts %}
-            <span>{{ forloop.counter }}번째 글:</span>
-            <span>
-              <a href="{% url 'posts:detail' post.pk%}">
-                {{ post.title }}
-              </a>
-            </span>
+          <span class="text-muted"><i class="bi bi-pencil-fill"></i> {{ forloop.counter }}번째 글: </span>
+          <span>
+            <a href="{% url 'posts:detail' post.pk%}">
+              {{ post.title }}
+            </a>
+          </span>
             <br>
           {% endfor %}
         </div>
 
         <div style="height:50%;">
-          <h4 class="main_color2 fw-bold">{{ user.username }}님이 작성한 댓글 목록</h3>
+          <h5 class="main_color2 fw-bold">{{ user.username }}님이 작성한 댓글: 총 {{ user.comment_set.count }}개</h5>
 
           {% for comment in comments %}
-            <a href="{% url 'posts:detail' comment.article.pk%}">
-              {{ forloop.counter }}번째 댓글:
-              {{ comment.content }}
-            </a>
-            <br>
-          {% endfor %}
+          <span class="text-muted"><i class="bi bi-pencil-fill"></i> {{ forloop.counter }}번째 댓글: </span>
+          <a href="{% url 'posts:detail' comment.article.pk%}">
+             {{ comment.content }}
+          </a>
+          <br>
+            {% endfor %}
+          </div>
         </div>
       </div>
     </div>
