@@ -74,9 +74,23 @@
                 {% csrf_token %}
                 <input class="btn btn-primary" type="submit" value="삭제">
               </form>
+              
+              <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#comment" aria-expanded="false" aria-controls="collapseExample">
+                수정
+              </button>
             {% endif %}
           </div>
         </div>
+        {% comment %} 댓글수정 {% endcomment %}
+        {% if request.user == comment.user %}  
+        <div class="collapse" id="comment">
+          <form action="{% url 'posts:comments_update' post.pk comment.pk %}" method="POST" class="align-self-center">
+            {% csrf_token %}
+            {% bootstrap_form comment_form %}
+            <input class="btn btn-primary" type="submit" value="수정">
+          </form>
+        </div>
+        {% endif %}
         <hr>
 
         <!-- 대댓글 반복 -->
@@ -95,9 +109,23 @@
                   {% csrf_token %}
                   <input class="btn btn-primary" type="submit" value="삭제">
                 </form>
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#recomment" aria-expanded="false" aria-controls="collapseExample">
+                  수정
+                </button>
+                
               {% endif %}
-            </div>
+            </div>  
           </div>
+          {% if request.user == recom.user %}
+            <div class="collapse" id="recomment">
+              {% comment %} 답글수정 {% endcomment %}
+              <form action="{% url 'posts:recomments_update' post.pk comment.pk recom.pk%}" method="POST" class="align-self-center">
+                {% csrf_token %}
+                {% bootstrap_form recomment_form %}
+                <input class="btn btn-primary" type="submit" value="수정">
+              </form>
+            </div>
+            {% endif %}
           <hr>
         {% endfor %}
         <div class="px-3 my-3 collapse" id="collapse{{comment.pk}}">
