@@ -89,8 +89,8 @@
             {% endif %}
           </div>
         {% endif %}
-        </div>
-      
+      </div>
+
       <!-- 오른쪽 화면 -->
       <div class="col-6 ms-5">
         <div style="height:50%;">
@@ -105,7 +105,7 @@
             <br>
           {% endfor %}
         </div>
-        
+
         <div style="height:50%;">
           <h5 class="main_color2 fw-bold">{{ user.username }}님이 작성한 댓글: 총 {{ user.comment_set.count }}개</h5>
 
@@ -119,33 +119,37 @@
           </div>
         </div>
       </div>
+    </div>
 
-  
     <!-- 버튼 그룹 -->
     <p class="text-center mt-4">
       <a class="btn btn-outline-primary" href="{% url 'accounts:update' %}">수정</a>
       <a class="btn btn-outline-success" href="{% url 'accounts:change_password' %}">비밀번호 변경</a>
       <a class="btn login_btn" href="{% url 'articles:index' %}">홈으로 돌아가기</a>
       <!-- Button trigger modal -->
-<button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  회원탈퇴
-</button>
+      <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        회원탈퇴
+      </button>
     </p>
   </div>
-  
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">정말로 탈퇴하시겠습니까?</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="text-center">
-        <Button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</Button>
-        <a class="btn btn-primary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">정말로 탈퇴하시겠습니까?</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="text-center">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+          {% if request.user.login_method == 'email' %}
+            <a class="btn btn-primary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
+          {% else %}
+            <a class="btn btn-primary" href="{% url 'accounts:delete' request.user.pk%}">예</a>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
-</div>
 {% endblock content %}
