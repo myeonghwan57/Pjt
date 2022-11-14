@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CustomUserCreationForm, CustomUserChangeForm, CheckPasswordForm
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
@@ -6,6 +6,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import get_user_model, get_user, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.decorators import login_required
 
 import os, requests
 from django.core.files.base import ContentFile
@@ -202,6 +203,7 @@ def github_login_callback(request):
             user = models.User.objects.create(
                 username=username,
                 login_method=models.User.LOGIN_GITHUB,
+                githuburl=f"http://github.com/{username}",
             )
 
             user.set_unusable_password()
@@ -220,3 +222,19 @@ def github_login_callback(request):
     except OverlapException as error:
         messages.error(request, error)
         return redirect(reverse("articles:index"))
+
+
+@login_required
+def follow(request, user_pk):
+    # 프로필에 해당하는 유저를 로그인한 유저가!
+    user = get_object_or_404(get_user_model(), pk=user_pk)
+    if request.user == user:
+        messages.warning(request, "스스로 팔로우 할 수 없습니다.")
+        return redirect("accounts:detail", user_pk)
+    if request.user in user.followers.all():
+        # (이미) 팔로우 상태이면, '팔로우 취소'버튼을 누르면 삭제 (remove)
+        user.followers.remove(request.user)
+    else:
+        # 팔로우 상태가 아니면, '팔로우'를 누르면 추가 (add)
+        user.followers.add(request.user)
+    return redirect("accounts:detail", user_pk)

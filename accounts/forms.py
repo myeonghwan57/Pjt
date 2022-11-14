@@ -26,15 +26,11 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = get_user_model()
-        fields = (
-            "username",
-            "profile",
-            "career",
-            "email",
-        )
+        fields = ("username", "profile", "career", "email", "githuburl")
         labels = {
             "profile": "프로필 사진",
             "career": "경력(년차)",
+            "githuburl": "Github 주소",
         }
 
 
