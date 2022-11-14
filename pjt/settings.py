@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "articles",
     "posts",
     "imagekit",
+    "import_export",
     "django_bootstrap5",
     "django.contrib.admin",
     "django.contrib.auth",
