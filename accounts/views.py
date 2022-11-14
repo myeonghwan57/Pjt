@@ -10,7 +10,7 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 import os, requests
 from django.core.files.base import ContentFile
 from . import forms, models
-from .exception import GithubException,SocialLoginException, OverlapException
+from .exception import GithubException, SocialLoginException, OverlapException
 from dotenv import load_dotenv
 from django.urls import reverse
 from posts.models import Post, Comment
@@ -114,14 +114,16 @@ def delete_checker(request, pk):
     return render(request, "accounts/pw_check.html", context)
 
 
-# def delete(request, pk):
-#     user = get_user_model().objects.get(pk=pk)
-#     if request.user == user:
-#         user.delete()
-#         auth_logout(request)
-#     else:
-#         messages.warning(request, "삭제는 본인만 가능합니다.")
-#     return redirect("articles:index")
+def social_delete(request, pk):
+    user = get_user_model().objects.get(pk=pk)
+    if request.user == user:
+        user.delete()
+        auth_logout(request)
+    else:
+        messages.warning(request, "삭제는 본인만 가능합니다.")
+    return redirect("articles:index")
+
+
 def github_login(request):
     load_dotenv()
     try:
@@ -192,7 +194,6 @@ def github_login_callback(request):
         if overlap == True:
             raise OverlapException("가입된 아이디가 있습니다.")
 
-        
         try:
             user = models.User.objects.get(username=username)
 
@@ -208,7 +209,7 @@ def github_login_callback(request):
             user.save()
             messages.success(request, f"{user.email} logged in with Github")
 
-        auth_login(request, user, backend='social_core.backends.github.GithubOAuth2')
+        auth_login(request, user, backend="social_core.backends.github.GithubOAuth2")
         return redirect(reverse("articles:index"))
     except GithubException as error:
         messages.error(request, error)
