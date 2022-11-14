@@ -33,3 +33,5 @@ class User(AbstractUser):
     @property
     def full_name(self):
         return f"{self.last_name}{self.first_name}"
+
+    githuburl = models.URLField(max_length=200, blank=True)
