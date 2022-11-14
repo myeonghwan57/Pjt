@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model, get_user, update_session_auth_ha
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 import os, requests
 from django.core.files.base import ContentFile
@@ -37,12 +38,21 @@ def signup(request):
 
 def detail(request, pk):
     user = get_user_model().objects.get(pk=pk)
+
     posts = user.post_set.all()
+    posts_paginator = Paginator(posts, 8)
+    posts_page = request.GET.get("page")
+    posts_ls = posts_paginator.get_page(posts_page)
+
     comments = user.comment_set.all()
+    comments_paginator = Paginator(comments, 8)
+    comments_page = request.GET.get("page")
+    comments_ls = comments_paginator.get_page(comments_page)
+
     context = {
         "user": user,
-        "posts": posts,
-        "comments": comments,
+        "posts": posts_ls,
+        "comments": comments_ls,
     }
     return render(request, "accounts/detail.html", context)
 

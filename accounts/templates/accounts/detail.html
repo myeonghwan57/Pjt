@@ -127,6 +127,19 @@
             </span>
             <br>
           {% endfor %}
+          <div class="text-end">
+            {% if posts.has_previous %}
+              <a href="?page=1">&laquo;</a>
+              <a href="?page={{posts.previous_page_number}}">prev</a>
+            {% endif %}
+            <span>{{posts.number}}</span>
+            <span>/</span>
+            <span>{{posts.paginator.num_pages}}</span>
+            {% if posts.has_next %}
+              <a href="?page={{posts.next_page_number}}">next</a>
+              <a href="?page={{posts.paginator.num_pages}}">&raquo;</a>
+            {% endif %}
+          </div>
         </div>
 
         <div style="height:50%;">
@@ -143,6 +156,19 @@
             </a>
             <br>
           {% endfor %}
+          <div class="text-end">
+            {% if comments.has_previous %}
+              <a href="?page=1">&laquo;</a>
+              <a href="?page={{comments.previous_page_number}}">prev</a>
+            {% endif %}
+            <span>{{comments.number}}</span>
+            <span>/</span>
+            <span>{{comments.paginator.num_pages}}</span>
+            {% if comments.has_next %}
+              <a href="?page={{comments.next_page_number}}">next</a>
+              <a href="?page={{comments.paginator.num_pages}}">&raquo;</a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
