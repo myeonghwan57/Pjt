@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row">
+      <!-- 게시글 -->
+      <div class="col-sm-9">
+        <div class="container d-flex flex-column justify-content-center mt-5 mb-3 p-5 rounded-4 shadow">
+          <div class="d-flex justify-content-between align-middle align-items-end">
+            <h2 class="fs-1 text-center">
+              <span class="fw-bold">
+                {{ jobs.job_name }}
+              </span>
+              <span class="fs-3 text-muted d-inline-block text-truncate" style="max-width: 350px;">
+                | {{ jobs.position }}
+              </span>
+            </h2>
+            <p class="mb-0 fs-5 text-muted">{{ jobs.pseudo_position }}</p>
+          </div>
+          <hr class="mt-2">
+            <div class="d-flex justify-content-center">
+              <img src="{% static 'images/0.png' %}" class="container">
+            </div>
+          <p class="fs-5 mt-3 mb-5 px-3">{{ jobs.company_job }}</p>
+          <hr>
+
+            <!-- 공유 -->
+            <div class="d-flex flex-column align-items-center me-3">
+              <button class="btn btn-lg p-0 m-0 border-0" data-bs-toggle="modal" data-bs-target="#shareModal">
+                <i class="bi bi-share fs-4"></i>
+              </button>
+              <p>공유</p>
+            </div>
+
+
+
+    <!-- 공유 Modal -->
+    <div class="modal fade" id="shareModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">공유하기</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        <div class="modal-body">
+            <p>다음 링크를 복사해주세요.</p>
+            <p>{{ request.build_absolute_uri }}</p>
+            <!-- 절대 링크 -->
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> <!-- container -->
+
+
+
+{% endblock content %}

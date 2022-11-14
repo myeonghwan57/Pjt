@@ -24,57 +24,7 @@
   </head>
 
   <body>
-    <!-- Navbar -->
-    <div class='wrapper'>
-      <div class="container">
-        <nav class="navbar navbar-expand-lg">
-          <div class="container-fluid">
-            <!-- LOGO -->
-            <a class="navbar-brand" href="{% url 'articles:index' %}"><img src="{% static '/images/logo.png' %}" style="width:50px; height:50px;"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <a class="nav-link fw-bold" aria-current="page" href="{% url 'articles:index' %}">채용</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link fw-bold" href="{% url 'posts:index' %}">커뮤니티</a>
-                </li>
-              </ul>
-              <div class="me-5">
-                <form class="d-flex" role="search">
-                  <input class="form-control me-auto" type="search" placeholder="Search" aria-label="Search" style="width:500px;">
-                  <button class="btn btn-outline-success ms-2" type="submit">검색</button>
-                </form>
-              </div>
-              {% if request.user.is_authenticated %}
-              <a class='btn login_btn ms-auto' href="{%url 'accounts:detail' user.pk %}">마이페이지</a>
-              <a class='btn signup_btn ms-2' href="{%url 'accounts:logout' %}">로그아웃</a>
-              {% else %}
-              <a class='btn login_btn ms-auto' href="{%url 'accounts:login' %}">로그인</a>
-              <a class='btn signup_btn ms-2' href="{%url 'accounts:signup' %}">회원가입</a>
-              {% endif %}
-
-            </div>
-          </div>
-        </nav>
-        {% if request.user.is_authenticated %}
-        <span><a class='text-decoration-none'href="{% url 'accounts:detail' request.user.pk %}">{{ request.user.username }}</a>님, 어서오세요!</span>
-        {% else %}
-        <span>방문해주셔서 감사합니다! 서비스를 이용하시려면 <a href="{% url 'accounts:signup' %} ">회원가입</a> 또는 <a href="{% url 'accounts:login' %} ">로그인</a>을 해주세요. 😎</span>
-        {% endif %}
-
-
-      {% if messages %}
-      {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}">
-        {{ message }}
-      </div>
-      {% endfor %}
-      {% endif %}
-    </div>
+{% include 'navbar.html' %}
 
       <!-- 본문 content block -->
       {% block content %}{% endblock content %}
