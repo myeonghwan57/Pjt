@@ -18,10 +18,12 @@ class User(AbstractUser):
 
     LOGIN_EMAIL = "email"
     LOGIN_GITHUB = "github"
+    LOGIN_GOOGLE = "Google"
 
     LOGIN_CHOICES = (
         (LOGIN_EMAIL, "Email"),
         (LOGIN_GITHUB, "Github"),
+        (LOGIN_GOOGLE, "Google"),
     )
 
     login_method = models.CharField(
