@@ -12,9 +12,9 @@
         <h4 class="main_color2 mb-3 fw-bold text-center">나의 프로필</h4>
         <p class="text-center">
           {% if user.profile %}
-            <img style='height:180px;width:180px;' src="{{ user.profile.url }}" alt="{{ user.profile }}">
+            <img class='rounded-circle' style='height:180px;width:180px;' src="{{ user.profile.url }}" alt="{{ user.profile }}">
           {% else %}
-            <img style='height:180px;width:180px;' src="{% static '/images/profile/user.png'%}" alt="user">
+            <img class='rounded-circle' style='height:180px;width:180px;' src="{% static '/images/profile/user.png'%}" alt="user">
           {% endif %}
         </p>
         <div style="margin: 0 auto; width:50%;">
