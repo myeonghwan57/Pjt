@@ -13,6 +13,7 @@ from django.db.models import Count
 @login_required
 def index(request):
     posts = Post.objects.all()
+    instances = Post.objects.all().order_by('-hits')[:3]
     sort = request.GET.get('sort','') #url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
 
     if request.method == 'POST':
@@ -22,14 +23,14 @@ def index(request):
 
     if sort == 'likes':
         posts_sort = posts.annotate(like_count=Count('like')).order_by('-like_count', '-created_at')
-        return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,})
+        return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,'instances':instances,})
     elif sort == 'comments':
         posts_sort = posts.annotate(comment_count=Count('comment')).order_by('-comment_count', '-created_at')
-        return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,})
+        return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts, 'instances':instances,})
     
     else:
         posts_sort = posts.order_by('-created_at')
-        return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,})
+        return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts, 'instances':instances,})
 
 @login_required
 def create(request):
