@@ -6,6 +6,18 @@
     <h2 class='my-4' style='color:#7689DE'>
       <img src="{% static '/images/crown.png' %}" alt="" style="width:70px; height:70px;">현재 커뮤니티 인기글
     </h2>
+    <form action="" method="POST">
+      {% csrf_token %}
+      <input class="btn btn-primary" name="tag" type="submit" value="전체">
+      <input class="btn btn-primary" name="tag" type="submit" value="커리어">
+      <input class="btn btn-primary" name="tag" type="submit" value="이직">
+      <input class="btn btn-primary" name="tag" type="submit" value="회사생활">
+      <input class="btn btn-primary" name="tag" type="submit" value="일상">
+      <input class="btn btn-primary" name="tag" type="submit" value="개발">
+      <input class="btn btn-primary" name="tag" type="submit" value="마케팅">
+      <input class="btn btn-primary" name="tag" type="submit" value="HR"> 
+    </form>
+
     <!-- 현재 인기 게시글-->
     <div class='row' style="width:100%;">
       <div class='col-4'>

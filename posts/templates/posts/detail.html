@@ -132,7 +132,7 @@
       console.log(event.target.dataset)
       console.log(event.target.dataset.postId)
 
-      axios({method: 'get', url: `http://localhost:8000/posts/${event.target.dataset.postId}/like/`}).then(response => {
+      axios({method: 'get', url: `http://127.0.0.1:8000/posts/${event.target.dataset.postId}/like/`}).then(response => {
         if (response.data.is_likes === true) { // 즐찾 했으면
           event
             .target
