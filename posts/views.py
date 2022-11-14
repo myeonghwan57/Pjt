@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from datetime import date, datetime, timedelta
 from django.db import transaction
 from django.db.models import Count
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 # Create your views here.
 
@@ -13,7 +14,7 @@ from django.db.models import Count
 def index(request):
     posts = Post.objects.all()
     sort = request.GET.get('sort','') #url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
-
+    
     if sort == 'likes':
         posts_sort = Post.objects.annotate(like_count=Count('like')).order_by('-like_count', '-created_at')
         return render(request, 'posts/index.html', {'posts_sort' : posts_sort, 'posts':posts,})
