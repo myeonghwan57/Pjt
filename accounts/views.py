@@ -52,7 +52,7 @@ def detail(request, pk):
     comments_ls = comments_paginator.get_page(comments_page)
 
     now = datetime.now()
-    delta = relativedelta(now, request.user.career)
+    delta = relativedelta(now, user.career)
     context = {
         "user": user,
         "posts": posts_ls,
