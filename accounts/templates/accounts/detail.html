@@ -5,6 +5,7 @@
     <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
       마이페이지</h1>
     <hr>
+
     <div class="row mt-5">
       <!-- 왼쪽 화면 -->
       <div class="col-5">
@@ -47,6 +48,12 @@
                 이메일 주소를 등록해주세요.</a>
             </p>
           {% endif %}
+
+          <!-- ###########추가########## -->
+          <!-- user.post 태그 빈도수 높은 순 세개 호출 -->
+          {% for tag in tagfreq %}
+            {{ tag.tag }}
+          {% endfor %}
         </div>
         {% if delta.years == 0 %}
           <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/0.png'%}">
