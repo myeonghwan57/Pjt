@@ -77,7 +77,7 @@
           {% for tag in tagfreq %}
             {{ tag.tag }}
           {% endfor %}
-          
+
         </div>
         {% if delta.years == 0 %}
           <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/0.png'%}">
@@ -144,21 +144,56 @@
       <!-- 오른쪽 화면 -->
 
       <div class="col-6 ms-5">
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#articles" data-toggle="tab">작성 글</a>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active text-muted" id="home-article" data-bs-toggle="tab" data-bs-target="#article-tab-pane" type="button" role="tab" aria-controls="article-tab-pane" aria-selected="true">작성 글</button>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#comments" data-toggle="tab">댓글단 글</a>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link text-muted" id="comment-tab" data-bs-toggle="tab" data-bs-target="#comment-tab-pane" type="button" role="tab" aria-controls="comment-tab-pane" aria-selected="false">댓글 단 글</button>
           </li>
         </ul>
 
-        <div class="tab-content">
-          <div class="tab-pane fade show active" id="articles">
-            <h5 class="main_color2 fw-bold">{{ user.username }}님이 작성한 글: 총
-              {{ user.post_set.count }}개</h5>
+        <!-- 사용자가 작성한 글 -->
+        <div class="tab-content mt-2" id="myTabContent">
+          <div class="tab-pane fade show active" id="article-tab-pane" role="tabpanel" aria-labelledby="article-tab" tabindex="0">
+            <h5 class="main_color2 fw-bold">총 {{ user.post_set.count }}개</h5>
+
+            {% if user.post_set.count == 0 %}
+            <div class="text-muted">작성한 글이 없습니다.</div>
+            {% else %}
+              <span class="text-muted text-center">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">제목</th>
+                      <th scope="col">작성일자</th>
+                      <th scope="col">태그</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for post in posts %}
+                    <tr>
+                      <td><i class="bi bi-pencil-fill"></i>
+                        <a href="{% url 'posts:detail' post.pk%}" style="text-decoration: none;" class="text-muted">
+                          {{ post.title|truncatechars:20 }}
+                        </a>
+                      </td>
+                      <td>
+                        <a href="{% url 'posts:detail' post.pk%}" style="text-decoration: none;" class="text-muted">
+                        {{ post.created_at }}
+                      </a></td>
+                      <td>
+                        <a href="{% url 'posts:detail' post.pk%}" style="text-decoration: none;" class="text-muted">
+                        {{ post.tag }}
+                      </a></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </span>
+            {% endif %}
             
-            <div class="text-end">
+            <div class="text-center">
               {% if posts.has_previous %}
                 <span><a href="?page={{posts.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a></span>
               {% endif %}
@@ -169,47 +204,42 @@
                 <span><a href="?page={{posts.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a></span>
               {% endif %}
             </div>
-
-            {% for post in posts %}
-              <span class="text-muted">
-                <i class="bi bi-pencil-fill"></i>
-                {{ forloop.counter }}번째 글:
-              </span>
-              <span>
-                <a href="{% url 'posts:detail' post.pk%}" style="text-decoration: none;" class="text-muted">
-                  {{ post.title }}
-                </a>
-              </span>
-              <br>
-            {% endfor %}
+          
+          <!-- 사용자가 작성한 댓글 -->
           </div>
-
-          <div class="tab-pane fade" id="comments" style="height:50%;">
-            <h5 class="main_color2 fw-bold">{{ user.username }}님이 작성한 댓글: 총
-              {{ user.comment_set.count }}개</h5>
-              
-            <div class="text-end">
-              {% if comments.has_previous %}
-                <a href="?page={{comments.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a></a>
-              {% endif %}
-              <span class="text-muted">{{comments.number}}</span>
-              <span class="text-muted">/</span>
-              <span class="text-muted">{{comments.paginator.num_pages}}</span>
-              {% if comments.has_next %}
-                <a href="?page={{comments.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a></a>
-              {% endif %}
-            </div>
-
-            {% for comment in comments %}
-              <span class="text-muted">
-                <i class="bi bi-pencil-fill"></i>
-                {{ forloop.counter }}번째 댓글:
-              </span>
-              <a href="{% url 'posts:detail' comment.article.pk %}" style="text-decoration: none;" class="text-muted">
-                {{ comment.content }}
-              </a>
-              <br>
-            {% endfor %} 
+          <div class="tab-pane fade mt-2" id="comment-tab-pane" role="tabpanel" aria-labelledby="comment-tab" tabindex="0">
+            <h5 class="main_color2 fw-bold">총 {{ user.comment_set.count }}개</h5>
+            
+            {% if user.comment_set.count == 0 %}
+            <div class="text-muted">작성한 댓글이 없습니다.</div>
+            {% else %}
+            <span class="text-muted text-center">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">내용</th>
+                    <th scope="col">작성일자</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for comment in comments %}
+                  <tr>
+                    <td><i class="bi bi-pencil-fill"></i>
+                      <a href="{% url 'posts:detail' comment.article.pk %}" style="text-decoration: none;" class="text-muted">
+                        {{ comment.content|truncatechars:20 }}
+                      </a>
+                    </td>
+                    <td>
+                      <a href="{% url 'posts:detail' comment.article.pk %}" style="text-decoration: none;" class="text-muted">
+                        {{ comment.created_at }}
+                      </a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </span>
+            {% endif %}
           </div>
         </div>
       </div>
