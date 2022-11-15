@@ -4,6 +4,7 @@ from django import forms
 from django.contrib.auth.hashers import check_password
 from .models import Note
 
+
 class DateInput(forms.DateInput):
     input_type = "date"
 
@@ -37,6 +38,7 @@ class CustomUserChangeForm(UserChangeForm):
             "career": "경력(년차)",
             "githuburl": "Github 주소",
         }
+        widgets = {"career": DateInput()}
 
 
 class CheckPasswordForm(forms.Form):
@@ -62,12 +64,17 @@ class CheckPasswordForm(forms.Form):
             if not check_password(password, confirm_password):
                 self.add_error("password", "비밀번호가 일치하지 않습니다.")
 
+
 class NoteForm(forms.ModelForm):
     class Meta:
         model = Note
-        fields = ('receive_user','title','content',)
-        labels={
-            "receive_user":'받는 사람',
-            'title':"글 제목",
-            'content':'글 내용',
+        fields = (
+            "receive_user",
+            "title",
+            "content",
+        )
+        labels = {
+            "receive_user": "받는 사람",
+            "title": "글 제목",
+            "content": "글 내용",
         }
