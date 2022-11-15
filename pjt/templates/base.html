@@ -50,6 +50,7 @@
                 </form>
               </div>
               {% if request.user.is_authenticated %}
+              <a class='btn login_btn ms-auto' href="{%url 'accounts:note' %}" target=”_blank” onClick="window.open(this.href, '', 'width=400, height=430 left=100px,top=100px'); return false;">쪽지함</a>
               <a class='btn login_btn ms-auto' href="{%url 'accounts:detail' user.pk %}">마이페이지</a>
               <a class='btn signup_btn ms-2' href="{%url 'accounts:logout' %}">로그아웃</a>
               {% else %}
