@@ -10,19 +10,19 @@
     <!-- 현재 인기 게시글-->
     <div class='row p-5 rounded' style="width:100%; background-color: #A9DCE3;">
       {% for instance in instances %}
-        <div class='col-4'>
-          <div class="card " style="">
+        <div class='my-1' style='width:400px'>
+          <div class="card" style="">
             <div class="card-body text-center" style="height:150px;">
               <h5 class="card-title fw-bold" style="height:60%">
                 <a class='text-decoration-none' href=" {% url 'posts:detail' instance.pk %} ">{{instance.title}}</a>
               </h5>
               <div class='d-flex align-items-center justify-content-end my-3'>
-                {% if user.profile %}
-                  <a href="{%url 'accounts:detail' instance.user.pk%}"><img class='post_profile_img mx-1' src="{{ user.profile.url }}" alt=""></a>
+                {% if instance.user.profile %}
+                  <a href="{%url 'accounts:detail' instance.user.pk%}"><img class='post_profile_img mx-1' src="{{ instance.user.profile.url }}" alt=""></a>
                 {% else %}
                   <a href="{%url 'accounts:detail' instance.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
                 {% endif %}
-                <a class='text-decoration-none text-muted' href="{%url 'accounts:detail' instance.user.pk%}">{{instance.user.username}}</a>
+                <a class='text-decoration-none text-muted fw-bold' href="{%url 'accounts:detail' instance.user.pk%}">{{instance.user.username}}</a>
               </div>
             </div>
           </div>
@@ -39,27 +39,37 @@
       </div>
     </div>
     <!--태그별 -->
-    <form class='my-3' action="" method="POST">
+    <form class='my-3 ' action="" method="POST">
       {% csrf_token %}
-      <input class="btn custom_option mx-1" name="tag" type="submit" value="전체">
-      <input class="btn custom_option mx-1" name="tag" type="submit" value="커리어">
-      <input class="btn custom_option mx-1" name="tag" type="submit" value="이직">
-      <input class="btn custom_option mx-1" name="tag" type="submit" value="회사생활">
-      <input class="btn custom_option mx-1" name="tag" type="submit" value="일상">
-      <input class="btn custom_option mx-1" name="tag" type="submit" value="개발">
-      <input class="btn custom_option mx-1" name="tag" type="submit" value="마케팅">
-      <input class="btn custom_option mx-1" name="tag" type="submit" value="질문">
-      <input class="btn custom_option mx-1" name="tag" type="submit" value="HR">
-      <input class="btn custom_option mx-1" name="tag" type="submit" value="기타">
+      <input class="btn custom_option m-1" name="tag" type="submit" value="전체">
+      <input class="btn custom_option m-1" name="tag" type="submit" value="커리어">
+      <input class="btn custom_option m-1" name="tag" type="submit" value="이직">
+      <input class="btn custom_option m-1" name="tag" type="submit" value="회사생활">
+      <input class="btn custom_option m-1" name="tag" type="submit" value="일상">
+      <input class="btn custom_option m-1" name="tag" type="submit" value="개발">
+      <input class="btn custom_option m-1" name="tag" type="submit" value="마케팅">
+      <input class="btn custom_option m-1" name="tag" type="submit" value="질문">
+      <input class="btn custom_option m-1" name="tag" type="submit" value="HR">
+      <input class="btn custom_option m-1" name="tag" type="submit" value="기타">
     </form>
 
     <div class='post_list row justify-content-end my-3'>
       <hr>
-      <div class="col-3">
+      <div class='col-lg-3'>
         <div>검색어 순위</div>
+        <p>1. 취업
+        </p>
+        <p>2. 웹개발
+        </p>
+        <p>3. 이직
+        </p>
+        <p>4. 재택근무
+        </p>
+        <p>5. 연봉
+        </p>
       </div>
       <!--게시글 목록 -->
-      <div class='col-9'>
+      <div class='col-lg-9'>
         <div class='custom_select' style="float: right;">
           <select id="sort-select" onchange="location = this.value;">
             <option class="custom_option sort-date" value="?sort=date">최신순</option>
@@ -70,12 +80,12 @@
         <div class='box'>
           {% for post in posts_sort %}
             <div id='box_item' class='px-4'>
-              {% if user.profile %}
-                <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{{ user.profile.url }}" alt=""></a>
+              {% if post.user.profile %}
+                <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{{ post.user.profile.url }}" alt=""></a>
               {% else %}
                 <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
               {% endif %}
-              <a class='text-decoration-none text-muted' href="{%url 'accounts:detail' post.user.pk%}">{{post.user.username}}</a>
+              <a class='text-decoration-none text-muted fw-bold' href="{%url 'accounts:detail' post.user.pk%}">{{post.user.username}}</a>
               <a class='text-decoration-none' href="{% url 'posts:detail' post.pk %}">
                 <h3 class='text-dark mt-3'>{{post.title}}</h3>
                 <p class='post_content text-muted'>{{post.content}}</p>
@@ -96,7 +106,10 @@
       </div>
     </div>
   </div>
-  <a class="return-top" href="#" style="right:100px; bottom:100px; position:fixed; z-index:9999;">TOP</a>
+  <a class="return-top" href="#" style="font-size:40px;right:50px; bottom:180px; position:fixed; z-index:9999;
+   color:#7689DE;">
+    <i class="bi bi-arrow-up-circle"></i>
+  </a>
 
   <script>
     // get url query string
