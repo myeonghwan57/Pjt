@@ -16,7 +16,7 @@ class User(AbstractUser):
         format="JPEG",
         options={"quality": 95},
     )
-    career = models.DateField(default=datetime.date.today)
+    career = models.DateTimeField(null=True, blank=True)
 
     LOGIN_EMAIL = "email"
     LOGIN_GITHUB = "github"
