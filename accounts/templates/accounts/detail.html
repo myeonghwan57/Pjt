@@ -26,11 +26,11 @@
         <div class="text-center mt-3">
           <span>
             <span class="fw-bold main_color1">
-              <a href="{% url 'accounts:follow_page' user.pk%}">팔로잉 수</a>
+              <a class="fw-bold main_color1" href="{% url 'accounts:follow_page' user.pk%}" style="text-decoration: none;">팔로잉 수</a>
             </span>
             <span class="text-muted">{{ user.follow.count }}&nbsp&nbsp</span>
             <span class="fw-bold main_color1">
-              <a href="{% url 'accounts:follow_page' user.pk%}">팔로워 수</a>
+              <a class="fw-bold main_color1" href="{% url 'accounts:follow_page' user.pk%}" style="text-decoration: none;">팔로워 수</a>
             </span>
             <span class="text-muted">{{ user.followers.count }}
             </span>
@@ -57,15 +57,15 @@
 
         <div style="margin: 0 auto; width:50%;">
           {% if user.githuburl %}
-            <p class="main_color1 fw-bold"><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}">
-              <a href="{{user.githuburl}}">
+            <p class="main_color1"><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}">
+              <a class="fw-bold" href="{{user.githuburl}}">
                 {{ user.githuburl }}
               </a>
             </p>
           {% else %}
-            <p><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}">
+            <p class="main_color1"><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}">
               {% if request.user == user %}
-                <a href="{% url 'accounts:update' %}" style="text-decoration: none;" class="main_color2">
+                <a href="{% url 'accounts:update' %}" style="text-decoration:none;" class="main_color2">
                   Github 주소를 등록해주세요.</a>
               {% else %}
                 Github 주소가 없습니다.
@@ -79,7 +79,7 @@
           {% else %}
             <p class="main_color2"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}">
               {% if request.user == user %}
-                <a href="{% url 'accounts:update' %}" style="text-decoration: none;" class="main_color2">
+                <a href="{% url 'accounts:update' %}" style="text-decoration:none;" class="main_color2">
                   이메일 주소를 등록해주세요.</a>
               {% else %}
                 이메일 주소가 없습니다.
@@ -88,9 +88,11 @@
           {% endif %}
 
           <!-- user.post 태그 빈도수 높은 순 세개 호출 -->
+          <p class="main_color1"><img style='height:30px;width:30px;' src="{% static '/images/tag.png'%}">
           {% for tag in tagfreq %}
-            {{ tag.tag }}
+            #{{ tag.tag }}
           {% endfor %}
+          </p>
 
         </div>
         {% if delta.years == 0 %}
