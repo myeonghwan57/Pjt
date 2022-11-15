@@ -21,4 +21,5 @@ urlpatterns = [
     path("login/github/", views.github_login, name="github-login"),
     path("login/github/callback/", views.github_login_callback, name="github-callback"),
     path("<int:user_pk>/followers/", views.follow, name="follow"),
+    path("<int:pk>/follow-page/", views.follow_page, name="follow_page"),
 ]
