@@ -65,12 +65,18 @@ def detail(request, pk):
     # user.post 태그 빈도수 높은 순 세개 호출
     tag_freq = posts.values("tag").annotate(cnt=Count("tag")).order_by("-cnt")[:3]
 
+    # like_posts
+    like_posts = user.like_posts.all()
+    like_posts_paginator = Paginator(like_posts, 6)
+    like_posts_page = request.GET.get("page")
+    like_posts_ls = like_posts_paginator.get_page(like_posts_page)
     context = {
         "user": user,
         "posts": posts_ls,
         "comments": comments_ls,
         "delta": delta,
         "tagfreq": tag_freq,
+        "like_posts": like_posts_ls,
     }
     return render(request, "accounts/detail.html", context)
 
