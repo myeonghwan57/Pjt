@@ -4,30 +4,32 @@
 {% block content %}
   <div class='container'>
     <div>
-      <div class='d-flex justify-content-between'>
-        <div>
-          <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
-          <a class='text-decoration-none text-muted' href="{%url 'accounts:detail' post.user.pk%}">{{post.user.username}}</a>
-        </div>
+      <div class='d-flex justify-content-between mt-3'>
+        <h3>{{post.title}}</h3>
         <p class='text-center'>
           조회수 :
           {{ post.hits }}
         </p>
+      </div>      
+      <div>
+        {% if post.user.profile %}
+          <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{{ post.user.profile.url }}" alt=""></a>
+        {% else %}
+          <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+        {% endif %}
+        <a class='text-decoration-none text-muted fw-bold' href="{%url 'accounts:detail' post.user.pk%}">{{post.user.username}}</a>
       </div>
 
-      <h3>{{post.title}}</h3>
-
+      <!-- 이미지 -->
       <div class='mt-5'>
-        <!-- 이미지 -->
-
         {% if post.photo_set %}
           {% for photo in post.photo_set.all %}
             <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.image.image }}" style="width: 300px; height: 300px;">
           {% endfor %}
         {% else %}
         {% endif %}
-
       </div>
+      <!-- 글내용 -->
       <h5 class='text-muted mt-5'>{{post.content}}</h5>
       <div class='d-flex justify-content-between mt-5'>
         <p>{{post.created_at}}</p>
@@ -60,26 +62,39 @@
     <!-- 댓글 -->
     {% for comment in comments %}
       {% if comment.parent_comment == NULL %}
-        <div class="d-flex justify-content-between">
-          <a style="text-decoration:none" class="col-1 align-self-center text-center text-dark" href="{%url 'accounts:detail' comment.user.pk%}">{{comment.user}}</a>
-          <div class="col-8 align-self-center">{{comment.content}}</div>
-          <div class='d-flex align-self-center'>
-            <div>
-              <a class="btn post_detail_recomment_btn" data-bs-toggle="collapse" href="#collapse{{comment.pk}}" role="button">
-                답글달기
-              </a>
-            </div>
-            {% if request.user == comment.user %}
+        <div class="row">
+          <div class="d-flex">
+            <div class='d-flex align-self-center'>
+              {% if comment.user.profile %}
+                <a class='align-self-center'href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{{ comment.user.profile.url }}" alt=""></a>
+              {% else %}
+                <a class='align-self-center' href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+              {% endif %}
+              <a style="text-decoration:none" class="align-self-center text-center text-dark mx-2 fw-bold" href="{%url 'accounts:detail' comment.user.pk%}">{{comment.user}}</a>
+            </div> 
+            <div class=" align-self-center">{{comment.content}}</div>
+          </div>
+      
+          <div>
+            <div class='d-flex align-self-center' style='float:right;'>
+              <div>
+                <button class="btn post_detail_comment_btn btn-sm" type="button"><a class="text-decoration-none" style="color:white;"data-bs-toggle="collapse" href="#collapse{{comment.pk}}">답글달기</a>
+                </button>
+              </div>
+              {% if request.user == comment.user %}
+              <button class="btn post_detail_comment_btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#comment" aria-expanded="false" aria-controls="collapseExample">
+                수정
+              </button>  
               <form action="{% url 'posts:comments_delete' post.pk comment.pk %}" method="POST" class="align-self-center">
                 {% csrf_token %}
-                <input class="btn btn-primary" type="submit" value="삭제">
+                <button class="btn post_detail_comment_btn btn-sm" type="submit" value="삭제">삭제</button>
               </form>
-              
-              <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#comment" aria-expanded="false" aria-controls="collapseExample">
-                수정
-              </button>
-            {% endif %}
+              {% endif %}
+            </div>
           </div>
+            
+   
+          
         </div>
         {% comment %} 댓글수정 {% endcomment %}
         {% if request.user == comment.user %}  
@@ -87,7 +102,7 @@
           <form action="{% url 'posts:comments_update' post.pk comment.pk %}" method="POST" class="align-self-center">
             {% csrf_token %}
             {% bootstrap_form comment_form %}
-            <input class="btn btn-primary" type="submit" value="수정">
+            <input class="btn post_detail_comment_btn btn-sm" type="submit" value="수정">
           </form>
         </div>
         {% endif %}
@@ -95,26 +110,35 @@
 
         <!-- 대댓글 반복 -->
         {% for recom in comment.recomment.all %}
-          <div class='d-flex justify-content-between'>
-            <div class="col-1 align-self-center text-center ms-5">
-              <i class="bi bi-arrow-return-right"></i>
-              <a href="{% url 'accounts:detail' recom.user.pk %}" style="text-decoration:none" class="text-dark col-1">{{ recom.user.username }}</a>
+          <div class='row'>
+            <div class='d-flex'>
+              <div class="d-flex align-self-center text-center ms-5">
+                <i class="bi bi-arrow-return-right"></i>
+                  {% if recom.user.profile %}
+                    <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{{ recom.user.profile.url }}" alt=""></a>
+                  {% else %}
+                    <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+                  {% endif %}
+                  <a href="{% url 'accounts:detail' recom.user.pk %}" style="text-decoration:none" class="text-dark align-self-center mx-2 fw-bold">{{ recom.user.username }}</a>
+              </div>
+              <div class="align-self-center">
+                {{ recom.content }}
+              </div>
             </div>
-            <div class="col-8 align-self-center">
-              {{ recom.content }}
+            <div>
+              <div class='d-flex align-self-center' style='float:right;'>
+                {% if request.user == recom.user %}
+                  <form action="{% url 'posts:recomments_delete' post.pk recom.pk %}" method="POST" class="align-self-center">
+                    {% csrf_token %}
+                    <input class="btn post_detail_comment_btn btn-sm" type="submit" value="삭제">
+                  </form>
+                  <button class="btn post_detail_comment_btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#recomment" aria-expanded="false" aria-controls="collapseExample">
+                    수정
+                  </button>
+                {% endif %}
+              </div>  
             </div>
-            <div class='d-flex align-self-center'>
-              {% if request.user == recom.user %}
-                <form action="{% url 'posts:recomments_delete' post.pk recom.pk %}" method="POST" class="align-self-center">
-                  {% csrf_token %}
-                  <input class="btn btn-primary" type="submit" value="삭제">
-                </form>
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#recomment" aria-expanded="false" aria-controls="collapseExample">
-                  수정
-                </button>
-                
-              {% endif %}
-            </div>  
+            
           </div>
           {% if request.user == recom.user %}
             <div class="collapse" id="recomment">
@@ -122,7 +146,7 @@
               <form action="{% url 'posts:recomments_update' post.pk comment.pk recom.pk%}" method="POST" class="align-self-center">
                 {% csrf_token %}
                 {% bootstrap_form recomment_form %}
-                <input class="btn btn-primary" type="submit" value="수정">
+                <input class="btn post_detail_comment_btn" type="submit" value="수정">
               </form>
             </div>
             {% endif %}

@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from datetime import date, datetime, timedelta
 from django.db import transaction
 from django.db.models import Count
+from django.shortcuts import get_object_or_404
 
 
 # Create your views here.
@@ -94,7 +95,7 @@ def create(request):
 
 @login_required
 def detail(request, post_pk):
-    post = Post.objects.get(pk=post_pk)
+    post = get_object_or_404(Post, pk=post_pk)
     comment_form = CommentForm()
     recomment_form = ReCommentForm()
 
@@ -127,7 +128,7 @@ def detail(request, post_pk):
 
 @login_required
 def update(request, post_pk):
-    post = Post.objects.get(pk=post_pk)
+    post = get_object_or_404(Post, pk=post_pk)
     photo_list = post.photo_set.all()  # post의 이미지를 photo_list에 받아온다.
     if post.user == request.user:
         if request.method == "POST":
@@ -173,7 +174,7 @@ def update(request, post_pk):
 
 @login_required
 def delete(request, post_pk):
-    post = Post.objects.get(pk=post_pk)
+    post = get_object_or_404(Post, pk=post_pk)
 
     if post.user == request.user:
         if request.method == "POST":
@@ -186,7 +187,7 @@ def delete(request, post_pk):
 
 @login_required
 def comments_create(request, post_pk):
-    post = Post.objects.get(pk=post_pk)
+    post = get_object_or_404(Post, pk=post_pk)
     if request.user.is_authenticated:
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid():
@@ -199,7 +200,7 @@ def comments_create(request, post_pk):
 
 @login_required
 def recomments_create(request, post_pk, comment_pk):
-    post = Post.objects.get(pk=post_pk)
+    post = get_object_or_404(Post, pk=post_pk)
     if request.user.is_authenticated:
         recomment_form = ReCommentForm(request.POST)
         if recomment_form.is_valid():
@@ -214,7 +215,7 @@ def recomments_create(request, post_pk, comment_pk):
 
 @login_required
 def comments_update(request, post_pk, comment_pk):
-    post = Post.objects.get(pk=post_pk)
+    post = get_object_or_404(Post, pk=post_pk)
     comment = Comment.objects.get(pk=comment_pk)
     if request.method == "POST":
         comment_form = CommentForm(request.POST, instance=comment)
@@ -231,7 +232,7 @@ def comments_update(request, post_pk, comment_pk):
 
 @login_required
 def recomments_update(request, post_pk, comment_pk, recomment_pk):
-    post = Post.objects.get(pk=post_pk)
+    post = get_object_or_404(Post, pk=post_pk)
     recomment = Comment.objects.get(pk=recomment_pk)
     if request.method == "POST":
         recomment_form = ReCommentForm(request.POST, instance=recomment)
@@ -249,7 +250,7 @@ def recomments_update(request, post_pk, comment_pk, recomment_pk):
 
 @login_required
 def recomments_delete(request, post_pk, recomment_pk):
-    recomment = Comment.objects.get(pk=recomment_pk)
+    recomment = get_object_or_404(Comment, pk=recomment_pk)
 
     if request.user == recomment.user:
         recomment.delete()
@@ -260,7 +261,7 @@ def recomments_delete(request, post_pk, recomment_pk):
 
 @login_required
 def comments_delete(request, post_pk, comment_pk):
-    comment = Comment.objects.get(pk=comment_pk)
+    comment = get_object_or_404(Comment, pk=comment_pk)
 
     if request.user == comment.user:
         comment.delete()
@@ -270,7 +271,7 @@ def comments_delete(request, post_pk, comment_pk):
 
 
 def like(request, post_pk):
-    post = Post.objects.get(pk=post_pk)
+    post = get_object_or_404(Post, pk=post_pk)
 
     if post.like.filter(pk=request.user.pk).exists():
         post.like.remove(request.user)
