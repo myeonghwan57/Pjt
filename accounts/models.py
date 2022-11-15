@@ -14,7 +14,7 @@ class User(AbstractUser):
         format="JPEG",
         options={"quality": 95},
     )
-    career = models.IntegerField(default=0)
+    career = models.DateField()
 
     LOGIN_EMAIL = "email"
     LOGIN_GITHUB = "github"

@@ -48,6 +48,7 @@ html,body{
 .post_profile_img{
   height: 35px;
   width: 35px;
+  border-radius:50%;
 }
 .post_write{
   width: 700px;

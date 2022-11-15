@@ -16,6 +16,9 @@ from dotenv import load_dotenv
 from django.urls import reverse
 from posts.models import Post, Comment
 from .models import User, Note
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from django.db.models import Count
 from django.http import HttpResponseForbidden
 # Create your views here.
 def signup(request):
@@ -38,6 +41,7 @@ def signup(request):
 def detail(request, pk):
     user = get_user_model().objects.get(pk=pk)
 
+    # 페이지네이션
     posts = user.post_set.all()
     posts_paginator = Paginator(posts, 8)
     posts_page = request.GET.get("page")
@@ -48,10 +52,19 @@ def detail(request, pk):
     comments_page = request.GET.get("page")
     comments_ls = comments_paginator.get_page(comments_page)
 
+    # 커리어 개월수 계산
+    now = datetime.now()
+    delta = relativedelta(now, user.career)
+
+    # user.post 태그 빈도수 높은 순 세개 호출
+    tag_freq = posts.values("tag").annotate(cnt=Count("tag")).order_by("-cnt")[:3]
+
     context = {
         "user": user,
         "posts": posts_ls,
         "comments": comments_ls,
+        "delta": delta,
+        "tagfreq": tag_freq,
     }
     return render(request, "accounts/detail.html", context)
 
