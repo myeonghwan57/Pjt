@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
 from django.conf import settings
+import datetime
+
 # Create your models here.
 class User(AbstractUser):
 
@@ -14,7 +16,7 @@ class User(AbstractUser):
         format="JPEG",
         options={"quality": 95},
     )
-    career = models.DateField()
+    career = models.DateTimeField(null=True, blank=True)
 
     LOGIN_EMAIL = "email"
     LOGIN_GITHUB = "github"
@@ -36,10 +38,14 @@ class User(AbstractUser):
 
     githuburl = models.URLField(max_length=200, blank=True)
 
+
 class Note(models.Model):
 
     send_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default="", related_name="send_user",
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        default="",
+        related_name="send_user",
     )
     receive_user = models.CharField(max_length=50, blank=True)
 
@@ -48,4 +54,3 @@ class Note(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     receive_view = models.BooleanField(default=False)
     send_view = models.BooleanField(default=False)
-    
