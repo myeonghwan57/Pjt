@@ -76,6 +76,7 @@ def detail(request, pk):
         "comments": comments_ls,
         "delta": delta,
         "tagfreq": tag_freq,
+        "like_posts_ls": like_posts,
         "like_posts": like_posts_ls,
     }
     return render(request, "accounts/detail.html", context)

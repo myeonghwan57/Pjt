@@ -89,9 +89,9 @@
 
           <!-- user.post 태그 빈도수 높은 순 세개 호출 -->
           <p class="main_color1"><img style='height:30px;width:30px;' src="{% static '/images/tag.png'%}">
-          {% for tag in tagfreq %}
-            #{{ tag.tag }}
-          {% endfor %}
+            {% for tag in tagfreq %}
+              #{{ tag.tag }}
+            {% endfor %}
           </p>
 
         </div>
@@ -292,9 +292,9 @@
 
           <div class="tab-pane fade mt-2" id="bookmark-tab-pane" role="tabpanel" aria-labelledby="bookmark-tab" tabindex="0">
             <h5 class="main_color2 fw-bold">총
-              {{ like_posts.count }}개</h5>
+              {{ like_posts_ls.count }}개</h5>
 
-            {% if like_posts.count == 0 %}
+            {% if like_posts_ls.count == 0 %}
               <div class="text-muted">좋아요한 글이 없습니다.</div>
             {% else %}
               <span class="text-muted text-center">
