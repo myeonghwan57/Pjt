@@ -64,8 +64,12 @@
             </p>
           {% else %}
             <p><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}">
+              {% if request.user == user %}
               <a href="{% url 'accounts:update' %}" style="text-decoration: none;" class="main_color2">
                 Github 주소를 등록해주세요.</a>
+              {% else %}
+                Github 주소가 없습니다.
+              {% endif %}
             </p>
           {% endif %}
 
@@ -74,9 +78,12 @@
               {{ user.email }}</p>
           {% else %}
             <p class="main_color2"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}">
-
-              <a href="{% url 'accounts:update' %}" style="text-decoration: none;" class="main_color2">
+              {% if request.user == user %}
+                <a href="{% url 'accounts:update' %}" style="text-decoration: none;" class="main_color2">
                 이메일 주소를 등록해주세요.</a>
+              {% else %}
+                이메일 주소가 없습니다.
+              {% endif %}
             </p>
           {% endif %}
 
@@ -156,7 +163,7 @@
             <button class="nav-link active text-muted" id="home-article" data-bs-toggle="tab" data-bs-target="#article-tab-pane" type="button" role="tab" aria-controls="article-tab-pane" aria-selected="true">작성 글</button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link text-muted" id="comment-tab" data-bs-toggle="tab" data-bs-target="#comment-tab-pane" type="button" role="tab" aria-controls="comment-tab-pane" aria-selected="false">댓글 단 글</button>
+            <button class="nav-link text-muted" id="comment-tab" data-bs-toggle="tab" data-bs-target="#comment-tab-pane" type="button" role="tab" aria-controls="comment-tab-pane" aria-selected="false">작성 댓글</button>
           </li>
         </ul>
 
@@ -215,9 +222,9 @@
                 </span>
               {% endif %}
             </div>
-          
-          <!-- 사용자가 작성한 댓글 -->
           </div>
+          <!-- 사용자가 작성한 댓글 -->
+
           <div class="tab-pane fade mt-2" id="comment-tab-pane" role="tabpanel" aria-labelledby="comment-tab" tabindex="0">
             <h5 class="main_color2 fw-bold">총 {{ user.comment_set.count }}개</h5>
             
@@ -253,17 +260,6 @@
             {% endif %}
           </div>
         </div>
-
-        {% for comment in comments %}
-          <span class="text-muted">
-            <i class="bi bi-pencil-fill"></i>
-            {{ forloop.counter }}번째 댓글:
-          </span>
-          <a href="{% url 'posts:detail' comment.article.pk %}" style="text-decoration: none;" class="text-muted">
-            {{ comment.content }}
-          </a>
-          <br>
-        {% endfor %}
       </div>
     </div>
   </div>
