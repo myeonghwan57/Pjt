@@ -4,6 +4,10 @@ from django import forms
 from django.contrib.auth.hashers import check_password
 
 
+class DateInput(forms.DateInput):
+    input_type = "date"
+
+
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = get_user_model()
@@ -16,9 +20,10 @@ class CustomUserCreationForm(UserCreationForm):
         labels = {
             "career": "경력(년차)",
         }
-        help_texts = {
-            "career": "신입일 경우 0을 입력해주세요.",
-        }
+        # help_texts = {
+        #     "career": "신입일 경우 0을 입력해주세요.",
+        # }
+        widgets = {"career": DateInput()}
 
 
 class CustomUserChangeForm(UserChangeForm):
