@@ -29,7 +29,7 @@
             <span class="fw-bold main_color1">팔로워 수</span> <span class="text-muted">{{ user.followers.count }} </span>
           </span>
         </div>
-        <div class="text-center mt-1 mb-4">
+        <div class="text-center mt-1 mb-1">
         {% if request.user != user %}
           {% if request.user in user.followers.all %}
             <a href='{% url 'accounts:follow' user.pk%}' class='btn btn-sm login_btn fw-bold'>이 사용자를 UnFollow 하지 않겠어요.</a>
@@ -37,6 +37,14 @@
             <a href='{% url 'accounts:follow' user.pk %}' class='btn btn-sm signup_btn fw-bold'>이 사용자를 Follow 할래요!</a>
           {% endif %}
         {% endif %}
+        </div>
+
+        <!-- 쪽지 보내기 버튼 -->
+        <div class="text-center mb-3">
+          {% if request.user == user %}
+          <a class='btn login_btn ms-auto' href="{%url 'accounts:note' %}" target="_blank" onClick="window.open(this.href, '', 'width=400, height=430 left=100px,top=100px'); return false;">
+            <i class="bi bi-envelope"></i> 쪽지함</a>
+          {% endif %}
         </div>
         
 
@@ -65,11 +73,11 @@
             </p>
           {% endif %}
 
-          <!-- ###########추가########## -->
           <!-- user.post 태그 빈도수 높은 순 세개 호출 -->
           {% for tag in tagfreq %}
             {{ tag.tag }}
           {% endfor %}
+          
         </div>
         {% if delta.years == 0 %}
           <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/0.png'%}">
