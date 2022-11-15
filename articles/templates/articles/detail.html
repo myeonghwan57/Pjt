@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load django_bootstrap5 %}
 {% load static %}
 {% block content %}
 <div class="container">
@@ -55,7 +56,7 @@
     <div class="mt-3 mb-5 p-5 rounded-4 shadow">
       <div class="mb-4">
         {% if request.user.is_authenticated %}
-          <form id="comment-create-form" data-article-id="{{ article.pk }}">
+          <form id="comment-create-form" data-jobs-id="{{ jobs.pk }}">
             {% csrf_token %}
             <div class="d-flex justify-content-between">
               <div class="flex-fill me-2">
@@ -96,7 +97,7 @@
                 <p>{{ comment.content }}</p>
                 <div id="btn-{{ comment.pk }}" class="d-flex align-items-baseline">
                   {% if request.user == comment.user %}
-                  <form class="comment-delete-form" data-article-id="{{ article.pk }}" data-comment-id="{{ comment.pk }}">
+                  <form class="comment-delete-form" data-jobs-id="{{ jobs.pk }}" data-comment-id="{{ comment.pk }}">
                     {% csrf_token %}
                     <button class="btn btn-sm p-0 border-0 text-danger text-decoration-none me-2" type="submit"><i class="bi bi-x-square"></i></button>
                   </form>
@@ -108,7 +109,7 @@
               </div>
               {% if request.user.is_authenticated %}
                 <div id="reply-create-{{ comment.pk }}" class="d-none">
-                  <form class="reply-create-form" data-article-id="{{ article.pk }}" data-comment-id="{{ comment.pk }}">
+                  <form class="reply-create-form" data-jobs-id="{{ jobs.pk }}" data-comment-id="{{ comment.pk }}">
                     {% csrf_token %}
                     <div class="d-flex justify-content-between">
                       <div class="flex-fill me-2">

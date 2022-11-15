@@ -21,6 +21,12 @@ def detail(request, pk):
 
     context = {
         "jobs": jobs,
+        "comments": CommentCompany.objects.select_related("user").filter(
+            jobs=jobs, parent=None
+        ),
+        "comments_count": CommentCompany.objects.filter(jobs=jobs).count(),
+        "comment_form": CommentCompanyForm(),
+        "reply_form": ReplyCompanyForm(),
     }
 
     return render(request, "articles/detail.html", context)
