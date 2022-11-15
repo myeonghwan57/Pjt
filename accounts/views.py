@@ -354,3 +354,15 @@ def delete_note(request, note_pk):
 
     else:
         return HttpResponseForbidden()
+
+
+def follow_page(request, pk):
+    user = get_object_or_404(get_user_model(), pk=pk)
+    # follow = follow && followers = following
+    followings = user.follow.all()
+    followers = user.followers.all()
+    context = {
+        "followings": followings,
+        "followers": followers,
+    }
+    return render(request, "accounts/follow.html", context)

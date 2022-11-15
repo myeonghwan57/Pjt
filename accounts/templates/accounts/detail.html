@@ -4,11 +4,11 @@
 {% block content %}
   <div class="container mt-3">
     {% if request.user != user %}
-    <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
-      {{ user.username }}님의 페이지</h1>
+      <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
+        {{ user.username }}님의 페이지</h1>
     {% else %}
-    <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
-      마이페이지</h1>
+      <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
+        마이페이지</h1>
     {% endif %}
     <hr>
 
@@ -25,28 +25,35 @@
         </p>
         <div class="text-center mt-3">
           <span>
-            <span class="fw-bold main_color1">팔로잉 수</span> <span class="text-muted">{{ user.follow.count }}&nbsp&nbsp</span>
-            <span class="fw-bold main_color1">팔로워 수</span> <span class="text-muted">{{ user.followers.count }} </span>
+            <span class="fw-bold main_color1">
+              <a href="{% url 'accounts:follow_page' user.pk%}">팔로잉 수</a>
+            </span>
+            <span class="text-muted">{{ user.follow.count }}&nbsp&nbsp</span>
+            <span class="fw-bold main_color1">
+              <a href="{% url 'accounts:follow_page' user.pk%}">팔로워 수</a>
+            </span>
+            <span class="text-muted">{{ user.followers.count }}
+            </span>
           </span>
         </div>
         <div class="text-center mt-1 mb-1">
-        {% if request.user != user %}
-          {% if request.user in user.followers.all %}
-            <a href='{% url 'accounts:follow' user.pk%}' class='btn btn-sm login_btn fw-bold'>이 사용자를 UnFollow 하지 않겠어요.</a>
-          {% else %}
-            <a href='{% url 'accounts:follow' user.pk %}' class='btn btn-sm signup_btn fw-bold'>이 사용자를 Follow 할래요!</a>
+          {% if request.user != user %}
+            {% if request.user in user.followers.all %}
+              <a href='{% url 'accounts:follow' user.pk%}' class='btn btn-sm login_btn fw-bold'>이 사용자를 UnFollow 하겠어요.</a>
+            {% else %}
+              <a href='{% url 'accounts:follow' user.pk %}' class='btn btn-sm signup_btn fw-bold'>이 사용자를 Follow 할래요!</a>
+            {% endif %}
           {% endif %}
-        {% endif %}
         </div>
 
         <!-- 쪽지 보내기 버튼 -->
         <div class="text-center mb-3">
           {% if request.user == user %}
-          <a class='btn login_btn ms-auto' href="{%url 'accounts:note' %}" target="_blank" onClick="window.open(this.href, '', 'width=400, height=430 left=100px,top=100px'); return false;">
-            <i class="bi bi-envelope"></i> 쪽지함</a>
+            <a class='btn login_btn ms-auto' href="{%url 'accounts:note' %}" target="_blank" onclick="window.open(this.href, '', 'width=400, height=430 left=100px,top=100px'); return false;">
+              <i class="bi bi-envelope"></i>
+              쪽지함</a>
           {% endif %}
         </div>
-        
 
         <div style="margin: 0 auto; width:50%;">
           {% if user.githuburl %}
@@ -77,7 +84,7 @@
           {% for tag in tagfreq %}
             {{ tag.tag }}
           {% endfor %}
-          
+
         </div>
         {% if delta.years == 0 %}
           <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/0.png'%}">
@@ -157,16 +164,20 @@
           <div class="tab-pane fade show active" id="articles">
             <h5 class="main_color2 fw-bold">{{ user.username }}님이 작성한 글: 총
               {{ user.post_set.count }}개</h5>
-            
+
             <div class="text-end">
               {% if posts.has_previous %}
-                <span><a href="?page={{posts.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a></span>
+                <span>
+                  <a href="?page={{posts.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a>
+                </span>
               {% endif %}
               <span class="text-muted">{{posts.number}}</span>
               <span class="text-muted">/</span>
               <span class="text-muted">{{posts.paginator.num_pages}}</span>
               {% if posts.has_next %}
-                <span><a href="?page={{posts.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a></span>
+                <span>
+                  <a href="?page={{posts.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a>
+                </span>
               {% endif %}
             </div>
 
@@ -187,65 +198,68 @@
           <div class="tab-pane fade" id="comments" style="height:50%;">
             <h5 class="main_color2 fw-bold">{{ user.username }}님이 작성한 댓글: 총
               {{ user.comment_set.count }}개</h5>
-              
+
             <div class="text-end">
               {% if comments.has_previous %}
-                <a href="?page={{comments.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a></a>
-              {% endif %}
-              <span class="text-muted">{{comments.number}}</span>
-              <span class="text-muted">/</span>
-              <span class="text-muted">{{comments.paginator.num_pages}}</span>
-              {% if comments.has_next %}
-                <a href="?page={{comments.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a></a>
-              {% endif %}
-            </div>
-
-            {% for comment in comments %}
-              <span class="text-muted">
-                <i class="bi bi-pencil-fill"></i>
-                {{ forloop.counter }}번째 댓글:
-              </span>
-              <a href="{% url 'posts:detail' comment.article.pk %}" style="text-decoration: none;" class="text-muted">
-                {{ comment.content }}
+                <a href="?page={{comments.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a>
               </a>
-              <br>
-            {% endfor %} 
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 버튼 그룹 -->
-  <p class="text-center mt-4">
-    <a class="btn btn-outline-primary" href="{% url 'accounts:update' %}">수정</a>
-    <a class="btn btn-outline-success" href="{% url 'accounts:change_password' %}">비밀번호 변경</a>
-    <a class="btn login_btn" href="{% url 'articles:index' %}">홈으로 돌아가기</a>
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      회원탈퇴
-    </button>
-    <!-- follow/following -->
-    </p>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">정말로 탈퇴하시겠습니까?</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="text-center">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
-          {% if request.user.login_method == 'email' %}
-            <a class="btn btn-primary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
-          {% else %}
-            <a class="btn btn-primary" href="{% url 'accounts:delete' request.user.pk%}">예</a>
+            {% endif %}
+            <span class="text-muted">{{comments.number}}</span>
+            <span class="text-muted">/</span>
+            <span class="text-muted">{{comments.paginator.num_pages}}</span>
+            {% if comments.has_next %}
+              <a href="?page={{comments.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a>
+            </a>
           {% endif %}
         </div>
+
+        {% for comment in comments %}
+          <span class="text-muted">
+            <i class="bi bi-pencil-fill"></i>
+            {{ forloop.counter }}번째 댓글:
+          </span>
+          <a href="{% url 'posts:detail' comment.article.pk %}" style="text-decoration: none;" class="text-muted">
+            {{ comment.content }}
+          </a>
+          <br>
+        {% endfor %}
       </div>
     </div>
   </div>
+</div>
+</div>
+
+<!-- 버튼 그룹 -->
+<p class="text-center mt-4">
+<a class="btn btn-outline-primary" href="{% url 'accounts:update' %}">수정</a>
+<a class="btn btn-outline-success" href="{% url 'accounts:change_password' %}">비밀번호 변경</a>
+<a class="btn login_btn" href="{% url 'articles:index' %}">홈으로 돌아가기</a>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  회원탈퇴
+</button>
+<!-- follow/following -->
+
+</p>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+  <div class="modal-header">
+    <h1 class="modal-title fs-5" id="exampleModalLabel">정말로 탈퇴하시겠습니까?</h1>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="text-center">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+    {% if request.user.login_method == 'email' %}
+      <a class="btn btn-primary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
+    {% else %}
+      <a class="btn btn-primary" href="{% url 'accounts:delete' request.user.pk%}">예</a>
+    {% endif %}
+  </div>
+</div>
+</div>
+</div>
 {% endblock content %}
