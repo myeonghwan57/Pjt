@@ -1,5 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CustomUserCreationForm, CustomUserChangeForm, CheckPasswordForm, NoteForm
+from .forms import (
+    CustomUserCreationForm,
+    CustomUserChangeForm,
+    CheckPasswordForm,
+    NoteForm,
+)
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -20,6 +25,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.db.models import Count
 from django.http import HttpResponseForbidden
+
 # Create your views here.
 def signup(request):
     if request.method == "POST":
@@ -43,12 +49,12 @@ def detail(request, pk):
 
     # 페이지네이션
     posts = user.post_set.all()
-    posts_paginator = Paginator(posts, 8)
+    posts_paginator = Paginator(posts, 6)
     posts_page = request.GET.get("page")
     posts_ls = posts_paginator.get_page(posts_page)
 
     comments = user.comment_set.all()
-    comments_paginator = Paginator(comments, 8)
+    comments_paginator = Paginator(comments, 6)
     comments_page = request.GET.get("page")
     comments_ls = comments_paginator.get_page(comments_page)
 
@@ -74,7 +80,6 @@ def login(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            messages.success(request, "로그인 되었습니다.")
             return redirect(request.GET.get("next") or "articles:index")
     else:
         form = AuthenticationForm()
@@ -84,13 +89,16 @@ def login(request):
     return render(request, "accounts/login.html", context)
 
 
+@login_required
 def logout(request):
     auth_logout(request)
-    messages.warning(request, "로그아웃")
+    messages.warning(request, "이용해주셔서 감사합니다! 다음에 또 방문해주세요.😊")
     return redirect("articles:index")
 
 
+@login_required
 def update(request):
+
     if request.method == "POST":
         form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -104,6 +112,7 @@ def update(request):
     return render(request, "accounts/signup.html", context)
 
 
+@login_required
 def change_password(request):
     if request.method == "POST":
         form = PasswordChangeForm(request.user, request.POST)
@@ -119,8 +128,8 @@ def change_password(request):
     return render(request, "accounts/passwordchange.html", context)
 
 
+@login_required
 def delete_checker(request, pk):
-    user = request.user
     if request.method == "POST":
         password_form = CheckPasswordForm(request.user, request.POST)
 
@@ -137,6 +146,7 @@ def delete_checker(request, pk):
     return render(request, "accounts/pw_check.html", context)
 
 
+@login_required
 def social_delete(request, pk):
     user = get_user_model().objects.get(pk=pk)
     if request.user == user:
@@ -261,25 +271,24 @@ def follow(request, user_pk):
         user.followers.add(request.user)
     return redirect("accounts:detail", user_pk)
 
-def note(request):
-    
-    notes = Note.objects.filter(receive_user=request.user).order_by('-pk')
 
-    context = {
-        "notes":notes
-    }
-    
-    return render(request,"accounts/note.html",context)
+def note(request):
+
+    notes = Note.objects.filter(receive_user=request.user).order_by("-pk")
+
+    context = {"notes": notes}
+
+    return render(request, "accounts/note.html", context)
+
 
 def send_note(request):
 
-    notes = Note.objects.filter(send_user=request.user).order_by('-pk')
+    notes = Note.objects.filter(send_user=request.user).order_by("-pk")
 
-    context = {
-        "notes":notes
-    }
-    
-    return render(request,"accounts/sendnote.html",context)
+    context = {"notes": notes}
+
+    return render(request, "accounts/sendnote.html", context)
+
 
 @login_required
 def create_note(request):
@@ -288,10 +297,10 @@ def create_note(request):
         user_list.append(i.username)
     if request.method == "POST":
         note_form = NoteForm(request.POST)
-        if (request.POST.get('receive_user') not in user_list) :
+        if request.POST.get("receive_user") not in user_list:
             messages.warning(request, "없는 유저입니다.")
             return redirect("accounts:create_note")
-        if request.POST.get('receive_user')==request.user.username:
+        if request.POST.get("receive_user") == request.user.username:
             messages.warning(request, "자기 자신에게 보낼 수 없습니다.")
             return redirect("accounts:create_note")
         if note_form.is_valid():
@@ -309,32 +318,34 @@ def create_note(request):
 
     return render(request, "accounts/createnote.html", context)
 
+
 @login_required
-def detail_note(request,note_pk):
+def detail_note(request, note_pk):
     note = Note.objects.get(pk=note_pk)
     if (request.user == note.send_user) or (request.user.username == note.receive_user):
         context = {
-            "note":note,
+            "note": note,
         }
-        return render(request,"accounts/detailnote.html",context)
+        return render(request, "accounts/detailnote.html", context)
 
     else:
-        return HttpResponseForbidden()        
+        return HttpResponseForbidden()
+
 
 @login_required
-def delete_note(request,note_pk):
+def delete_note(request, note_pk):
     note = Note.objects.get(pk=note_pk)
 
     if (request.user == note.send_user) or (request.user.username == note.receive_user):
 
         if request.user == note.send_user:
-            if request.method == 'POST':
+            if request.method == "POST":
                 note.send_view = True
                 note.save()
                 return redirect("accounts:send_note")
 
         if request.user.username == note.receive_user:
-            if request.method == 'POST':
+            if request.method == "POST":
                 note.receive_view = True
                 note.save()
                 return redirect("accounts:note")
@@ -343,3 +354,15 @@ def delete_note(request,note_pk):
 
     else:
         return HttpResponseForbidden()
+
+
+def follow_page(request, pk):
+    user = get_object_or_404(get_user_model(), pk=pk)
+    # follow = follow && followers = following
+    followings = user.follow.all()
+    followers = user.followers.all()
+    context = {
+        "followings": followings,
+        "followers": followers,
+    }
+    return render(request, "accounts/follow.html", context)
