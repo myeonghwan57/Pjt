@@ -5,7 +5,6 @@
     <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
       마이페이지</h1>
     <hr>
-
     <div class="row mt-5">
       <!-- 왼쪽 화면 -->
       <div class="col-5">
@@ -49,7 +48,7 @@
             </p>
           {% endif %}
         </div>
-        {% if user.career == 0 %}
+        {% if delta.years == 0 %}
           <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/0.png'%}">
             신입 개발자</p>
           <p>
@@ -62,35 +61,36 @@
         {% else %}
           <div>
             <!-- 1~4년차 -->
-            {% if user.career > 0 and user.career < 5 %}
-              <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/1.png'%}">{{ user.career }}년 경력, 초급 개발자</p>
+            {% if delta.years > 0 and delta.years < 5 %}
+              <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/1.png'%}">{{ delta.years }}년
+                {{delta.months}}개월 경력, 초급 개발자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 5~8년차 -->
-            {% elif user.career > 4 and user.career < 9 %}
+            {% elif delta.years > 4 and delta.years < 9 %}
               <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/2.png'%}">
-                {{ user.career }}년 경력, 중급 개발자</p>
+                {{ delta.years }}년 경력, 중급 개발자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 9~12년차 -->
-            {% elif user.career > 8 and user.career < 13 %}
+            {% elif delta.years > 8 and delta.years < 13 %}
               <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/3.png'%}">
-                {{ user.career }}년 경력, 고급 개발자</p>
+                {{ delta.years }}년 경력, 고급 개발자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#EAEAEA;"></span>
               <!-- 13~16년차 -->
-            {% elif user.career > 12 and user.career < 17 %}
+            {% elif delta.years > 12 and delta.years < 17 %}
               <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/4.png'%}">
-                {{ user.career }}년 경력, 고급 개발자/관리자</p>
+                {{ delta.years }}년 경력, 고급 개발자/관리자</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
@@ -99,7 +99,7 @@
               <!-- 17년 이상 -->
             {% else %}
               <p class="text-center fw-bold mt-3"><img style='height:45px;width:45px;' src="{% static '/images/5.png'%}">
-                {{ user.career }}년 경력, 고급 개발자/관리자/임원</p>
+                {{ delta.years }}년 경력, 고급 개발자/관리자/임원</p>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>
               <span class="me-1" style="padding-left:20%; background-color:#7689DE;"></span>

@@ -17,6 +17,8 @@ from dotenv import load_dotenv
 from django.urls import reverse
 from posts.models import Post, Comment
 from .models import User
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 # Create your views here.
 def signup(request):
@@ -49,10 +51,13 @@ def detail(request, pk):
     comments_page = request.GET.get("page")
     comments_ls = comments_paginator.get_page(comments_page)
 
+    now = datetime.now()
+    delta = relativedelta(now, request.user.career)
     context = {
         "user": user,
         "posts": posts_ls,
         "comments": comments_ls,
+        "delta": delta,
     }
     return render(request, "accounts/detail.html", context)
 
