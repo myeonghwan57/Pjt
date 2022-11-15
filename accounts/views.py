@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CustomUserCreationForm, CustomUserChangeForm, CheckPasswordForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm, CheckPasswordForm, NoteForm
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -8,7 +8,6 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-
 import os, requests
 from django.core.files.base import ContentFile
 from . import forms, models
@@ -16,8 +15,11 @@ from .exception import GithubException, SocialLoginException, OverlapException
 from dotenv import load_dotenv
 from django.urls import reverse
 from posts.models import Post, Comment
-from .models import User
-
+from .models import User, Note
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from django.db.models import Count
+from django.http import HttpResponseForbidden
 # Create your views here.
 def signup(request):
     if request.method == "POST":
@@ -39,6 +41,7 @@ def signup(request):
 def detail(request, pk):
     user = get_user_model().objects.get(pk=pk)
 
+    # 페이지네이션
     posts = user.post_set.all()
     posts_paginator = Paginator(posts, 6)
     posts_page = request.GET.get("page")
@@ -49,10 +52,19 @@ def detail(request, pk):
     comments_page = request.GET.get("page")
     comments_ls = comments_paginator.get_page(comments_page)
 
+    # 커리어 개월수 계산
+    now = datetime.now()
+    delta = relativedelta(now, user.career)
+
+    # user.post 태그 빈도수 높은 순 세개 호출
+    tag_freq = posts.values("tag").annotate(cnt=Count("tag")).order_by("-cnt")[:3]
+
     context = {
         "user": user,
         "posts": posts_ls,
         "comments": comments_ls,
+        "delta": delta,
+        "tagfreq": tag_freq,
     }
     return render(request, "accounts/detail.html", context)
 
@@ -247,3 +259,86 @@ def follow(request, user_pk):
         # 팔로우 상태가 아니면, '팔로우'를 누르면 추가 (add)
         user.followers.add(request.user)
     return redirect("accounts:detail", user_pk)
+
+def note(request):
+    
+    notes = Note.objects.filter(receive_user=request.user).order_by('-pk')
+
+    context = {
+        "notes":notes
+    }
+    
+    return render(request,"accounts/note.html",context)
+
+def send_note(request):
+
+    notes = Note.objects.filter(send_user=request.user).order_by('-pk')
+
+    context = {
+        "notes":notes
+    }
+    
+    return render(request,"accounts/sendnote.html",context)
+
+@login_required
+def create_note(request):
+    user_list = []
+    for i in User.objects.all():
+        user_list.append(i.username)
+    if request.method == "POST":
+        note_form = NoteForm(request.POST)
+        if (request.POST.get('receive_user') not in user_list) :
+            messages.warning(request, "없는 유저입니다.")
+            return redirect("accounts:create_note")
+        if request.POST.get('receive_user')==request.user.username:
+            messages.warning(request, "자기 자신에게 보낼 수 없습니다.")
+            return redirect("accounts:create_note")
+        if note_form.is_valid():
+            note = note_form.save(commit=False)
+            note.send_user = request.user
+            note.save()
+            return redirect("accounts:note")
+
+    else:
+        note_form = NoteForm()
+
+    context = {
+        "note_form": note_form,
+    }
+
+    return render(request, "accounts/createnote.html", context)
+
+@login_required
+def detail_note(request,note_pk):
+    note = Note.objects.get(pk=note_pk)
+    if (request.user == note.send_user) or (request.user.username == note.receive_user):
+        context = {
+            "note":note,
+        }
+        return render(request,"accounts/detailnote.html",context)
+
+    else:
+        return HttpResponseForbidden()        
+
+@login_required
+def delete_note(request,note_pk):
+    note = Note.objects.get(pk=note_pk)
+
+    if (request.user == note.send_user) or (request.user.username == note.receive_user):
+
+        if request.user == note.send_user:
+            if request.method == 'POST':
+                note.send_view = True
+                note.save()
+                return redirect("accounts:send_note")
+
+        if request.user.username == note.receive_user:
+            if request.method == 'POST':
+                note.receive_view = True
+                note.save()
+                return redirect("accounts:note")
+
+        return redirect("accounts:note")
+
+    else:
+        return HttpResponseForbidden()
