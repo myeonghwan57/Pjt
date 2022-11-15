@@ -40,12 +40,12 @@ def detail(request, pk):
     user = get_user_model().objects.get(pk=pk)
 
     posts = user.post_set.all()
-    posts_paginator = Paginator(posts, 8)
+    posts_paginator = Paginator(posts, 6)
     posts_page = request.GET.get("page")
     posts_ls = posts_paginator.get_page(posts_page)
 
     comments = user.comment_set.all()
-    comments_paginator = Paginator(comments, 8)
+    comments_paginator = Paginator(comments, 6)
     comments_page = request.GET.get("page")
     comments_ls = comments_paginator.get_page(comments_page)
 
@@ -62,7 +62,6 @@ def login(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            messages.success(request, "로그인 되었습니다.")
             return redirect(request.GET.get("next") or "articles:index")
     else:
         form = AuthenticationForm()
@@ -74,7 +73,7 @@ def login(request):
 
 def logout(request):
     auth_logout(request)
-    messages.warning(request, "로그아웃")
+    messages.warning(request, "이용해주셔서 감사합니다! 다음에 또 방문해주세요.😊")
     return redirect("articles:index")
 
 

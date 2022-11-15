@@ -1,15 +1,21 @@
 {% extends 'base.html' %}
+{% load django_bootstrap5 %}
 {% load static %}
 {% block content %}
   <div class="container mt-3">
+    {% if request.user != user %}
+    <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
+      {{ user.username }}님의 페이지</h1>
+    {% else %}
     <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
       마이페이지</h1>
+    {% endif %}
     <hr>
 
     <div class="row mt-5">
       <!-- 왼쪽 화면 -->
       <div class="col-5">
-        <h4 class="main_color2 mb-3 fw-bold text-center">나의 프로필</h4>
+        <h4 class="main_color2 mb-3 fw-bold text-center">프로필</h4>
         <p class="text-center">
           {% if user.profile %}
             <img class='rounded-circle' style='height:180px;width:180px;' src="{{ user.profile.url }}" alt="{{ user.profile }}">
@@ -17,14 +23,24 @@
             <img class='rounded-circle' style='height:180px;width:180px;' src="{% static '/images/profile/user.png'%}" alt="user">
           {% endif %}
         </p>
-        <div style="margin: 0 auto; width:50%;">
-          <p>
-            <img style='height:30px;width:30px;' src="{% static '/images/id.png'%}">
-            <span class="main_color1 align-middle fw-bold">
-              {{ user.username }}</span>
-          </p>
+        <div class="text-center mt-3">
+          <span>
+            <span class="fw-bold main_color1">팔로잉 수</span> <span class="text-muted">{{ user.follow.count }}&nbsp&nbsp</span>
+            <span class="fw-bold main_color1">팔로워 수</span> <span class="text-muted">{{ user.followers.count }} </span>
+          </span>
+        </div>
+        <div class="text-center mt-1 mb-4">
+        {% if request.user != user %}
+          {% if request.user in user.followers.all %}
+            <a href='{% url 'accounts:follow' user.pk%}' class='btn btn-sm login_btn fw-bold'>이 사용자를 UnFollow 하지 않겠어요.</a>
+          {% else %}
+            <a href='{% url 'accounts:follow' user.pk %}' class='btn btn-sm signup_btn fw-bold'>이 사용자를 Follow 할래요!</a>
+          {% endif %}
+        {% endif %}
+        </div>
+        
 
-          <!-- Github 주소 등록 부분 수정 필요 -->
+        <div style="margin: 0 auto; width:50%;">
           {% if user.githuburl %}
             <p class="main_color1 fw-bold"><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}">
               <a href="{{user.githuburl}}">
@@ -111,63 +127,74 @@
       </div>
 
       <!-- 오른쪽 화면 -->
+
       <div class="col-6 ms-5">
-        <div style="height:50%;">
-          <h5 class="main_color2 fw-bold">{{ user.username }}님이 작성한 글: 총
-            {{ user.post_set.count }}개</h5>
-          {% for post in posts %}
-            <span class="text-muted">
-              <i class="bi bi-pencil-fill"></i>
-              {{ forloop.counter }}번째 글:
-            </span>
-            <span>
-              <a href="{% url 'posts:detail' post.pk%}">
-                {{ post.title }}
-              </a>
-            </span>
-            <br>
-          {% endfor %}
-          <div class="text-end">
-            {% if posts.has_previous %}
-              <a href="?page=1">&laquo;</a>
-              <a href="?page={{posts.previous_page_number}}">prev</a>
-            {% endif %}
-            <span>{{posts.number}}</span>
-            <span>/</span>
-            <span>{{posts.paginator.num_pages}}</span>
-            {% if posts.has_next %}
-              <a href="?page={{posts.next_page_number}}">next</a>
-              <a href="?page={{posts.paginator.num_pages}}">&raquo;</a>
-            {% endif %}
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#articles" data-toggle="tab">작성 글</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#comments" data-toggle="tab">댓글단 글</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="articles">
+            <h5 class="main_color2 fw-bold">{{ user.username }}님이 작성한 글: 총
+              {{ user.post_set.count }}개</h5>
+            
+            <div class="text-end">
+              {% if posts.has_previous %}
+                <span><a href="?page={{posts.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a></span>
+              {% endif %}
+              <span class="text-muted">{{posts.number}}</span>
+              <span class="text-muted">/</span>
+              <span class="text-muted">{{posts.paginator.num_pages}}</span>
+              {% if posts.has_next %}
+                <span><a href="?page={{posts.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a></span>
+              {% endif %}
+            </div>
+
+            {% for post in posts %}
+              <span class="text-muted">
+                <i class="bi bi-pencil-fill"></i>
+                {{ forloop.counter }}번째 글:
+              </span>
+              <span>
+                <a href="{% url 'posts:detail' post.pk%}" style="text-decoration: none;" class="text-muted">
+                  {{ post.title }}
+                </a>
+              </span>
+              <br>
+            {% endfor %}
           </div>
-        </div>
 
-        <div style="height:50%;">
-          <h5 class="main_color2 fw-bold">{{ user.username }}님이 작성한 댓글: 총
-            {{ user.comment_set.count }}개</h5>
+          <div class="tab-pane fade" id="comments" style="height:50%;">
+            <h5 class="main_color2 fw-bold">{{ user.username }}님이 작성한 댓글: 총
+              {{ user.comment_set.count }}개</h5>
+              
+            <div class="text-end">
+              {% if comments.has_previous %}
+                <a href="?page={{comments.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a></a>
+              {% endif %}
+              <span class="text-muted">{{comments.number}}</span>
+              <span class="text-muted">/</span>
+              <span class="text-muted">{{comments.paginator.num_pages}}</span>
+              {% if comments.has_next %}
+                <a href="?page={{comments.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a></a>
+              {% endif %}
+            </div>
 
-          {% for comment in comments %}
-            <span class="text-muted">
-              <i class="bi bi-pencil-fill"></i>
-              {{ forloop.counter }}번째 댓글:
-            </span>
-            <a href="{% url 'posts:detail' comment.article.pk%}">
-              {{ comment.content }}
-            </a>
-            <br>
-          {% endfor %}
-          <div class="text-end">
-            {% if comments.has_previous %}
-              <a href="?page=1">&laquo;</a>
-              <a href="?page={{comments.previous_page_number}}">prev</a>
-            {% endif %}
-            <span>{{comments.number}}</span>
-            <span>/</span>
-            <span>{{comments.paginator.num_pages}}</span>
-            {% if comments.has_next %}
-              <a href="?page={{comments.next_page_number}}">next</a>
-              <a href="?page={{comments.paginator.num_pages}}">&raquo;</a>
-            {% endif %}
+            {% for comment in comments %}
+              <span class="text-muted">
+                <i class="bi bi-pencil-fill"></i>
+                {{ forloop.counter }}번째 댓글:
+              </span>
+              <a href="{% url 'posts:detail' comment.article.pk %}" style="text-decoration: none;" class="text-muted">
+                {{ comment.content }}
+              </a>
+              <br>
+            {% endfor %} 
           </div>
         </div>
       </div>
@@ -184,19 +211,6 @@
       회원탈퇴
     </button>
     <!-- follow/following -->
-    <span>
-      팔로잉:{{user.follow.count}}
-      팔로워:{{user.followers.count}}
-    </span>
-    {% if request.user != user %}
-      {% if request.user in user.followers.all %}
-        <a href='{% url 'accounts:follow' user.pk%}' class='btn btn-danger'>언팔로우</a>
-      {% else %}
-        <a href='{% url 'accounts:follow' user.pk %}' class='btn btn-primary'>팔로우</a>
-      {% endif %}
-    {% else %}
-      <button class='btn btn-primary disabled' value='팔로우' style='height:20px;width:100px;'>
-      {% endif %}
     </p>
   </div>
 
