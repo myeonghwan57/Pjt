@@ -19,9 +19,20 @@ def index(request):
 def detail(request, pk):
     jobs = get_object_or_404(JobData, pk=pk)
     br = jobs.company_job.replace("\n", "<br>")
+    job_list = list(jobs.pseudo_position.split(","))
+    lst = []
+    for i in job_list:
+        i = list(i)
+        tmp = []
+        for j in range(len(i)):
+            if str(i[j]) != '"':
+                tmp.append(str(i[j]))
+        lst.append("".join(tmp))
+    jobs.pseudo_position = lst
     context = {
         "jobs": jobs,
         "jobs.company_job": br,
+        # "jobs.pseudo_position": job_list,
         "comments": CommentCompany.objects.select_related("user").filter(
             jobs=jobs, parent=None
         ),
@@ -34,8 +45,8 @@ def detail(request, pk):
 
 
 @require_POST
-def comment_create(request, pk):
-    jobs = get_object_or_404(JobData, pk=pk)
+def comment_create(request, jobs_pk):
+    jobs = get_object_or_404(JobData, pk=jobs_pk)
 
     if request.user.is_authenticated:
         comment_form = CommentCompanyForm(request.POST)
