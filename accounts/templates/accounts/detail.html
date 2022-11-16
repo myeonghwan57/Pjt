@@ -367,6 +367,39 @@
               <div class="text-muted">스크랩한 글이 없습니다.</div>
             {% else %}
               <!-- 테이블 출력 -->
+              <span class="text-muted text-center">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">제목</th>
+                      <th scope="col">작성일자</th>
+                      <th scope="col">태그</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bookmark in bookmark_articles %}
+                      <tr>
+                        <td>
+                          <i class="bi bi-pencil-fill"></i>
+                          <a href="{% url 'articles:detail' bookmark.pk%}" style="text-decoration: none;" class="text-muted">
+                            {{ bookmark.job_name|truncatechars:20 }}
+                          </a>
+                        </td>
+                        <td>
+                          <a href="{% url 'articles:detail' bookmark.pk%}" style="text-decoration: none;" class="text-muted">
+                            다른 내용
+                          </a>
+                        </td>
+                        <td>
+                          <a href="{% url 'articles:detail' bookmark.pk%}" style="text-decoration: none;" class="text-muted">
+                            다른내용
+                          </a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </span>
             {% endif %}
 
           </div>
