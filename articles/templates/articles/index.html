@@ -1,37 +1,31 @@
 {% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
 
 {% block content %}
-<div class="container my-4">
-    <h1 class="text-center my-5 pt-5 fs-3 fw-bold">전체 공고</h1>
+<div class="container mt-3">
+  <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
+    모집 중인 공고</h1>
 
   <!-- content -->
-  <div class="flex-wrap my-3 pb-5">
-    <main class="container d-flex justify-content-center rounded bg-white border my-5">
-      <section class="container" style="height: auto;">
-        <table class="table my-5 mt-3 text-center">
-          <thead>
-            <tr>
-              <th scope="col">공고 No.</th>
-              <th scope="col">포지션</th>
-              <th scope="col">유사직무</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for job in Joblists %}
-              <tr>
-                <td scope="row" class="align-middle">{{ job.pk }}</td>
-                <th class="align-middle">
-                  <a href="{% url 'articles:detail' job.pk %}" class="black-pink text-decoration-none">{{ job.position }}</a>
-                </th>
-                <td class="align-middle">
-                  <span class="nav1-text">{{ job.pseudo_position }}</span>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </section>
-    </main>
-  </div>
+  <section class="container">
+    <div class="row d-flex justify-content-between">
+      {% for job in Joblists %}
+        <div class="card col-3 ms-1 px-3 g-lg-3" style="width:33%;">
+          <div class="card-body">
+            <h5 class="card-title fw-bold main_color1">
+              <a href="{% url 'articles:detail' job.pk %}" class="main_color1 text-decoration-none">📌 {{ job.job_name }}</a>
+              <hr>
+            </h5>
+            <div class="card-subtitle mt-2 mb-2 text-muted">{{ job.position }}</div>
+            <p class="card-text">
+                {{ job.pseudo_position }}
+            </p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
 </div>
 {% endblock content %}

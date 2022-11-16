@@ -12,7 +12,9 @@ from django.views.decorators.http import require_POST
 
 def index(request):
     Joblists = JobData.objects.order_by("id")
-    context = {"Joblists": Joblists}
+    context = {
+        "Joblists": Joblists,
+    }
     return render(request, "articles/index.html", context)
 
 
