@@ -286,25 +286,29 @@ def like(request, post_pk):
     return JsonResponse(data)
 
 def search(request):
-    if request.method =='POST':
-        search = request.POST['search']
-        jobs = JobData.objects.filter(
-            Q(job_name__contains = search)
-            | Q(position__contains = search)
-            | Q(pseudo_position__contains = search)
-            | Q(company_job__contains = search)
+    search = request.GET.get('search',False)
+    jobs = JobData.objects.filter(
+        Q(job_name__contains = search)
+        | Q(position__contains = search)
+        | Q(pseudo_position__contains = search)
+        | Q(company_job__contains = search)
+    )
+    posts = Post.objects.filter(
+        Q(title__contains=search)
+        | Q(content__contains=search)
+        | Q(user__username__contains=search)
         )
-        posts = Post.objects.filter(
-            Q(title__contains=search)
-            | Q(content__contains=search)
-            | Q(user__username__contains=search)
-            )
-        comments = Comment.objects.filter(
-            Q(content__contains=search)
-        )
-        recomments = Comment.objects.filter(
-            Q(content__contains=search)
-        )
-        return render(request, 'posts/search.html',{'search':search,'posts':posts, 'comments':comments,'recomments':recomments, 'jobs':jobs,})
+    comments = Comment.objects.filter(
+        Q(content__contains=search)
+    )
+    
+    if not search:
+        jobs=[]
+        posts=[]
+        comments=[]
+        text = '검색어를 입력해 주세요.'
+    elif not len(posts) and not len(jobs) and not len(comments):
+        text = '검색 결과가 없습니다.'
     else:
-        return render(request, 'posts/searched.html', {})
+        text = "" 
+    return render(request, 'posts/search.html',{'search':search,'posts':posts, 'comments':comments, 'jobs':jobs,'text':text,})
