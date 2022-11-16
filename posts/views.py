@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+
+from articles.models import JobData
 from .models import Post, Comment, Photo
 from .forms import PostForm, CommentForm, ReCommentForm
 from django.http import HttpResponseForbidden, JsonResponse
@@ -286,6 +288,12 @@ def like(request, post_pk):
 def search(request):
     if request.method =='POST':
         search = request.POST['search']
+        jobs = JobData.objects.filter(
+            Q(job_name__contains = search)
+            | Q(position__contains = search)
+            | Q(pseudo_position__contains = search)
+            | Q(company_job__contains = search)
+        )
         posts = Post.objects.filter(
             Q(title__contains=search)
             | Q(content__contains=search)
@@ -297,6 +305,6 @@ def search(request):
         recomments = Comment.objects.filter(
             Q(content__contains=search)
         )
-        return render(request, 'posts/search.html',{'search':search,'posts':posts, 'comments':comments,'recomments':recomments,})
+        return render(request, 'posts/search.html',{'search':search,'posts':posts, 'comments':comments,'recomments':recomments, 'jobs':jobs,})
     else:
         return render(request, 'posts/searched.html', {})
