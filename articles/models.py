@@ -11,6 +11,7 @@ class JobData(models.Model):
     position = models.CharField(max_length=100)
     pseudo_position = models.CharField(max_length=100)
     company_job = models.TextField()
+    bookmark = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="bookmark")
 
 
 class CommentCompany(models.Model):

@@ -213,3 +213,18 @@ def comment_delete(request, jobs_pk, comment_pk):
     else:
         messages.warning(request, "댓글 작성자만 삭제 가능합니다.")
         return redirect("articles:detail", jobs_pk)
+
+
+@login_required
+def bookmark(request, pk):
+    jobdata = JobData.objects.get(pk=pk)
+    if jobdata.bookmark.filter(pk=request.user.pk).exists():
+        jobdata.bookmark.remove(request.user)
+        is_bookmarked = False
+    else:
+        jobdata.bookmark.add(request.user)
+        is_bookmarked = True
+    data = {
+        "is_bookmarked": is_bookmarked,
+    }
+    return JsonResponse(data)
