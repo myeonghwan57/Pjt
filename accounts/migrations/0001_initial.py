@@ -50,17 +50,5 @@ class Migration(migrations.Migration):
                 ('objects', django.contrib.auth.models.UserManager()),
             ],
         ),
-        migrations.CreateModel(
-            name='Note',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('receive_user', models.CharField(blank=True, max_length=50)),
-                ('title', models.CharField(max_length=50)),
-                ('content', models.TextField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('receive_view', models.BooleanField(default=False)),
-                ('send_view', models.BooleanField(default=False)),
-                ('send_user', models.ForeignKey(default='', on_delete=django.db.models.deletion.CASCADE, related_name='send_user', to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
+
     ]
