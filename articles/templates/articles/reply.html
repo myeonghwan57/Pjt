@@ -7,9 +7,9 @@
       <li id="comment-{{ comment.pk }}" class="list-group-item bg-light p-0 border-0 flex-fill">
         <div id="comment-{{ comment.pk }}-user" class="d-flex justify-content-between align-items-center">
           {% if request.user == comment.user %}
-            <a class="card-text m-2 comment-user" href="{% url 'accounts:mypage' %}">{{ comment.user }}</a>
+            <a class="card-text m-2 comment-user" href="{% url 'accounts:detail' %}">{{ comment.user }}</a>
           {% else %}
-            <a class="card-text m-2 comment-user" href="{% url 'accounts:profile' comment.user %}">{{ comment.user }}</a>
+            <a class="card-text m-2 comment-user" href="{% url 'accounts:detail' comment.user %}">{{ comment.user }}</a>
           {% endif %}
           <p class="card-text text-muted">
             {% if comment.created_string == False %}
