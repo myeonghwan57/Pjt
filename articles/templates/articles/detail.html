@@ -84,7 +84,6 @@
                   </div>
                   <div>
                     <input class="btn btn-search" type="submit" value="작성">
-
                   </div>
                 </form>
               {% else %}
@@ -117,7 +116,7 @@
                       <p>{{ comment.content }}</p>
                       <div id="btn-{{ comment.pk }}" class="d-flex align-items-baseline">
                         {% if request.user == comment.user %}
-                          <form class="comment-delete-form" data-article-id="{{ article.pk }}" data-comment-id="{{ comment.pk }}">
+                          <form class="comment-delete-form" data-article-id="{{ jobs.pk }}" data-comment-id="{{ comment.pk }}">
                             {% csrf_token %}
                             <button class="btn btn-sm p-0 border-0 text-danger text-decoration-none me-2" type="submit">
                               <i class="bi bi-x-square"></i>
@@ -133,7 +132,7 @@
                     </div>
                     {% if request.user.is_authenticated %}
                       <div id="reply-create-{{ comment.pk }}" class="d-none">
-                        <form class="reply-create-form" data-article-id="{{ article.pk }}" data-comment-id="{{ comment.pk }}">
+                        <form class="reply-create-form" data-article-id="{{ jobs.pk }}" data-comment-id="{{ comment.pk }}">
                           {% csrf_token %}
                           <div class="d-flex justify-content-between">
                             <div class="flex-fill me-2">
@@ -162,7 +161,7 @@
   <!-- container -->
 
   <!-- 댓글 비동기 -->
-  <script type="text/javascript" src="/static/js/comment.js"></script>
+  <script type="text/javascript" src="/static/js/company_comment.js"></script>
 {% endblock content %}
 
 {% block script %}

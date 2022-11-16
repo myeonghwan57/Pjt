@@ -13,9 +13,7 @@ from django.template.defaultfilters import linebreaksbr
 
 def index(request):
     Joblists = JobData.objects.order_by("id")
-    context = {
-        "Joblists": Joblists,
-    }
+    context = {"Joblists": Joblists}
     return render(request, "articles/index.html", context)
 
 
@@ -35,8 +33,6 @@ def detail(request, pk):
     br = jobs.company_job
     br = str(br).replace('"', "")
     br = list(str(br).split("\\n"))
-    # br = br.replace('"', "")
-    # br = str(br).replace("\\n", "<br>")
     jobs.company_job = br
     context = {
         "jobs": jobs,
