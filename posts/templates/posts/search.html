@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% block content %}
+  <div class='container'>
+    {% if search %}
+      <div>
+        <h3 class='d-flex'>
+          <div style="color:#7689DE;">'{{search}}'</div>
+          <div>검색 결과 입니다.</div>
+        </h3>
+      </div>
+      <div>
+        <div class='search_result p-3 rounded'>
+          <h3>게시글</h3>
+          {% for post in posts %}
+            <div class='d-flex'>
+              <i class="bi bi-postcard mx-1"></i>
+              <a class='text-decoration-none ' href="{%url 'posts:detail' post.pk%}">
+                <p>{{post.title}}</p>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+        <hr>
+        <div class='search_result p-3 rounded'>
+          <h3>댓글</h3>
+          {% for comment in comments %}
+            <div class='d-flex'>
+              <i class="bi bi-chat-square-dots mx-1"></i>
+              <a class='text-decoration-none ' href="{%url 'posts:detail' comment.article.pk%}">
+                <p>{{comment.content}}</p>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+        <hr>
+      {% endif %}
+    </div>
+
+  </div>
+{% endblock content %}
