@@ -104,7 +104,7 @@
         </div>
 
         {% if page_obj.has_next %}
-        <a class="infinite-more-link" href="http://127.0.0.1:8000/posts/?sort={{ sort }}&page={{ page_obj.next_page_number }}">next</a>
+        <a class="infinite-more-link" href="http://127.0.0.1:8000/posts/scroll/{{tag_name}}?sort={{ sort }}&page={{ page_obj.next_page_number }}">next</a>
         {% endif %}
       </div>
     </div>

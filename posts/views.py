@@ -9,6 +9,7 @@ from datetime import date, datetime, timedelta
 from django.db import transaction
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator
 from django.db.models import Q
 
 
@@ -20,50 +21,79 @@ def index(request):
     posts = Post.objects.all()
     instances = Post.objects.all().order_by("-hits")[:3]
     sort = request.GET.get("sort", "")  # url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
+    if sort == "likes":
+        posts_sort = posts.annotate(like_count=Count("like")).order_by(
+            "-like_count", "-created_at"
+        )
 
-    if request.method == "POST":
-        posts = Post.objects.filter(tag__contains=request.POST.get("tag"))
-        if request.POST.get("tag") == "전체":
-            posts = Post.objects.all()
+    elif sort == "comments":
+        posts_sort = posts.annotate(comment_count=Count("comment")).order_by(
+            "-comment_count", "-created_at"
+        )
+    else:
+        posts_sort = posts.order_by("-created_at")
+
+    page = request.GET.get('page') #GET 방식으로 정보를 받아오는 데이터
+    paginator = Paginator(posts_sort, '3') #Paginator(분할될 객체, 페이지 당 담길 객체수)
+    page_obj = paginator.get_page(page)
+    return render(
+        request,
+        "posts/index.html",
+        {
+            "posts_sort": posts_sort,
+            "posts": posts,
+            "instances": instances,
+            "page_obj":page_obj,
+            "sort":sort,
+        },
+    )
+
+def divide(request):
+
+    tag_name = request.POST.get('tag')
+
+    return redirect("posts:scroll",tag_name)
+
+
+def scroll(request,tag_name):
+    if tag_name == '전체':
+        return redirect('posts:index')
+
+    instances = Post.objects.all().order_by("-hits")[:3]
+    sort = request.GET.get("sort", "")  # url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
+    posts = Post.objects.filter(tag__contains=tag_name)
 
     if sort == "likes":
         posts_sort = posts.annotate(like_count=Count("like")).order_by(
             "-like_count", "-created_at"
         )
-        return render(
-            request,
-            "posts/index.html",
-            {
-                "posts_sort": posts_sort,
-                "posts": posts,
-                "instances": instances,
-            },
-        )
+
+
     elif sort == "comments":
         posts_sort = posts.annotate(comment_count=Count("comment")).order_by(
             "-comment_count", "-created_at"
         )
-        return render(
-            request,
-            "posts/index.html",
-            {
-                "posts_sort": posts_sort,
-                "posts": posts,
-                "instances": instances,
-            },
-        )
 
     else:
         posts_sort = posts.order_by("-created_at")
-        return render(
-            request,
-            "posts/index.html",
-            {
-                "posts_sort": posts_sort,
-                "posts": posts,
-                "instances": instances,
-            },
-        )
+
+    page = request.GET.get('page','1') #GET 방식으로 정보를 받아오는 데이터
+    paginator = Paginator(posts_sort, '3') #Paginator(분할될 객체, 페이지 당 담길 객체수)
+    page_obj = paginator.get_page(page)
+
+    return render(
+        request,
+        "posts/scroll.html",
+        {
+            "posts_sort": posts_sort,
+            "posts": posts,
+            "instances": instances,
+            "page_obj":page_obj,
+            "tag_name":tag_name,
+            "sort":sort,
+
+        },
+    )
 
 
 @login_required
