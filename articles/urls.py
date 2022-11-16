@@ -17,5 +17,5 @@ urlpatterns = [
         views.reply_create,
         name="reply_create",
     ),
-
+    path("details/<int:pk>/bookmark/", views.bookmark, name="bookmark"),
 ]
