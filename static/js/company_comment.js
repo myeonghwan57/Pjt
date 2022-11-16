@@ -21,7 +21,7 @@ function commentDelete() {
       const commentId = event.currentTarget.dataset.commentId
       axios({
         method: 'POST',
-        url: `/articles/${articleId}/comments/${commentId}/delete/`,
+        url: `/details/${articleId}/comments/${commentId}/delete/`,
         headers: { 'X-CSRFToken': csrftoken }
       })
         .then(response => {
@@ -79,7 +79,7 @@ function commentDelete() {
               if (response.data.request_username == comments[i].username) {
                 document.querySelector(`#btn-${comments[i].pk}`).insertAdjacentHTML('beforeend',
                   `
-                <form class="comment-delete-form" data-article-id="${response.data.article_pk}" data-comment-id="${comments[i].pk}">
+                <form class="comment-delete-form" data-article-id="${response.data.jobs_pk}" data-comment-id="${comments[i].pk}">
                   <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                   <button class="btn btn-sm p-0 border-0 text-danger text-decoration-none me-2" type="submit"><i class="bi bi-x-square"></i></button>
                 </form>
@@ -95,7 +95,7 @@ function commentDelete() {
                 document.querySelector(`#comment-${comments[i].pk}`).insertAdjacentHTML('beforeend',
                   `
                 <div id="reply-create-${comments[i].pk}" class="d-none">
-                  <form class="reply-create-form" data-article-id="${response.data.article_pk}" data-comment-id="${comments[i].pk}">
+                  <form class="reply-create-form" data-article-id="${response.data.jobs_pk}" data-comment-id="${comments[i].pk}">
                     <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                     <div class="d-flex justify-content-between">
                       <div class="flex-fill me-2">
@@ -159,7 +159,7 @@ function commentDelete() {
               if (response.data.request_username == comments[i].username) {
                 document.querySelector(`#btn-${comments[i].pk}`).insertAdjacentHTML('beforeend',
                   `
-                <form class="comment-delete-form" data-article-id="${response.data.article_pk}" data-comment-id="${comments[i].pk}">
+                <form class="comment-delete-form" data-article-id="${response.data.jobs_pk}" data-comment-id="${comments[i].pk}">
                   <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                   <button class="btn btn-sm p-0 border-0 text-danger text-decoration-none me-2" type="submit"><i class="bi bi-x-square"></i></button>
                 </form>
@@ -175,7 +175,7 @@ function commentDelete() {
                 document.querySelector(`#comment-${comments[i].pk}`).insertAdjacentHTML('beforeend',
                   `
                 <div id="reply-create-${comments[i].pk}" class="d-none">
-                  <form class="reply-create-form" data-article-id="${response.data.article_pk}" data-comment-id="${comments[i].pk}">
+                  <form class="reply-create-form" data-article-id="${response.data.jobs_pk}" data-comment-id="${comments[i].pk}">
                     <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                     <div class="d-flex justify-content-between">
                       <div class="flex-fill me-2">
@@ -216,7 +216,7 @@ function replyCreate() {
       const commentId = event.currentTarget.dataset.commentId
       axios({
         method: 'POST',
-        url: `/articles/${articleId}/comments/${commentId}/reply/`,
+        url: `/details/${articleId}/comments/${commentId}/reply/`,
         headers: { 'X-CSRFToken': csrftoken },
         data: new FormData(replyCreateForm) // 폼에 있는 정보를 data로 넘겨줄 수 있도록 변환
       })
@@ -275,7 +275,7 @@ function replyCreate() {
               if (response.data.request_username == comments[i].username) {
                 document.querySelector(`#btn-${comments[i].pk}`).insertAdjacentHTML('beforeend',
                   `
-                <form class="comment-delete-form" data-article-id="${response.data.article_pk}" data-comment-id="${comments[i].pk}">
+                <form class="comment-delete-form" data-article-id="${response.data.jobs_pk}" data-comment-id="${comments[i].pk}">
                   <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                   <button class="btn btn-sm p-0 border-0 text-danger text-decoration-none me-2" type="submit"><i class="bi bi-x-square"></i></button>
                 </form>
@@ -291,7 +291,7 @@ function replyCreate() {
                 document.querySelector(`#comment-${comments[i].pk}`).insertAdjacentHTML('beforeend',
                   `
                 <div id="reply-create-${comments[i].pk}" class="d-none">
-                  <form class="reply-create-form" data-article-id="${response.data.article_pk}" data-comment-id="${comments[i].pk}">
+                  <form class="reply-create-form" data-article-id="${response.data.jobs_pk}" data-comment-id="${comments[i].pk}">
                     <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                     <div class="d-flex justify-content-between">
                       <div class="flex-fill me-2">
@@ -355,7 +355,7 @@ function replyCreate() {
               if (response.data.request_username == comments[i].username) {
                 document.querySelector(`#btn-${comments[i].pk}`).insertAdjacentHTML('beforeend',
                   `
-                <form class="comment-delete-form" data-article-id="${response.data.article_pk}" data-comment-id="${comments[i].pk}">
+                <form class="comment-delete-form" data-article-id="${response.data.jobs_pk}" data-comment-id="${comments[i].pk}">
                   <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                   <button class="btn btn-sm p-0 border-0 text-danger text-decoration-none me-2" type="submit"><i class="bi bi-x-square"></i></button>
                 </form>
@@ -371,7 +371,7 @@ function replyCreate() {
                 document.querySelector(`#comment-${comments[i].pk}`).insertAdjacentHTML('beforeend',
                   `
                 <div id="reply-create-${comments[i].pk}" class="d-none">
-                  <form class="reply-create-form" data-article-id="${response.data.article_pk}" data-comment-id="${comments[i].pk}">
+                  <form class="reply-create-form" data-article-id="${response.data.jobs_pk}" data-comment-id="${comments[i].pk}">
                     <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                     <div class="d-flex justify-content-between">
                       <div class="flex-fill me-2">
@@ -411,7 +411,7 @@ function commentCreate() {
     const articleId = event.currentTarget.dataset.articleId
     axios({
       method: 'POST',
-      url: `/articles/${articleId}/comments/`,
+      url: `/details/${articleId}/comments/`,
       headers: { 'X-CSRFToken': csrftoken },
       data: new FormData(commentCreateForm) // 폼에 있는 정보를 data로 넘겨줄 수 있도록 변환
     })
@@ -470,7 +470,7 @@ function commentCreate() {
             if (response.data.request_username == comments[i].username) {
               document.querySelector(`#btn-${comments[i].pk}`).insertAdjacentHTML('beforeend',
                 `
-              <form class="comment-delete-form" data-article-id="${response.data.article_pk}" data-comment-id="${comments[i].pk}">
+              <form class="comment-delete-form" data-article-id="${response.data.jobs_pk}" data-comment-id="${comments[i].pk}">
                 <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                 <button class="btn btn-sm p-0 border-0 text-danger text-decoration-none me-2" type="submit"><i class="bi bi-x-square"></i></button>
               </form>
@@ -486,7 +486,7 @@ function commentCreate() {
               document.querySelector(`#comment-${comments[i].pk}`).insertAdjacentHTML('beforeend',
                 `
               <div id="reply-create-${comments[i].pk}" class="d-none">
-                <form class="reply-create-form" data-article-id="${response.data.article_pk}" data-comment-id="${comments[i].pk}">
+                <form class="reply-create-form" data-article-id="${response.data.jobs_pk}" data-comment-id="${comments[i].pk}">
                   <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                   <div class="d-flex justify-content-between">
                     <div class="flex-fill me-2">
@@ -550,7 +550,7 @@ function commentCreate() {
             if (response.data.request_username == comments[i].username) {
               document.querySelector(`#btn-${comments[i].pk}`).insertAdjacentHTML('beforeend',
                 `
-              <form class="comment-delete-form" data-article-id="${response.data.article_pk}" data-comment-id="${comments[i].pk}">
+              <form class="comment-delete-form" data-article-id="${response.data.jobs_pk}" data-comment-id="${comments[i].pk}">
                 <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                 <button class="btn btn-sm p-0 border-0 text-danger text-decoration-none me-2" type="submit"><i class="bi bi-x-square"></i></button>
               </form>
@@ -566,7 +566,7 @@ function commentCreate() {
               document.querySelector(`#comment-${comments[i].pk}`).insertAdjacentHTML('beforeend',
                 `
               <div id="reply-create-${comments[i].pk}" class="d-none">
-                <form class="reply-create-form" data-article-id="${response.data.article_pk}" data-comment-id="${comments[i].pk}">
+                <form class="reply-create-form" data-article-id="${response.data.jobs_pk}" data-comment-id="${comments[i].pk}">
                   <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                   <div class="d-flex justify-content-between">
                     <div class="flex-fill me-2">

@@ -13,6 +13,7 @@ from django.template.defaultfilters import linebreaksbr
 
 def index(request):
     Joblists = JobData.objects.order_by("id")
+<<<<<<< HEAD
 
     # job_list = list(Joblists.pseudo_position.split(","))
     print(Joblists.id)
@@ -28,6 +29,9 @@ def index(request):
     context = {
         "Joblists": Joblists,
     }
+=======
+    context = {"Joblists": Joblists}
+>>>>>>> ce278441c7629dbb723eb06ba67f1f7e51279bbc
     return render(request, "articles/index.html", context)
 
 
@@ -47,8 +51,6 @@ def detail(request, pk):
     br = jobs.company_job
     br = str(br).replace('"', "")
     br = list(str(br).split("\\n"))
-    # br = br.replace('"', "")
-    # br = str(br).replace("\\n", "<br>")
     jobs.company_job = br
     context = {
         "jobs": jobs,

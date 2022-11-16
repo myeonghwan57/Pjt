@@ -3,29 +3,73 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-3">
-  <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
-    모집 중인 공고</h1>
+  <div class="container mt-3">
+    <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
+      모집 중인 공고</h1>
 
-  <!-- content -->
-  <section class="container">
-    <div class="row d-flex justify-content-between">
-      {% for job in Joblists %}
-        <div class="card col-3 ms-1 px-3 g-lg-3" style="width:33%;">
-          <div class="card-body">
-            <h5 class="card-title fw-bold main_color1">
-              <a href="{% url 'articles:detail' job.pk %}" class="main_color1 text-decoration-none">📌 {{ job.job_name }}</a>
-              <hr>
-            </h5>
-            <div class="card-subtitle mt-2 mb-2 text-muted">{{ job.position }}</div>
-            <p class="card-text">
-              {% comment %} {{ job.pseudo_position }} {% endcomment %}
-            </p>
+    <!-- content -->
+    <section class="container">
+      <div class="row d-flex justify-content-between">
+        {% for job in Joblists %}
+          <div class="card col-3 ms-1 px-3 g-lg-3" style="width:33%;">
+            <div class="card-body">
+              <h5 class="card-title fw-bold main_color1">
+                <a href="{% url 'articles:detail' job.pk %}" class="main_color1 text-decoration-none">📌
+                  {{ job.job_name }}</a>
+                <hr>
+              </h5>
+              <div class="card-subtitle mt-2 mb-2 text-muted">{{ job.position }}</div>
+              <p class="card-text">
+                {{ job.pseudo_position }}
+              </p>
+              <!-- 북마크버튼 -->
+              {% if request.user in job.bookmark.all %}
+                <button id='bookmarkbtn' data-jobdata-id='{{job.pk}}' type='button' class='btn btn-warning text-white'>bookmark</button>
+              {% else %}
+                <button id='bookmarkbtn' data-jobdata-id='{{job.pk}}' type='button' class='btn btn-danger text-white'>bookmark</button>
+
+              {% endif %}
+
+            </div>
           </div>
-        </div>
-      {% endfor %}
-    </div>
-  </section>
+        {% endfor %}
+      </div>
+    </section>
 
-</div>
+  </div>
 {% endblock content %}
+{% block script %}
+  <script>
+    const bookmark = document.querySelector('#bookmarkbtn')
+    bookmark.addEventListener('click', function (event) {
+      console.log(event.target.dataset)
+      console.log(event.target.dataset.jobdataId)
+
+      axios({method: 'get', url: `details/${event.target.dataset.jobdataId}/bookmark/`}).then(response => {
+        is_bookmarked = response.data.is_bookmarked
+        if (is_bookmarked === true) {
+          console.log(response.data.is_bookmarked)
+
+          event
+            .target
+            .classList
+            .remove('btn-danger')
+          event
+            .target
+            .classList
+            .add('btn-warning')
+        } else {
+          console.log(response.data.is_bookmarked)
+          event
+            .target
+            .classList
+            .remove('btn-warning')
+          event
+            .target
+            .classList
+            .add('btn-danger')
+        }
+      })
+    })
+  </script>
+{% endblock script %}
