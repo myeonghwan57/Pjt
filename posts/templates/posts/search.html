@@ -3,13 +3,14 @@
 {% load static %}
 {% block content %}
   <div class='container'>
-    <div>
+    <div class='m-auto' style=' width:80%'>
       <h3 class='d-flex'>
         <div style="color:#7689DE;">'{{search}}'</div>
         <div>검색 결과 입니다.</div>
       </h3>
+      <div>{{text}}</div>
     </div>
-    <div>
+    <div class='m-auto' style=' width:80%'>
       <div class='search_result p-3 rounded'>
         <h3>채용정보</h3>
         {% for job in jobs %}
