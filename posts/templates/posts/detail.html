@@ -76,7 +76,6 @@
             </div> 
             <div class=" align-self-center">{{comment.content}}</div>
           </div>
-      
           <div>
             <div class='d-flex align-self-center' style='float:right;'>
               <div>
@@ -167,7 +166,7 @@
       {% endif %}
     {% endfor %}
     <div class="px-3 my-3">
-      <form id='comment-form' method="POST" data-post-id="{{post.pk}}" class="border border-5 rounded p-3" style="background-color:whitesmoke;">
+      <form action="{% url 'posts:comments_create' post.pk %}" method="POST" class="border border-5 rounded p-3" style="background-color:whitesmoke;">
         {% csrf_token %}
         {% bootstrap_form comment_form %}
         <div class="text-end"><input class="btn post_detail_comment_btn" type="submit" value="댓글 작성">
