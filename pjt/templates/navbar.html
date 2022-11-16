@@ -19,7 +19,7 @@
             </li>
           </ul>
           <div class="me-5">
-            <form class="d-flex" method="POST" action="{% url 'posts:search' %}">
+            <form class="d-flex" method="GET" action="{% url 'posts:search' %}">
               {% csrf_token %}
               <input class="form-control me-auto" type="search" placeholder="Search" aria-label="Search" style="width:500px;" name='search'>
               <button class="btn btn-outline-success ms-2" type="submit">검색</button>

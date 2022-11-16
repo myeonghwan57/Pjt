@@ -27,7 +27,12 @@
                 {{ jobs.position }}
               </span>
             </h2>
-            <p class="mb-0 fs-5 text-muted">{{ jobs.pseudo_position }}</p>
+            <p class="mb-0 fs-5 text-muted">
+              {% for job in jobs.pseudo_position %}
+              {% comment %} {% job_positon = str(job)[1:-1:1]%} {% endcomment %}
+              {{ job }}
+              {% endfor %}
+            </p>
           </div>
           <hr class="mt-2">
           <div class="d-flex justify-content-center">
@@ -63,19 +68,20 @@
               </div>
             </div>
           </div>
-          <!-- 댓글 -->
-          <div class="mt-3 mb-5 p-5 rounded-4 shadow">
-            <div class="mb-4">
-              {% if request.user.is_authenticated %}
-                <form id="comment-create-form" data-article-id="{{ article.pk }}">
-                  {% csrf_token %}
-                  <div class="d-flex justify-content-between">
-                    <div class="flex-fill me-2">
-                      {% bootstrap_form comment_form %}
-                    </div>
-                    <div>
-                      <input class="btn btn-search" type="submit" value="작성">
-                    </div>
+
+        <!-- 댓글 -->
+        <div class="mt-3 mb-5 p-5 rounded-4 shadow">
+          <div class="mb-4">
+            {% if request.user.is_authenticated %}
+              <form id="comment-create-form" data-article-id="{{ jobs.pk }}">
+                {% csrf_token %}
+                <div class="d-flex justify-content-between">
+                  <div class="flex-fill me-2">
+                    {% bootstrap_form comment_form %}
+                  </div>
+                  <div>
+                    <input class="btn btn-search" type="submit" value="작성">
+
                   </div>
                 </form>
               {% else %}
