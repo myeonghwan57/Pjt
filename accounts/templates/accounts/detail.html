@@ -26,23 +26,27 @@
         <div class="text-center mt-3">
           <span>
             <span class="fw-bold main_color1">
-              <a href="{% url 'accounts:follow_page' user.pk%}">팔로잉 수</a>
+              <a class="fw-bold main_color1" href="{% url 'accounts:follow_page' user.pk%}" style="text-decoration: none;">팔로잉 수</a>
             </span>
-            <span class="text-muted">{{ user.follow.count }}&nbsp&nbsp</span>
+            <span class="text-muted" id="followings-count">{{ user.follow.count }}&nbsp&nbsp</span>
             <span class="fw-bold main_color1">
-              <a href="{% url 'accounts:follow_page' user.pk%}">팔로워 수</a>
+              <a class="fw-bold main_color1" href="{% url 'accounts:follow_page' user.pk%}" style="text-decoration: none;">팔로워 수</a>
             </span>
-            <span class="text-muted">{{ user.followers.count }}
+            <span class="text-muted" id="followers-count">{{ user.followers.count }}
             </span>
           </span>
         </div>
+        <!-- follow/following -->
         <div class="text-center mt-1 mb-1">
           {% if request.user != user %}
-            {% if request.user in user.followers.all %}
-              <a href='{% url 'accounts:follow' user.pk%}' class='btn btn-sm login_btn fw-bold'>이 사용자를 UnFollow 하겠어요.</a>
-            {% else %}
-              <a href='{% url 'accounts:follow' user.pk %}' class='btn btn-sm signup_btn fw-bold'>이 사용자를 Follow 할래요!</a>
-            {% endif %}
+            <form id='follow-form' data-user-id="{{user.pk}}" method='POST'>
+              {% csrf_token %}
+              {% if request.user in user.followers.all %}
+                <input type="submit" value="이 사용자를 UnFollow 하겠어요." class='btn btn-sm login_btn fw-bold'>
+              {% else %}
+                <input type="submit" value="이 사용자를 Follow 할래요!" class='btn btn-sm signup_btn fw-bold'>
+              {% endif %}
+            </form>
           {% endif %}
         </div>
 
@@ -57,16 +61,16 @@
 
         <div style="margin: 0 auto; width:50%;">
           {% if user.githuburl %}
-            <p class="main_color1 fw-bold"><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}">
-              <a href="{{user.githuburl}}">
+            <p class="main_color1"><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}">
+              <a class="fw-bold" href="{{user.githuburl}}">
                 {{ user.githuburl }}
               </a>
             </p>
           {% else %}
-            <p><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}">
+            <p class="main_color1"><img style='height:30px;width:30px;' src="{% static '/images/github.png'%}">
               {% if request.user == user %}
-              <a href="{% url 'accounts:update' %}" style="text-decoration: none;" class="main_color2">
-                Github 주소를 등록해주세요.</a>
+                <a href="{% url 'accounts:update' %}" style="text-decoration:none;" class="main_color2">
+                  Github 주소를 등록해주세요.</a>
               {% else %}
                 Github 주소가 없습니다.
               {% endif %}
@@ -79,8 +83,8 @@
           {% else %}
             <p class="main_color2"><img style='height:30px;width:30px;' src="{% static '/images/email.png'%}">
               {% if request.user == user %}
-                <a href="{% url 'accounts:update' %}" style="text-decoration: none;" class="main_color2">
-                이메일 주소를 등록해주세요.</a>
+                <a href="{% url 'accounts:update' %}" style="text-decoration:none;" class="main_color2">
+                  이메일 주소를 등록해주세요.</a>
               {% else %}
                 이메일 주소가 없습니다.
               {% endif %}
@@ -88,9 +92,11 @@
           {% endif %}
 
           <!-- user.post 태그 빈도수 높은 순 세개 호출 -->
-          {% for tag in tagfreq %}
-            {{ tag.tag }}
-          {% endfor %}
+          <p class="main_color1"><img style='height:30px;width:30px;' src="{% static '/images/tag.png'%}">
+            {% for tag in tagfreq %}
+              #{{ tag.tag }}
+            {% endfor %}
+          </p>
 
         </div>
         {% if delta.years == 0 %}
@@ -165,15 +171,22 @@
           <li class="nav-item" role="presentation">
             <button class="nav-link text-muted" id="comment-tab" data-bs-toggle="tab" data-bs-target="#comment-tab-pane" type="button" role="tab" aria-controls="comment-tab-pane" aria-selected="false">작성 댓글</button>
           </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link text-muted" id="bookmark-tab" data-bs-toggle="tab" data-bs-target="#bookmark-tab-pane" type="button" role="tab" aria-controls="bookmark-tab-pane" aria-selected="false">좋아요한 글</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link text-muted" id="artbookmark-tab" data-bs-toggle="tab" data-bs-target="#artbookmark-tab-pane" type="button" role="tab" aria-controls="artbookmark-tab-pane" aria-selected="false">북마크한 글</button>
+          </li>
         </ul>
 
         <!-- 사용자가 작성한 글 -->
         <div class="tab-content mt-2" id="myTabContent">
           <div class="tab-pane fade show active" id="article-tab-pane" role="tabpanel" aria-labelledby="article-tab" tabindex="0">
-            <h5 class="main_color2 fw-bold">총 {{ user.post_set.count }}개</h5>
+            <h5 class="main_color2 fw-bold">총
+              {{ user.post_set.count }}개</h5>
 
             {% if user.post_set.count == 0 %}
-            <div class="text-muted">작성한 글이 없습니다.</div>
+              <div class="text-muted">작성한 글이 없습니다.</div>
             {% else %}
               <span class="text-muted text-center">
                 <table class="table">
@@ -186,27 +199,31 @@
                   </thead>
                   <tbody>
                     {% for post in posts %}
-                    <tr>
-                      <td><i class="bi bi-pencil-fill"></i>
-                        <a href="{% url 'posts:detail' post.pk%}" style="text-decoration: none;" class="text-muted">
-                          {{ post.title|truncatechars:20 }}
-                        </a>
-                      </td>
-                      <td>
-                        <a href="{% url 'posts:detail' post.pk%}" style="text-decoration: none;" class="text-muted">
-                        {{ post.created_at }}
-                      </a></td>
-                      <td>
-                        <a href="{% url 'posts:detail' post.pk%}" style="text-decoration: none;" class="text-muted">
-                        {{ post.tag }}
-                      </a></td>
-                    </tr>
+                      <tr>
+                        <td>
+                          <i class="bi bi-pencil-fill"></i>
+                          <a href="{% url 'posts:detail' post.pk%}" style="text-decoration: none;" class="text-muted">
+                            {{ post.title|truncatechars:20 }}
+                          </a>
+                        </td>
+                        <td>
+                          <a href="{% url 'posts:detail' post.pk%}" style="text-decoration: none;" class="text-muted">
+                            {{ post.created_at }}
+                          </a>
+                        </td>
+                        <td>
+                          <a href="{% url 'posts:detail' post.pk%}" style="text-decoration: none;" class="text-muted">
+                            {{ post.tag }}
+                          </a>
+                        </td>
+                      </tr>
                     {% endfor %}
                   </tbody>
                 </table>
               </span>
             {% endif %}
-            
+
+            <!-- pagenator -->
             <div class="text-center">
               {% if posts.has_previous %}
                 <span>
@@ -226,43 +243,171 @@
           <!-- 사용자가 작성한 댓글 -->
 
           <div class="tab-pane fade mt-2" id="comment-tab-pane" role="tabpanel" aria-labelledby="comment-tab" tabindex="0">
-            <h5 class="main_color2 fw-bold">총 {{ user.comment_set.count }}개</h5>
-            
+            <h5 class="main_color2 fw-bold">총
+              {{ user.comment_set.count }}개</h5>
+
             {% if user.comment_set.count == 0 %}
-            <div class="text-muted">작성한 댓글이 없습니다.</div>
+              <div class="text-muted">작성한 댓글이 없습니다.</div>
             {% else %}
-            <span class="text-muted text-center">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">내용</th>
-                    <th scope="col">작성일자</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for comment in comments %}
-                  <tr>
-                    <td><i class="bi bi-pencil-fill"></i>
-                      <a href="{% url 'posts:detail' comment.article.pk %}" style="text-decoration: none;" class="text-muted">
-                        {{ comment.content|truncatechars:20 }}
-                      </a>
-                    </td>
-                    <td>
-                      <a href="{% url 'posts:detail' comment.article.pk %}" style="text-decoration: none;" class="text-muted">
-                        {{ comment.created_at }}
-                      </a>
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </span>
+              <span class="text-muted text-center">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">내용</th>
+                      <th scope="col">작성일자</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for comment in comments %}
+                      <tr>
+                        <td>
+                          <i class="bi bi-pencil-fill"></i>
+                          <a href="{% url 'posts:detail' comment.article.pk %}" style="text-decoration: none;" class="text-muted">
+                            {{ comment.content|truncatechars:20 }}
+                          </a>
+                        </td>
+                        <td>
+                          <a href="{% url 'posts:detail' comment.article.pk %}" style="text-decoration: none;" class="text-muted">
+                            {{ comment.created_at }}
+                          </a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </span>
             {% endif %}
+
+            <!-- pagenator -->
+            <div class="text-center">
+              {% if comments.has_previous %}
+                <span>
+                  <a href="?page={{comments.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a>
+                </span>
+              {% endif %}
+              <span class="text-muted">{{comments.number}}</span>
+              <span class="text-muted">/</span>
+              <span class="text-muted">{{comments.paginator.num_pages}}</span>
+              {% if comments.has_next %}
+                <span>
+                  <a href="?page={{comments.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a>
+                </span>
+              {% endif %}
+            </div>
+          </div>
+          <!-- 사용자가 좋아요한 글 -->
+
+          <div class="tab-pane fade mt-2" id="bookmark-tab-pane" role="tabpanel" aria-labelledby="bookmark-tab" tabindex="0">
+            <h5 class="main_color2 fw-bold">총
+              {{ like_posts_ls.count }}개</h5>
+
+            {% if like_posts_ls.count == 0 %}
+              <div class="text-muted">좋아요한 글이 없습니다.</div>
+            {% else %}
+              <span class="text-muted text-center">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">제목</th>
+                      <th scope="col">작성일자</th>
+                      <th scope="col">태그</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for lp in like_posts %}
+                      <tr>
+                        <td>
+                          <i class="bi bi-pencil-fill"></i>
+                          <a href="{% url 'posts:detail' lp.pk%}" style="text-decoration: none;" class="text-muted">
+                            {{ lp.title|truncatechars:20 }}
+                          </a>
+                        </td>
+                        <td>
+                          <a href="{% url 'posts:detail' lp.pk%}" style="text-decoration: none;" class="text-muted">
+                            {{ lp.created_at }}
+                          </a>
+                        </td>
+                        <td>
+                          <a href="{% url 'posts:detail' lp.pk%}" style="text-decoration: none;" class="text-muted">
+                            {{ lp.tag }}
+                          </a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </span>
+            {% endif %}
+
+            <!-- pagenator -->
+            <div class="text-center">
+              {% if like_posts.has_previous %}
+                <span>
+                  <a href="?page={{like_posts.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a>
+                </span>
+              {% endif %}
+              <span class="text-muted">{{like_posts.number}}</span>
+              <span class="text-muted">/</span>
+              <span class="text-muted">{{like_posts.paginator.num_pages}}</span>
+              {% if like_posts.has_next %}
+                <span>
+                  <a href="?page={{like_posts.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a>
+                </span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- 사용자가 북마크한 글 -->
+
+          <div class="tab-pane fade mt-2" id="artbookmark-tab-pane" role="tabpanel" aria-labelledby="artbookmark-tab" tabindex="0">
+            <h5 class="main_color2 fw-bold">총
+              {{ bookmark_articles.count }}개</h5>
+
+            {% if bookmark_articles.count == 0 %}
+              <div class="text-muted">스크랩한 글이 없습니다.</div>
+            {% else %}
+              <!-- 테이블 출력 -->
+              <span class="text-muted text-center">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">제목</th>
+                      <th scope="col">작성일자</th>
+                      <th scope="col">태그</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bookmark in bookmark_articles %}
+                      <tr>
+                        <td>
+                          <i class="bi bi-pencil-fill"></i>
+                          <a href="{% url 'articles:detail' bookmark.pk%}" style="text-decoration: none;" class="text-muted">
+                            {{ bookmark.job_name|truncatechars:20 }}
+                          </a>
+                        </td>
+                        <td>
+                          <a href="{% url 'articles:detail' bookmark.pk%}" style="text-decoration: none;" class="text-muted">
+                            다른 내용
+                          </a>
+                        </td>
+                        <td>
+                          <a href="{% url 'articles:detail' bookmark.pk%}" style="text-decoration: none;" class="text-muted">
+                            다른내용
+                          </a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </span>
+            {% endif %}
+
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 </div>
 
@@ -273,9 +418,8 @@
 <a class="btn login_btn" href="{% url 'articles:index' %}">홈으로 돌아가기</a>
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  회원탈퇴
+회원탈퇴
 </button>
-<!-- follow/following -->
 
 </p>
 </div>
@@ -284,19 +428,78 @@
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog">
 <div class="modal-content">
-  <div class="modal-header">
-    <h1 class="modal-title fs-5" id="exampleModalLabel">정말로 탈퇴하시겠습니까?</h1>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-  </div>
-  <div class="text-center">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
-    {% if request.user.login_method == 'email' %}
-      <a class="btn btn-primary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
-    {% else %}
-      <a class="btn btn-primary" href="{% url 'accounts:delete' request.user.pk%}">예</a>
-    {% endif %}
-  </div>
+<div class="modal-header">
+  <h1 class="modal-title fs-5" id="exampleModalLabel">정말로 탈퇴하시겠습니까?</h1>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="text-center">
+  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+  {% if request.user.login_method == 'email' %}
+    <a class="btn btn-primary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
+  {% else %}
+    <a class="btn btn-primary" href="{% url 'accounts:delete' request.user.pk%}">예</a>
+  {% endif %}
 </div>
 </div>
 </div>
+</div>
+
 {% endblock content %}
+
+{% block script %}
+<script>
+const form = document.querySelector('#follow-form')
+const csrftoken = document
+.querySelector('[name=csrfmiddlewaretoken]')
+.value
+
+form
+.addEventListener('submit', function (event) {
+event.preventDefault()
+const userId = event
+  .target
+  .dataset
+  .userId
+
+  axios({
+    method: 'post',
+    url: `/accounts/${userId}/followers/`,
+    headers: {
+      'X-CSRFToken': csrftoken
+    }
+  })
+  .then((response) => {
+    const isFollowed = response.data.is_followed
+    const followBtn = document.querySelector('#follow-form > input[type=submit]')
+    if (isFollowed === true) {
+      followBtn.value = '이 사용자를 UnFollow 하겠어요.';
+      followBtn
+        .classList
+        .add('login_btn');
+      followBtn
+        .classList
+        .remove('signup_btn');
+    } else {
+      followBtn.value = '이 사용자를 Follow 할래요!';
+      followBtn
+        .classList
+        .add('signup_btn');
+      followBtn
+        .classList
+        .remove('login_btn');
+    }
+
+    const followersCountTag = document.querySelector('#followings-count')
+    const followingsCountTag = document.querySelector('#followers-count')
+    const followersCount = response.data.followers_count
+    const followingsCount = response.data.followings_count
+    followersCountTag.innerText = followersCount
+    followingsCountTag.innerText = followingsCount
+  })
+  .catch((error) => {
+    console.log(error.response)
+  })
+})
+</script>
+
+{% endblock script %}

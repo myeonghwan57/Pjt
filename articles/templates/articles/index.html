@@ -1,34 +1,75 @@
 {% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
 
 {% block content %}
-{% comment %} {% include './banner.html' %} {% endcomment %}
-<div class="container my-4">
-    <h1 class="text-center my-5 pt-5 fs-3 fw-bold">전체 공고</h1>
-</div>
-  <!-- content -->
-  <div class="flex-wrap my-3 pb-5">
-    <main class="container d-flex justify-content-center rounded bg-white border my-5">
-      <section class="container" style="width: 85%; height: auto;">
-          <table class="table my-5 mt-3">
-            <thead>
-              <tr>
-                <th scope="col">공고 No.</th>
-                <th scope="col">포지션</th>
-                <th scope="col">유사직무</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for job in Joblists %}
-                <tr>
-                  <td scope="row" class="align-middle">{{ job.pk }}</td>
-                  <th class="align-middle">
-                    <a href="{% url 'articles:detail' job.pk %}" class="black-pink text-decoration-none">{{ job.position }}</a>
-                  </th>
-                  <td class="align-middle">
-                    <span class="nav1-text">{{ job.pseudo_position }}</span>
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+  <div class="container mt-3">
+    <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
+      모집 중인 공고</h1>
+
+    <!-- content -->
+    <section class="container">
+      <div class="row d-flex justify-content-between">
+        {% for job in Joblists %}
+          <div class="card col-3 ms-1 px-3 g-lg-3" style="width:33%;">
+            <div class="card-body">
+              <h5 class="card-title fw-bold main_color1">
+                <a href="{% url 'articles:detail' job.pk %}" class="main_color1 text-decoration-none">📌
+                  {{ job.job_name }}</a>
+                <hr>
+              </h5>
+              <div class="card-subtitle mt-2 mb-2 text-muted">{{ job.position }}</div>
+              <p class="card-text">
+                {{ job.pseudo_position }}
+              </p>
+              <!-- 북마크버튼 -->
+              {% if request.user in job.bookmark.all %}
+                <button id='bookmarkbtn' data-jobdata-id='{{job.pk}}' type='button' class='btn btn-warning text-white'>bookmark</button>
+              {% else %}
+                <button id='bookmarkbtn' data-jobdata-id='{{job.pk}}' type='button' class='btn btn-danger text-white'>bookmark</button>
+
+              {% endif %}
+
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+  </div>
 {% endblock content %}
+{% block script %}
+  <script>
+    const bookmark = document.querySelector('#bookmarkbtn')
+    bookmark.addEventListener('click', function (event) {
+      console.log(event.target.dataset)
+      console.log(event.target.dataset.jobdataId)
+
+      axios({method: 'get', url: `details/${event.target.dataset.jobdataId}/bookmark/`}).then(response => {
+        is_bookmarked = response.data.is_bookmarked
+        if (is_bookmarked === true) {
+          console.log(response.data.is_bookmarked)
+
+          event
+            .target
+            .classList
+            .remove('btn-danger')
+          event
+            .target
+            .classList
+            .add('btn-warning')
+        } else {
+          console.log(response.data.is_bookmarked)
+          event
+            .target
+            .classList
+            .remove('btn-warning')
+          event
+            .target
+            .classList
+            .add('btn-danger')
+        }
+      })
+    })
+  </script>
+{% endblock script %}

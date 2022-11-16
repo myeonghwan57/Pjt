@@ -65,12 +65,23 @@ def detail(request, pk):
     # user.post 태그 빈도수 높은 순 세개 호출
     tag_freq = posts.values("tag").annotate(cnt=Count("tag")).order_by("-cnt")[:3]
 
+    # like_posts
+    like_posts = user.like_posts.all()
+    like_posts_paginator = Paginator(like_posts, 6)
+    like_posts_page = request.GET.get("page")
+    like_posts_ls = like_posts_paginator.get_page(like_posts_page)
+    # bookmarked article
+    bookmarked_articles = user.bookmark.all()
+
     context = {
         "user": user,
         "posts": posts_ls,
         "comments": comments_ls,
         "delta": delta,
         "tagfreq": tag_freq,
+        "like_posts_ls": like_posts,
+        "like_posts": like_posts_ls,
+        "bookmark_articles": bookmarked_articles,
     }
     return render(request, "accounts/detail.html", context)
 
@@ -256,6 +267,9 @@ def github_login_callback(request):
         return redirect(reverse("articles:index"))
 
 
+from django.http import JsonResponse
+
+
 @login_required
 def follow(request, user_pk):
     # 프로필에 해당하는 유저를 로그인한 유저가!
@@ -266,10 +280,18 @@ def follow(request, user_pk):
     if request.user in user.followers.all():
         # (이미) 팔로우 상태이면, '팔로우 취소'버튼을 누르면 삭제 (remove)
         user.followers.remove(request.user)
+        is_followed = False
     else:
         # 팔로우 상태가 아니면, '팔로우'를 누르면 추가 (add)
         user.followers.add(request.user)
-    return redirect("accounts:detail", user_pk)
+        is_followed = True
+
+    data = {
+        "is_followed": is_followed,
+        "followings_count": user.followers.count(),
+        "followers_count": user.follow.count(),
+    }
+    return JsonResponse(data)
 
 
 def note(request):

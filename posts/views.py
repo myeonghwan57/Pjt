@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+
+from articles.models import JobData
 from .models import Post, Comment, Photo
 from .forms import PostForm, CommentForm, ReCommentForm
 from django.http import HttpResponseForbidden, JsonResponse
@@ -8,6 +10,7 @@ from django.db import transaction
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 
 # Create your views here.
@@ -311,3 +314,31 @@ def like(request, post_pk):
         is_likes = True
     data = {"is_likes": is_likes, "likes_count": post.like.count()}
     return JsonResponse(data)
+
+def search(request):
+    search = request.GET.get('search',False)
+    jobs = JobData.objects.filter(
+        Q(job_name__contains = search)
+        | Q(position__contains = search)
+        | Q(pseudo_position__contains = search)
+        | Q(company_job__contains = search)
+    )
+    posts = Post.objects.filter(
+        Q(title__contains=search)
+        | Q(content__contains=search)
+        | Q(user__username__contains=search)
+        )
+    comments = Comment.objects.filter(
+        Q(content__contains=search)
+    )
+    
+    if not search:
+        jobs=[]
+        posts=[]
+        comments=[]
+        text = '검색어를 입력해 주세요.'
+    elif not len(posts) and not len(jobs) and not len(comments):
+        text = '검색 결과가 없습니다.'
+    else:
+        text = "" 
+    return render(request, 'posts/search.html',{'search':search,'posts':posts, 'comments':comments, 'jobs':jobs,'text':text,})

@@ -38,4 +38,5 @@ urlpatterns = [
         views.recomments_update,
         name="recomments_update",
     ),
+    path('search',views.search,name='search'),
 ]

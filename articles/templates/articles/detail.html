@@ -2,138 +2,203 @@
 {% load django_bootstrap5 %}
 {% load static %}
 {% block content %}
-<div class="container">
+  <div class="container">
     <div class="row">
       <!-- 게시글 -->
-      <div class="col-sm-9">
+      <div class="<!--col-sm-9-->">
         <div class="container d-flex flex-column justify-content-center mt-5 mb-3 p-5 rounded-4 shadow">
           <div class="d-flex justify-content-between align-middle align-items-end">
             <h2 class="fs-1 text-center">
               <span class="fw-bold">
                 {{ jobs.job_name }}
               </span>
+
+              <!-- 북마크버튼 -->
+              {% if request.user in jobs.bookmark.all %}
+              <!-- <a href="{% url 'articles:bookmark' jobs.pk %}"class='btn btn-warning text-white'>북마크</a> -->
+              <button id='bookmarkbtn' data-jobdata-id='{{jobs.pk}}' type='button' class='btn btn-warning text-white'>bookmark</button>
+              {% else %}
+              <!-- <a href="{% url 'articles:bookmark' jobs.pk %}"class='btn btn-danger text-white'>북마크</a> -->
+              <button id='bookmarkbtn'data-jobdata-id='{{jobs.pk}}' type='button' class='btn btn-danger text-white'>bookmark</button>
+              {% endif %}
+
               <span class="fs-3 text-muted d-inline-block text-truncate" style="max-width: 350px;">
-                | {{ jobs.position }}
+                |
+                {{ jobs.position }}
               </span>
             </h2>
-            <p class="mb-0 fs-5 text-muted">{{ jobs.pseudo_position }}</p>
+            <p class="mb-0 fs-5 text-muted">
+              {% for job in jobs.pseudo_position %}
+              {{ job }}
+              {% endfor %}
+            </p>
           </div>
           <hr class="mt-2">
-            <div class="d-flex justify-content-center">
-              <img src="{% static 'images/0.png' %}" class="container">
-            </div>
-          <p class="fs-5 mt-3 mb-5 px-3">{{ jobs.company_job }}</p>
+          <div class="d-flex justify-content-center">
+            <img src="{% static 'images/0.png' %}" class="container">
+          </div>
+          <p class="fs-5 mt-3 mb-5 px-3">
+              {% for str in jobs.company_job %}
+              {{ str }}<br>
+              {% endfor %}
+          </p>
           <hr>
 
-            <!-- 공유 -->
-            <div class="d-flex flex-column align-items-center me-3">
-              <button class="btn btn-lg p-0 m-0 border-0" data-bs-toggle="modal" data-bs-target="#shareModal">
-                <i class="bi bi-share fs-4"></i>
-              </button>
-              <p>공유</p>
-            </div>
-
-
-
-    <!-- 공유 Modal -->
-    <div class="modal fade" id="shareModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">공유하기</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <!-- 공유 -->
+          <div class="d-flex flex-column align-items-center me-3">
+            <button class="btn btn-lg p-0 m-0 border-0" data-bs-toggle="modal" data-bs-target="#shareModal">
+              <i class="bi bi-share fs-4"></i>
+            </button>
+            <p>공유</p>
           </div>
-        <div class="modal-body">
-            <p>다음 링크를 복사해주세요.</p>
-            <p>{{ request.build_absolute_uri }}</p>
-            <!-- 절대 링크 -->
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+          <!-- 공유 Modal -->
+          <div class="modal fade" id="shareModal" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">공유하기</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p>다음 링크를 복사해주세요.</p>
+                  <p>{{ request.build_absolute_uri }}</p>
+                  <!-- 절대 링크 -->
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <!-- 댓글 -->
+        <div class="mt-3 mb-5 p-5 rounded-4 shadow">
+          <div class="mb-4">
+            {% if request.user.is_authenticated %}
+              <form id="comment-create-form" data-article-id="{{ jobs.pk }}">
+                {% csrf_token %}
+                <div class="d-flex justify-content-between">
+                  <div class="flex-fill me-2">
+                    {% bootstrap_form comment_form %}
+                  </div>
+                  <div>
+                    <input class="btn btn-search" type="submit" value="작성">
+                  </div>
+                </form>
+              {% else %}
+                <div class="rounded bg-white border border-2">
+                  <p class="text-muted align-middle m-2">댓글을 달려면 로그인해야 합니다.</p>
+                </div>
+              {% endif %}
+            </div>
+            <div id="comments-area">
+              <h5>{{ comments_count }}개의 댓글</h5>
+              <hr class="mb-0">
+              <ul id="comments-list" class="list-group list-group-flush rounded-2">
+                {% for comment in comments %}
+                  <li id="comment-{{ comment.pk }}" class="list-group-item bg-light p-0">
+                    <div id="comment-{{ comment.pk }}-user" class="d-flex justify-content-between align-items-center">
+                      {% if request.user == comment.user %}
+                        <a class="card-text m-2 comment-user" href="{% url 'accounts:detail' %}">{{ comment.user }}</a>
+                      {% else %}
+                        <a class="card-text m-2 comment-user" href="{% url 'accounts:profile' comment.user %}">{{ comment.user }}</a>
+                      {% endif %}
+                      <p class="card-text text-muted">
+                        {% if comment.created_string == False %}
+                          {{ comment.created_at|date:'Y-m-d D' }}
+                        {% else %}
+                          {{ comment.created_string }}
+                        {% endif %}
+                      </p>
+                    </div>
+                    <div class="d-flex justify-content-between m-2">
+                      <p>{{ comment.content }}</p>
+                      <div id="btn-{{ comment.pk }}" class="d-flex align-items-baseline">
+                        {% if request.user == comment.user %}
+                          <form class="comment-delete-form" data-article-id="{{ jobs.pk }}" data-comment-id="{{ comment.pk }}">
+                            {% csrf_token %}
+                            <button class="btn btn-sm p-0 border-0 text-danger text-decoration-none me-2" type="submit">
+                              <i class="bi bi-x-square"></i>
+                            </button>
+                          </form>
+                        {% endif %}
+                        {% if request.user.is_authenticated %}
+                          <button class="btn btn-sm p-0 border-0 text-secondary text-decoration-none me-2 reply-btn" data-comment-id="{{ comment.pk }}">
+                            <i class="bi bi-arrow-down-right"></i>
+                          </button>
+                        {% endif %}
+                      </div>
+                    </div>
+                    {% if request.user.is_authenticated %}
+                      <div id="reply-create-{{ comment.pk }}" class="d-none">
+                        <form class="reply-create-form" data-article-id="{{ jobs.pk }}" data-comment-id="{{ comment.pk }}">
+                          {% csrf_token %}
+                          <div class="d-flex justify-content-between">
+                            <div class="flex-fill me-2">
+                              {% bootstrap_form reply_form %}
+                            </div>
+                            <div>
+                              <input class="btn btn-search" type="submit" value="작성">
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    {% endif %}
+                    {% with parent=comment reply_list=comment.reply_set.all %}
+                    {% include 'articles/reply.html' %}
+                    {% endwith %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <!-- 댓글 -->
         </div>
       </div>
     </div>
-    <div class="mt-3 mb-5 p-5 rounded-4 shadow">
-      <div class="mb-4">
-        {% if request.user.is_authenticated %}
-          <form id="comment-create-form" data-jobs-id="{{ jobs.pk }}">
-            {% csrf_token %}
-            <div class="d-flex justify-content-between">
-              <div class="flex-fill me-2">
-                {% bootstrap_form comment_form %}
-              </div>
-              <div>
-                <input class="btn btn-search" type="submit" value="작성">
-              </div>
-            </div>
-          </form>
-        {% else %}
-          <div class="rounded bg-white border border-2">
-            <p class="text-muted align-middle m-2">댓글을 달려면 로그인해야 합니다.</p>
-          </div>
-        {% endif %}
-      </div>
-      <div id="comments-area">
-        <h5>{{ comments_count }}개의 댓글</h5>
-        <hr class="mb-0">
-        <ul id="comments-list" class="list-group list-group-flush rounded-2">
-          {% for comment in comments %}
-            <li id="comment-{{ comment.pk }}" class="list-group-item bg-light p-0">
-              <div id="comment-{{ comment.pk }}-user" class="d-flex justify-content-between align-items-center">
-                {% if request.user == comment.user %}
-                  <a class="card-text m-2 comment-user" href="{% url 'accounts:mypage' %}">{{ comment.user }}</a>
-                {% else %}
-                  <a class="card-text m-2 comment-user" href="{% url 'accounts:profile' comment.user %}">{{ comment.user }}</a>
-                {% endif %}
-                <p class="card-text text-muted">
-                  {% if comment.created_string == False %}
-                    {{ comment.created_at|date:'Y-m-d D' }}
-                  {% else %}
-                    {{ comment.created_string }}
-                  {% endif %}
-                </p>
-              </div>
-              <div class="d-flex justify-content-between m-2">
-                <p>{{ comment.content }}</p>
-                <div id="btn-{{ comment.pk }}" class="d-flex align-items-baseline">
-                  {% if request.user == comment.user %}
-                  <form class="comment-delete-form" data-jobs-id="{{ jobs.pk }}" data-comment-id="{{ comment.pk }}">
-                    {% csrf_token %}
-                    <button class="btn btn-sm p-0 border-0 text-danger text-decoration-none me-2" type="submit"><i class="bi bi-x-square"></i></button>
-                  </form>
-                  {% endif %}
-                  {% if request.user.is_authenticated %}
-                    <button class="btn btn-sm p-0 border-0 text-secondary text-decoration-none me-2 reply-btn" data-comment-id="{{ comment.pk }}"><i class="bi bi-arrow-down-right"></i></button>
-                  {% endif %}
-                </div>
-              </div>
-              {% if request.user.is_authenticated %}
-                <div id="reply-create-{{ comment.pk }}" class="d-none">
-                  <form class="reply-create-form" data-jobs-id="{{ jobs.pk }}" data-comment-id="{{ comment.pk }}">
-                    {% csrf_token %}
-                    <div class="d-flex justify-content-between">
-                      <div class="flex-fill me-2">
-                        {% bootstrap_form reply_form %}
-                      </div>
-                      <div>
-                        <input class="btn btn-search" type="submit" value="작성">
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              {% endif %}
-              {% with parent=comment reply_list=comment.reply_set.all %}
-                {% include 'articles/reply.html' %}
-              {% endwith %}
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div> <!-- 댓글 -->
   </div>
-</div> <!-- container -->
-
+  <!-- container -->
 
   <!-- 댓글 비동기 -->
-  <script type="text/javascript" src="/static/js/comment.js"></script>
+  <script type="text/javascript" src="/static/js/company_comment.js"></script>
 {% endblock content %}
+
+{% block script %}
+  <script>
+    const bookmark = document.querySelector('#bookmarkbtn')
+    bookmark.addEventListener('click', function (event) {
+      console.log(event.target.dataset)
+      console.log(event.target.dataset.jobdataId)
+  
+      axios({
+        method: 'get', 
+        url:`bookmark/`
+      }).then(response => {
+        is_bookmarked = response.data.is_bookmarked 
+        if (is_bookmarked === true) {
+          console.log(response.data.is_bookmarked)
+          
+          event
+          .target
+          .classList
+          .remove('btn-danger')
+          event
+          .target
+          .classList
+          .add('btn-warning')
+        } else {
+          console.log(response.data.is_bookmarked)
+          event
+          .target
+          .classList
+          .remove('btn-warning')
+          event
+          .target
+          .classList
+          .add('btn-danger')
+        }
+      })
+    })
+  </script>
+  {% endblock script %}
