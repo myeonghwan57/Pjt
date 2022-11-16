@@ -174,6 +174,9 @@
           <li class="nav-item" role="presentation">
             <button class="nav-link text-muted" id="bookmark-tab" data-bs-toggle="tab" data-bs-target="#bookmark-tab-pane" type="button" role="tab" aria-controls="bookmark-tab-pane" aria-selected="false">좋아요한 글</button>
           </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link text-muted" id="artbookmark-tab" data-bs-toggle="tab" data-bs-target="#artbookmark-tab-pane" type="button" role="tab" aria-controls="artbookmark-tab-pane" aria-selected="false">북마크한 글</button>
+          </li>
         </ul>
 
         <!-- 사용자가 작성한 글 -->
@@ -353,10 +356,25 @@
               {% endif %}
             </div>
           </div>
+
+          <!-- 사용자가 북마크한 글 -->
+
+          <div class="tab-pane fade mt-2" id="artbookmark-tab-pane" role="tabpanel" aria-labelledby="artbookmark-tab" tabindex="0">
+            <h5 class="main_color2 fw-bold">총
+              {{ bookmark_articles.count }}개</h5>
+
+            {% if bookmark_articles.count == 0 %}
+              <div class="text-muted">스크랩한 글이 없습니다.</div>
+            {% else %}
+              <!-- 테이블 출력 -->
+            {% endif %}
+
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 </div>
 
@@ -367,7 +385,7 @@
 <a class="btn login_btn" href="{% url 'articles:index' %}">홈으로 돌아가기</a>
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  회원탈퇴
+회원탈퇴
 </button>
 
 </p>
@@ -377,18 +395,18 @@
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog">
 <div class="modal-content">
-  <div class="modal-header">
-    <h1 class="modal-title fs-5" id="exampleModalLabel">정말로 탈퇴하시겠습니까?</h1>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-  </div>
-  <div class="text-center">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
-    {% if request.user.login_method == 'email' %}
-      <a class="btn btn-primary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
-    {% else %}
-      <a class="btn btn-primary" href="{% url 'accounts:delete' request.user.pk%}">예</a>
-    {% endif %}
-  </div>
+<div class="modal-header">
+  <h1 class="modal-title fs-5" id="exampleModalLabel">정말로 탈퇴하시겠습니까?</h1>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="text-center">
+  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+  {% if request.user.login_method == 'email' %}
+    <a class="btn btn-primary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
+  {% else %}
+    <a class="btn btn-primary" href="{% url 'accounts:delete' request.user.pk%}">예</a>
+  {% endif %}
+</div>
 </div>
 </div>
 </div>
@@ -404,52 +422,51 @@ const csrftoken = document
 
 form
 .addEventListener('submit', function (event) {
-  event.preventDefault()
-  const userId = event
-    .target
-    .dataset
-    .userId
+event.preventDefault()
+const userId = event
+  .target
+  .dataset
+  .userId
 
-    axios({
-      method: 'post',
-      url: `/accounts/${userId}/followers/`,
-      headers: {
-        'X-CSRFToken': csrftoken
-      }
-    })
-    .then((response) => {
-      const isFollowed = response.data.is_followed
-      const followBtn = document.querySelector('#follow-form > input[type=submit]')
-      if (isFollowed === true) {
-        followBtn.value = '이 사용자를 UnFollow 하겠어요.';
-        followBtn
-          .classList
-          .add('btn-sm', 'login_btn', 'fw-bold');
-        followBtn
-          .classList
-          .remove('btn-sm', 'signup_btn', 'fw-bold');
-
-      } else {
-        followBtn.value = '이 사용자를 Follow 할래요!';
-        followBtn
-          .classList
-          .add('btn-sm', 'signup_btn', 'fw-bold');
-        followBtn
-          .classList
-          .remove('btn-sm', 'login_btn', 'fw-bold');
-      }
-
-      const followersCountTag = document.querySelector('#followers-count')
-      const followingsCountTag = document.querySelector('#followings-count')
-      const followersCount = response.data.followers_count
-      const followingsCount = response.data.followings_count
-      followersCountTag.innerText = followersCount
-      followingsCountTag.innerText = followingsCount
-    })
-    .catch((error) => {
-      console.log(error.response)
-    })
+  axios({
+    method: 'post',
+    url: `/accounts/${userId}/followers/`,
+    headers: {
+      'X-CSRFToken': csrftoken
+    }
   })
+  .then((response) => {
+    const isFollowed = response.data.is_followed
+    const followBtn = document.querySelector('#follow-form > input[type=submit]')
+    if (isFollowed === true) {
+      followBtn.value = '이 사용자를 UnFollow 하겠어요.';
+      followBtn
+        .classList
+        .add('login_btn');
+      followBtn
+        .classList
+        .remove('signup_btn');
+    } else {
+      followBtn.value = '이 사용자를 Follow 할래요!';
+      followBtn
+        .classList
+        .add('signup_btn');
+      followBtn
+        .classList
+        .remove('login_btn');
+    }
+
+    const followersCountTag = document.querySelector('#followings-count')
+    const followingsCountTag = document.querySelector('#followers-count')
+    const followersCount = response.data.followers_count
+    const followingsCount = response.data.followings_count
+    followersCountTag.innerText = followersCount
+    followingsCountTag.innerText = followingsCount
+  })
+  .catch((error) => {
+    console.log(error.response)
+  })
+})
 </script>
 
 {% endblock script %}

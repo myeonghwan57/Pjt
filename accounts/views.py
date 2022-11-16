@@ -70,6 +70,9 @@ def detail(request, pk):
     like_posts_paginator = Paginator(like_posts, 6)
     like_posts_page = request.GET.get("page")
     like_posts_ls = like_posts_paginator.get_page(like_posts_page)
+    # bookmarked article
+    bookmarked_articles = user.bookmark.all()
+
     context = {
         "user": user,
         "posts": posts_ls,
@@ -78,6 +81,7 @@ def detail(request, pk):
         "tagfreq": tag_freq,
         "like_posts_ls": like_posts,
         "like_posts": like_posts_ls,
+        "bookmark_articles": bookmarked_articles,
     }
     return render(request, "accounts/detail.html", context)
 
