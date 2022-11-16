@@ -13,6 +13,18 @@ from django.template.defaultfilters import linebreaksbr
 
 def index(request):
     Joblists = JobData.objects.order_by("id")
+
+    # job_list = list(Joblists.pseudo_position.split(","))
+    print(Joblists.id)
+    # for i in job_list:
+    #     i = list(i)
+    #     tmp = []
+    #     for j in range(len(i)):
+    #         if str(i[j]) != '"':
+    #             tmp.append(str(i[j]))
+    #     lst.append("".join(tmp))
+    # Joblists.pseudo_position = lst
+
     context = {
         "Joblists": Joblists,
     }
