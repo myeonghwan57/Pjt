@@ -28,21 +28,25 @@
             <span class="fw-bold main_color1">
               <a class="fw-bold main_color1" href="{% url 'accounts:follow_page' user.pk%}" style="text-decoration: none;">팔로잉 수</a>
             </span>
-            <span class="text-muted">{{ user.follow.count }}&nbsp&nbsp</span>
+            <span class="text-muted" id="followings-count">{{ user.follow.count }}&nbsp&nbsp</span>
             <span class="fw-bold main_color1">
               <a class="fw-bold main_color1" href="{% url 'accounts:follow_page' user.pk%}" style="text-decoration: none;">팔로워 수</a>
             </span>
-            <span class="text-muted">{{ user.followers.count }}
+            <span class="text-muted" id="followers-count">{{ user.followers.count }}
             </span>
           </span>
         </div>
+        <!-- follow/following -->
         <div class="text-center mt-1 mb-1">
           {% if request.user != user %}
-            {% if request.user in user.followers.all %}
-              <a href='{% url 'accounts:follow' user.pk%}' class='btn btn-sm login_btn fw-bold'>이 사용자를 UnFollow 하겠어요.</a>
-            {% else %}
-              <a href='{% url 'accounts:follow' user.pk %}' class='btn btn-sm signup_btn fw-bold'>이 사용자를 Follow 할래요!</a>
-            {% endif %}
+            <form id='follow-form' data-user-id="{{user.pk}}" method='POST'>
+              {% csrf_token %}
+              {% if request.user in user.followers.all %}
+                <input type="submit" value="이 사용자를 UnFollow 하겠어요." class='btn btn-sm login_btn fw-bold'>
+              {% else %}
+                <input type="submit" value="이 사용자를 Follow 할래요!" class='btn btn-sm signup_btn fw-bold'>
+              {% endif %}
+            </form>
           {% endif %}
         </div>
 
@@ -365,7 +369,6 @@
 <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
   회원탈퇴
 </button>
-<!-- follow/following -->
 
 </p>
 </div>
@@ -389,4 +392,64 @@
 </div>
 </div>
 </div>
+
 {% endblock content %}
+
+{% block script %}
+<script>
+const form = document.querySelector('#follow-form')
+const csrftoken = document
+.querySelector('[name=csrfmiddlewaretoken]')
+.value
+
+form
+.addEventListener('submit', function (event) {
+  event.preventDefault()
+  const userId = event
+    .target
+    .dataset
+    .userId
+
+    axios({
+      method: 'post',
+      url: `/accounts/${userId}/followers/`,
+      headers: {
+        'X-CSRFToken': csrftoken
+      }
+    })
+    .then((response) => {
+      const isFollowed = response.data.is_followed
+      const followBtn = document.querySelector('#follow-form > input[type=submit]')
+      if (isFollowed === true) {
+        followBtn.value = '이 사용자를 UnFollow 하겠어요.';
+        followBtn
+          .classList
+          .add('btn-sm', 'login_btn', 'fw-bold');
+        followBtn
+          .classList
+          .remove('btn-sm', 'signup_btn', 'fw-bold');
+
+      } else {
+        followBtn.value = '이 사용자를 Follow 할래요!';
+        followBtn
+          .classList
+          .add('btn-sm', 'signup_btn', 'fw-bold');
+        followBtn
+          .classList
+          .remove('btn-sm', 'login_btn', 'fw-bold');
+      }
+
+      const followersCountTag = document.querySelector('#followers-count')
+      const followingsCountTag = document.querySelector('#followings-count')
+      const followersCount = response.data.followers_count
+      const followingsCount = response.data.followings_count
+      followersCountTag.innerText = followersCount
+      followingsCountTag.innerText = followingsCount
+    })
+    .catch((error) => {
+      console.log(error.response)
+    })
+  })
+</script>
+
+{% endblock script %}
