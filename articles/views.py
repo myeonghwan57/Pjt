@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from datetime import timedelta, timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.template.defaultfilters import linebreaksbr
 
 # Create your views here.
 
@@ -18,7 +19,7 @@ def index(request):
 
 def detail(request, pk):
     jobs = get_object_or_404(JobData, pk=pk)
-    br = jobs.company_job.replace("\n", "<br>")
+
     job_list = list(jobs.pseudo_position.split(","))
     lst = []
     for i in job_list:
@@ -29,10 +30,14 @@ def detail(request, pk):
                 tmp.append(str(i[j]))
         lst.append("".join(tmp))
     jobs.pseudo_position = lst
+    br = jobs.company_job
+    br = str(br).replace('"', "")
+    br = list(str(br).split("\\n"))
+    # br = br.replace('"', "")
+    # br = str(br).replace("\\n", "<br>")
+    jobs.company_job = br
     context = {
         "jobs": jobs,
-        "jobs.company_job": br,
-        # "jobs.pseudo_position": job_list,
         "comments": CommentCompany.objects.select_related("user").filter(
             jobs=jobs, parent=None
         ),

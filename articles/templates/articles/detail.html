@@ -19,7 +19,6 @@
             </h2>
             <p class="mb-0 fs-5 text-muted">
               {% for job in jobs.pseudo_position %}
-              {% comment %} {% job_positon = str(job)[1:-1:1]%} {% endcomment %}
               {{ job }}
               {% endfor %}
             </p>
@@ -28,7 +27,11 @@
           <div class="d-flex justify-content-center">
             <img src="{% static 'images/0.png' %}" class="container">
           </div>
-          <p class="fs-5 mt-3 mb-5 px-3">{{ jobs.company_job }}</p>
+          <p class="fs-5 mt-3 mb-5 px-3">
+              {% for str in jobs.company_job %}
+              {{ str }}<br>
+              {% endfor %}
+          </p>
           <hr>
 
           <!-- 공유 -->
