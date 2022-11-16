@@ -14,22 +14,23 @@
           <div class="card col-3 ms-1 px-3 g-lg-3" style="width:33%;">
             <div class="card-body">
               <h5 class="card-title fw-bold main_color1">
-                <a href="{% url 'articles:detail' job.pk %}" class="main_color1 text-decoration-none">📌
-                  {{ job.job_name }}</a>
-                <hr>
+                <span><a href="{% url 'articles:detail' job.pk %}" class="main_color1 text-decoration-none">
+                  {{ job.job_name }}
+                </a></span>
+                <span>
+                  <!-- 북마크버튼 -->
+                  {% if request.user in job.bookmark.all %}
+                    <button id='bookmarkbtn' data-jobdata-id='{{job.pk}}' type='button' class='btn bi-bookmark-fill main_color2'> 스크랩</button>
+                  {% else %}
+                    <button id='bookmarkbtn' data-jobdata-id='{{job.pk}}' type='button' class='btn bi bi-bookmark main_color2'> 스크랩</button>
+                  {% endif %}
+                </span>
               </h5>
+              <hr>
               <div class="card-subtitle mt-2 mb-2 text-muted">{{ job.position }}</div>
               <p class="card-text">
                 {{ job.pseudo_position }}
               </p>
-              <!-- 북마크버튼 -->
-              {% if request.user in job.bookmark.all %}
-                <button id='bookmarkbtn' data-jobdata-id='{{job.pk}}' type='button' class='btn btn-warning text-white'>bookmark</button>
-              {% else %}
-                <button id='bookmarkbtn' data-jobdata-id='{{job.pk}}' type='button' class='btn btn-danger text-white'>bookmark</button>
-
-              {% endif %}
-
             </div>
           </div>
         {% endfor %}
@@ -53,21 +54,21 @@
           event
             .target
             .classList
-            .remove('btn-danger')
+            .remove('bi-bookmark')
           event
             .target
             .classList
-            .add('btn-warning')
+            .add('bi-bookmark-fill')
         } else {
           console.log(response.data.is_bookmarked)
           event
             .target
             .classList
-            .remove('btn-warning')
+            .remove('bi-bookmark-fill')
           event
             .target
             .classList
-            .add('btn-danger')
+            .add('bi-bookmark')
         }
       })
     })
