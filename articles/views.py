@@ -18,9 +18,10 @@ def index(request):
 
 def detail(request, pk):
     jobs = get_object_or_404(JobData, pk=pk)
-
+    br = jobs.company_job.replace("\n", "<br>")
     context = {
         "jobs": jobs,
+        "jobs.company_job": br,
         "comments": CommentCompany.objects.select_related("user").filter(
             jobs=jobs, parent=None
         ),
