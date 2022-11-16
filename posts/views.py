@@ -7,6 +7,7 @@ from datetime import date, datetime, timedelta
 from django.db import transaction
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 
 # Create your views here.
@@ -281,3 +282,21 @@ def like(request, post_pk):
         is_likes = True
     data = {"is_likes": is_likes, "likes_count": post.like.count()}
     return JsonResponse(data)
+
+def search(request):
+    if request.method =='POST':
+        search = request.POST['search']
+        posts = Post.objects.filter(
+            Q(title__contains=search)
+            | Q(content__contains=search)
+            | Q(user__username__contains=search)
+            )
+        comments = Comment.objects.filter(
+            Q(content__contains=search)
+        )
+        recomments = Comment.objects.filter(
+            Q(content__contains=search)
+        )
+        return render(request, 'posts/search.html',{'search':search,'posts':posts, 'comments':comments,'recomments':recomments,})
+    else:
+        return render(request, 'posts/searched.html', {})
