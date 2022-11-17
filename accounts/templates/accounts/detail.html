@@ -171,16 +171,25 @@
       <div class="col-6 ms-5">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
-            <button class="nav-link active text-muted" id="home-article" data-bs-toggle="tab" data-bs-target="#article-tab-pane" type="button" role="tab" aria-controls="article-tab-pane" aria-selected="true">작성 글</button>
+            <button class="nav-link active text-muted" id="home-article" data-bs-toggle="tab" data-bs-target="#article-tab-pane" type="button" role="tab" aria-controls="article-tab-pane" aria-selected="true">
+              작성 글 <span class="badge text-bg-secondary">{{ user.post_set.count }}</span>
+            </button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link text-muted" id="comment-tab" data-bs-toggle="tab" data-bs-target="#comment-tab-pane" type="button" role="tab" aria-controls="comment-tab-pane" aria-selected="false">작성 댓글</button>
+            <button class="nav-link text-muted" id="comment-tab" data-bs-toggle="tab" data-bs-target="#comment-tab-pane" type="button" role="tab" aria-controls="comment-tab-pane" aria-selected="false">
+              작성 댓글 <span class="badge text-bg-secondary">{{ user.comment_set.count }}</span>
+            </button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link text-muted" id="bookmark-tab" data-bs-toggle="tab" data-bs-target="#bookmark-tab-pane" type="button" role="tab" aria-controls="bookmark-tab-pane" aria-selected="false">좋아요한 글</button>
+            <button class="nav-link text-muted" id="bookmark-tab" data-bs-toggle="tab" data-bs-target="#bookmark-tab-pane" type="button" role="tab" aria-controls="bookmark-tab-pane" aria-selected="false">
+              좋아요한 글 <span class="badge text-bg-secondary">{{ like_posts_ls.count }}</span>
+            </button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link text-muted" id="artbookmark-tab" data-bs-toggle="tab" data-bs-target="#artbookmark-tab-pane" type="button" role="tab" aria-controls="artbookmark-tab-pane" aria-selected="false">북마크한 글</button>
+            <button class="nav-link text-muted" id="artbookmark-tab" data-bs-toggle="tab" data-bs-target="#artbookmark-tab-pane" type="button" role="tab" aria-controls="artbookmark-tab-pane" aria-selected="false">
+              북마크한 글
+              <span class="badge text-bg-secondary">{{ bookmark_articles.count }}</span>
+            </button>
           </li>
         </ul>
 
@@ -196,7 +205,7 @@
               <span class="text-muted text-center">
                 <table class="table">
                   <thead>
-                    <tr>
+                    <tr class="main_color1">
                       <th scope="col">제목</th>
                       <th scope="col">작성일자</th>
                       <th scope="col">태그</th>
@@ -257,7 +266,7 @@
               <span class="text-muted text-center">
                 <table class="table">
                   <thead>
-                    <tr>
+                    <tr class="main_color1">
                       <th scope="col">내용</th>
                       <th scope="col">작성일자</th>
                     </tr>
@@ -312,7 +321,7 @@
               <span class="text-muted text-center">
                 <table class="table">
                   <thead>
-                    <tr>
+                    <tr class="main_color1">
                       <th scope="col">제목</th>
                       <th scope="col">작성일자</th>
                       <th scope="col">태그</th>
@@ -375,10 +384,10 @@
               <span class="text-muted text-center">
                 <table class="table">
                   <thead>
-                    <tr>
-                      <th scope="col">제목</th>
-                      <th scope="col">작성일자</th>
-                      <th scope="col">태그</th>
+                    <tr class="main_color1">
+                      <th scope="col">회사명</th>
+                      <th scope="col">포지션</th>
+                      <th scope="col">세부직무</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -392,12 +401,12 @@
                         </td>
                         <td>
                           <a href="{% url 'articles:detail' bookmark.pk%}" style="text-decoration: none;" class="text-muted">
-                            다른 내용
+                            {{ bookmark.position|truncatechars:20 }}
                           </a>
                         </td>
                         <td>
                           <a href="{% url 'articles:detail' bookmark.pk%}" style="text-decoration: none;" class="text-muted">
-                            다른내용
+                            {{ bookmark.pseudo_position|truncatechars:20 }}
                           </a>
                         </td>
                       </tr>
@@ -412,9 +421,6 @@
       </div>
     </div>
   </div>
-</div>
-</div>
-</div>
 
 <!-- 버튼 그룹 -->
 <p class="text-center mt-4">
@@ -428,25 +434,28 @@
 
 </p>
 </div>
+</div>
+</div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog">
-<div class="modal-content">
-<div class="modal-header">
-  <h1 class="modal-title fs-5" id="exampleModalLabel">정말로 탈퇴하시겠습니까?</h1>
-  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div class="text-center">
-  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
-  {% if request.user.login_method == 'email' %}
-    <a class="btn btn-primary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
-  {% else %}
-    <a class="btn btn-primary" href="{% url 'accounts:delete' request.user.pk%}">예</a>
-  {% endif %}
-</div>
-</div>
-</div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">정말로 탈퇴하시겠습니까?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+        {% if request.user.login_method == 'email' %}
+          <a class="btn btn-primary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
+        {% else %}
+          <a class="btn btn-primary" href="{% url 'accounts:delete' request.user.pk%}">예</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock content %}

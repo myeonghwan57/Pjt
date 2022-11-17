@@ -13,14 +13,33 @@ from django.template.defaultfilters import linebreaksbr
 
 def index(request):
     Joblists = JobData.objects.order_by("id")
-    context = {"Joblists": Joblists}
+
+    for i in range(1, len(Joblists) + 1):
+        jobs = JobData.objects.get(pk=i)
+        job_list = list(jobs.pseudo_position.split(","))
+        lst = []
+        for i in job_list:
+            i = list(i)
+            tmp = []
+            for j in range(len(i)):
+                if str(i[j]) != '"':
+                    tmp.append(str(i[j]))
+            lst.append("".join(tmp))
+        jobs.pseudo_position = ""
+
+        for h in range(len(lst)):
+            jobs.pseudo_position += lst[h] + " "
+
+    context = {
+        "Joblists": Joblists,
+    }
     return render(request, "articles/index.html", context)
 
 
 def detail(request, pk):
     jobs = get_object_or_404(JobData, pk=pk)
-
     job_list = list(jobs.pseudo_position.split(","))
+
     lst = []
     for i in job_list:
         i = list(i)
@@ -231,3 +250,15 @@ def bookmark(request, pk):
         "is_bookmarked": is_bookmarked,
     }
     return JsonResponse(data)
+
+
+@login_required
+def bookmarkindex(request, pk):
+    jobdata = JobData.objects.get(pk=pk)
+    if jobdata.bookmark.filter(pk=request.user.pk).exists():
+        jobdata.bookmark.remove(request.user)
+        is_bookmarked = False
+    else:
+        jobdata.bookmark.add(request.user)
+        is_bookmarked = True
+    return redirect("articles:index")

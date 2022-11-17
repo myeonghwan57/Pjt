@@ -22,5 +22,5 @@ urlpatterns = [
         name="company_reply_create",
     ),
     path("details/<int:pk>/bookmark/", views.bookmark, name="bookmark"),
-
+    path("details/<int:pk>/bookmarkindex/", views.bookmarkindex, name="bookmarkindex"),
 ]
