@@ -6,43 +6,53 @@
 <div class="container">
   <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
     회원탈퇴</h1>
-  <div class="mt-5">
-    <form method="POST" novalidate="novalidate">
-      {% csrf_token %}
-        <p class="main_color1">
-          <strong>{{ user.user_id }}</strong>
-          회원님의 계정이 삭제됩니다.<br>
-          탈퇴시 개인정보 및 이용정보가 삭제되며 복구할 수 없습니다.<br>
-          하단의 유의사항 동의에 체크한 후 본인의 비밀번호를 입력하면 탈퇴가 완료됩니다.<br>
-          구ㅎ11조 서비스를 이용해주셔서 감사드립니다.
-        </p>
-      <div>
-        <label name="label_password" for="{{ password_form.password.id_for_label }}">{{ password_form.password.label }}</label>
-        {{ password_form.password }}
-        {% if password_form.password.errors %}
-          <script type="text/javascript">
-            document
-              .getElementsByName('password')[0]
-              .setAttribute('class', 'form-control is-invalid')
-          </script>
-          {% for error in password_form.password.errors %}
-            <div class="invalid-feedback">
-              {{ error }}
+    <div class="mt-5 login_page" style="width:60%;">
+      <form method="POST" novalidate="novalidate">
+        {% csrf_token %}
+          <p class="main_color1">
+            <strong>{{ user.user_id }}</strong>
+            회원님의 계정이 삭제됩니다.<br>
+            탈퇴시 개인정보 및 이용정보가 삭제되며 복구할 수 없습니다.<br>
+            동의하신다면 유의사항에 체크해주세요.
+            <div class="text-center">
+              <label class="text-dark fw-bold">
+                <input type="checkbox" name="ck" onclick="checkDisable(this.form)">
+                <span>탈퇴 및 데이터 삭제 동의</span>
+              </label>
             </div>
-          {% endfor %}
-        {% endif %}
-        <small>
-          본인인증을 위해 비밀번호를 입력해주세요.
-        </small>
-      </div>
-
-      <label>
-        <input type="checkbox" name="ck" onclick="checkDisable(this.form)">
-        <span>유의사항 동의</span>
-      </label>
-
-      <button type="submit" name="bt" disabled="true">탈퇴하기</button>
-    </form>
+          </p>
+          <p class="main_color1">
+            동의 후 본인의 비밀번호를 입력하면 탈퇴가 완료됩니다.<br>
+            구ㅎ11조 서비스를 이용해주셔서 감사드립니다.<br>
+            다음에 또 뵙길 바랄게요!😊
+          </p>
+        
+          
+        
+        <div class="main_color2 fw-bold">
+          <label name="label_password" for="{{ password_form.password.id_for_label }}">{{ password_form.password.label }}</label>
+          {{ password_form.password }}
+          {% if password_form.password.errors %}
+            <script type="text/javascript">
+              document
+                .getElementsByName('password')[0]
+                .setAttribute('class', 'form-control is-invalid')
+            </script>
+            {% for error in password_form.password.errors %}
+              <div class="invalid-feedback">
+                {{ error }}
+              </div>
+            {% endfor %}
+          {% endif %}
+          <small>
+            본인인증을 위해 비밀번호를 입력해주세요.
+          </small>
+        </div>
+        <div class="mt-3 text-center">
+          <button class="btn login_btn" type="submit" name="bt" disabled="true">서비스 탈퇴하기</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
