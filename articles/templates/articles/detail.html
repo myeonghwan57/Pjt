@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
 {% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/btn.css" %}">
+{% endblock css %}
 {% block content %}
   <div class="container">
     <div class="row">
@@ -160,9 +163,17 @@
     </div>
   </div>
   <!-- container -->
-
+  <footer>
+    <div class="d-flex justify-content-front mb-4 mx-5 fixed-bottom" style="z-index: 2;">
+      <button class="w-btn w-btn-gra1 w-btn-gra-anim topBtn" onclick="topFunction()" type="Go to top">
+        TOP
+    </button>
+    </div>
+  </footer>
   <!-- 댓글 비동기 -->
   <script type="text/javascript" src="/static/js/company_comment.js"></script>
+  <!-- 탑 버튼 -->
+  <script type="text/javascript" src="/static/js/topBtn.js"></script>
 {% endblock content %}
 
 {% block script %}
