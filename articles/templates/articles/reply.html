@@ -3,13 +3,15 @@
 <ul id="reply-list-{{ parent.pk }}" class="list-group list-group-flush rounded-2">
   {% for comment in reply_list %}
     <div id="reply-{{ comment.pk }}" class="d-flex">
-      <a href="#comment-{{ parent.pk }}" class="m-2"><i class="bi bi-arrow-return-right"></i></a>
+      <a href="#comment-{{ parent.pk }}" class="m-2">
+        <i class="bi bi-arrow-return-right"></i>
+      </a>
       <li id="comment-{{ comment.pk }}" class="list-group-item bg-light p-0 border-0 flex-fill">
         <div id="comment-{{ comment.pk }}-user" class="d-flex justify-content-between align-items-center">
           {% if request.user == comment.user %}
-            <a class="card-text m-2 comment-user" href="{% url 'accounts:detail' %}">{{ comment.user }}</a>
+            <a class="card-text m-2 comment-user" href="{% url 'accounts:detail' comment.user.pk%}">{{ comment.user }}</a>
           {% else %}
-            <a class="card-text m-2 comment-user" href="{% url 'accounts:detail' comment.user %}">{{ comment.user }}</a>
+            <a class="card-text m-2 comment-user" href="{% url 'accounts:detail' comment.user.pk %}">{{ comment.user }}</a>
           {% endif %}
           <p class="card-text text-muted">
             {% if comment.created_string == False %}
@@ -23,13 +25,17 @@
           <p>{{ comment.content }}</p>
           <div id="btn-{{ comment.pk }}" class="d-flex align-items-baseline">
             {% if request.user == comment.user %}
-            <form class="comment-delete-form" data-article-id="{{ jobs.pk }}" data-comment-id="{{ comment.pk }}">
-              {% csrf_token %}
-              <button class="btn btn-sm p-0 border-0 text-danger text-decoration-none me-2" type="submit"><i class="bi bi-x-square"></i></button>
-            </form>
+              <form class="comment-delete-form" data-article-id="{{ jobs.pk }}" data-comment-id="{{ comment.pk }}">
+                {% csrf_token %}
+                <button class="btn btn-sm p-0 border-0 text-danger text-decoration-none me-2" type="submit">
+                  <i class="bi bi-x-square"></i>
+                </button>
+              </form>
             {% endif %}
             {% if request.user.is_authenticated %}
-              <button class="btn btn-sm p-0 border-0 text-secondary text-decoration-none me-2 reply-btn" data-comment-id="{{ comment.pk }}" type="button"><i class="bi bi-arrow-down-right"></i></button>
+              <button class="btn btn-sm p-0 border-0 text-secondary text-decoration-none me-2 reply-btn" data-comment-id="{{ comment.pk }}" type="button">
+                <i class="bi bi-arrow-down-right"></i>
+              </button>
             {% endif %}
           </div>
         </div>
@@ -49,7 +55,7 @@
           </div>
         {% endif %}
         {% with parent=comment reply_list=comment.reply_set.all %}
-          {% include 'articles/reply.html' %}
+        {% include 'articles/reply.html' %}
         {% endwith %}
       </li>
     </div>
