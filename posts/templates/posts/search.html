@@ -16,8 +16,20 @@
         {% for job in jobs %}
           <div class='d-flex'>
             <i class="bi bi-person-workspace mx-1"></i>
-            <a class='text-decoration-none ' href="{%url 'articles:detail' job.pk%}">
+            <a class='text-decoration-none text-muted' href="{%url 'articles:detail' job.pk%}">
               <p>{{job.job_name}}</p>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+      <hr>
+      <div class='search_result p-3 rounded'>
+        <h3>채용정보 댓글</h3>
+        {% for comment in job_comments %}
+          <div class='d-flex'>
+            <i class="bi bi-chat-square-dots mx-1"></i>
+            <a class='text-decoration-none text-muted' href="{%url 'articles:detail' comment.jobs.pk%}">
+              <p>{{comment.content}}</p>
             </a>
           </div>
         {% endfor %}
@@ -28,7 +40,7 @@
         {% for post in posts %}
           <div class='d-flex'>
             <i class="bi bi-postcard mx-1"></i>
-            <a class='text-decoration-none ' href="{%url 'posts:detail' post.pk%}">
+            <a class='text-decoration-none text-muted' href="{%url 'posts:detail' post.pk%}">
               <p>{{post.title}}</p>
             </a>
           </div>
@@ -40,7 +52,7 @@
         {% for comment in comments %}
           <div class='d-flex'>
             <i class="bi bi-chat-square-dots mx-1"></i>
-            <a class='text-decoration-none ' href="{%url 'posts:detail' comment.article.pk%}">
+            <a class='text-decoration-none text-muted' href="{%url 'posts:detail' comment.article.pk%}">
               <p>{{comment.content}}</p>
             </a>
           </div>
