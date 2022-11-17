@@ -5,6 +5,8 @@ app_name = "posts"
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("divide/", views.divide, name="divide"),
+    path("scroll/<str:tag_name>", views.scroll, name="scroll"),
     path("create/", views.create, name="create"),
     path("<int:post_pk>/", views.detail, name="detail"),
     path("<int:post_pk>/update", views.update, name="update"),

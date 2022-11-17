@@ -56,17 +56,18 @@
     <div class='post_list row justify-content-end my-3'>
       <hr>
       <div class='col-lg-3'>
-        <div class='d-flex flex-column align-items-center search_result rounded mx-4 py-3'>
-          <div class='search_ranking my-2 rounded p-1'>검색어 순위</div>
-          <div class='flex-column'>
-            {% for search_word in search_words %}
-              <div>{{forloop.counter}}.
-                {{search_word.word}}</div>
-            {% endfor %}
-          </div>
-        </div>
+        <div>검색어 순위</div>
+        <p>1. 취업
+        </p>
+        <p>2. 웹개발
+        </p>
+        <p>3. 이직
+        </p>
+        <p>4. 재택근무
+        </p>
+        <p>5. 연봉
+        </p>
       </div>
-
       <!--게시글 목록 -->
       <div class='col-lg-9'>
         <div class='custom_select' style="float: right;">
@@ -103,7 +104,7 @@
         </div>
 
         {% if page_obj.has_next %}
-        <a class="infinite-more-link" href="http://127.0.0.1:8000/posts/?sort={{ sort }}&page={{ page_obj.next_page_number }}">next</a>
+        <a class="infinite-more-link" href="http://127.0.0.1:8000/posts/scroll/{{tag_name}}?sort={{ sort }}&page={{ page_obj.next_page_number }}">next</a>
         {% endif %}
       </div>
     </div>

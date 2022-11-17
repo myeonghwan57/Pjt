@@ -6,22 +6,55 @@ from django.contrib.auth.decorators import login_required
 from datetime import timedelta, timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.template.defaultfilters import linebreaksbr
 
 # Create your views here.
 
 
 def index(request):
     Joblists = JobData.objects.order_by("id")
-    context = {"Joblists": Joblists}
+
+    for i in range(1, len(Joblists)+1):
+        jobs = JobData.objects.get(pk=i)
+        job_list = list(jobs.pseudo_position.split(","))
+        lst = []
+        for i in job_list:
+            i = list(i)
+            tmp = []
+            for j in range(len(i)):
+                if str(i[j]) != '"':
+                    tmp.append(str(i[j]))
+            lst.append("".join(tmp))
+        jobs.pseudo_position = ""
+
+        for h in range(len(lst)):
+            jobs.pseudo_position += lst[h] + " "
+
+    context = {
+        "Joblists": Joblists,
+    }
     return render(request, "articles/index.html", context)
 
 
 def detail(request, pk):
     jobs = get_object_or_404(JobData, pk=pk)
-    br = jobs.company_job.replace("\n", "<br>")
+    job_list = list(jobs.pseudo_position.split(","))
+
+    lst = []
+    for i in job_list:
+        i = list(i)
+        tmp = []
+        for j in range(len(i)):
+            if str(i[j]) != '"':
+                tmp.append(str(i[j]))
+        lst.append("".join(tmp))
+    jobs.pseudo_position = lst
+    br = jobs.company_job
+    br = str(br).replace('"', "")
+    br = list(str(br).split("\\n"))
+    jobs.company_job = br
     context = {
         "jobs": jobs,
-        "jobs.company_job": br,
         "comments": CommentCompany.objects.select_related("user").filter(
             jobs=jobs, parent=None
         ),
@@ -34,8 +67,8 @@ def detail(request, pk):
 
 
 @require_POST
-def comment_create(request, pk):
-    jobs = get_object_or_404(JobData, pk=pk)
+def comment_create(request, jobs_pk):
+    jobs = get_object_or_404(JobData, pk=jobs_pk)
 
     if request.user.is_authenticated:
         comment_form = CommentCompanyForm(request.POST)
@@ -202,3 +235,18 @@ def comment_delete(request, jobs_pk, comment_pk):
     else:
         messages.warning(request, "댓글 작성자만 삭제 가능합니다.")
         return redirect("articles:detail", jobs_pk)
+
+
+@login_required
+def bookmark(request, pk):
+    jobdata = JobData.objects.get(pk=pk)
+    if jobdata.bookmark.filter(pk=request.user.pk).exists():
+        jobdata.bookmark.remove(request.user)
+        is_bookmarked = False
+    else:
+        jobdata.bookmark.add(request.user)
+        is_bookmarked = True
+    data = {
+        "is_bookmarked": is_bookmarked,
+    }
+    return JsonResponse(data)
