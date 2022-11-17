@@ -145,7 +145,7 @@
                           </form>
                         </div>
                       {% endif %}
-                      {% with parent = comment reply_list = comment.reply_set.all %}
+                      {% with parent=comment reply_list=comment.reply_set.all %}
                       {% include 'articles/reply.html' %}
                       {% endwith %}
                     </li>
