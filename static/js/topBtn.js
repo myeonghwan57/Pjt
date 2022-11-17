@@ -1,19 +1,22 @@
-// Get the button:
-let mybutton = document.getElementById("myBtn");
+$(document).ready(function () {
 
-// When the user scrolls down 20px from the top of the document, show the button
-window.onscroll = function () { scrollFunction() };
+    $(".return-top").hide(); // 탑 버튼 숨김
+    $(function () {
 
-function scrollFunction() {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        mybutton.style.display = "block";
-    } else {
-        mybutton.style.display = "none";
-    }
-}
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 100) { // 스크롤 내릴 표시
+                $('.return-top').fadeIn();
+            } else {
+                $('.return-top').fadeOut();
+            }
+        });
 
-// When the user clicks on the button, scroll to the top of the document
-function topFunction() {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-}
+        $('.return-top').click(function () {
+            $('body,html').animate({
+                scrollTop: 0
+            }, 10); // 탑 이동 스크롤 속도
+            return false;
+        });
+    });
+
+});
