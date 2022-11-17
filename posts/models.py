@@ -54,3 +54,7 @@ class Comment(models.Model):
 class Photo(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
+#검색 랭킹
+class Ranking(models.Model):
+    word = models.CharField(max_length=50)
+    search_count = models.IntegerField(default=1)
