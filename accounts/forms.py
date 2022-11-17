@@ -18,12 +18,17 @@ class CustomUserCreationForm(UserCreationForm):
             "password2",
             "career",
         )
-        labels = {
-            "career": "경력(년차)",
+        error_messages = {
+            "username": {
+                "unique": "입력한 계정으로 가입이 불가능 합니다.",
+            },
         }
-        # help_texts = {
-        #     "career": "신입일 경우 0을 입력해주세요.",
-        # }
+        labels = {
+            "career": "입사 일자",
+        }
+        help_texts = {
+            "career": "선택 사항입니다.",
+        }
         widgets = {"career": DateInput()}
 
 
