@@ -94,8 +94,10 @@
                 <p class='post_info'>{{post.created_at}}
                 </p>
                 <p class='post_info'>
-                  <i class="bi bi-eye"></i>{{post.hits}}
-                  <i class="bi bi-hand-thumbs-up"></i>{{post.like.count}}
+                  <i class="bi bi-eye"></i> {{post.hits}}
+                  <i class="bi bi-hand-thumbs-up"></i> {{post.like.count}}
+                  <i class="bi bi-chat-right-dots"></i> {{post.comment_set.count}}
+
                 </p>
               </div>
             </div>
