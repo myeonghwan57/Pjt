@@ -7,6 +7,7 @@ from datetime import timedelta, timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.template.defaultfilters import linebreaksbr
+import random
 
 # Create your views here.
 
@@ -39,7 +40,18 @@ def index(request):
 def detail(request, pk):
     jobs = get_object_or_404(JobData, pk=pk)
     job_list = list(jobs.pseudo_position.split(","))
-
+    num = random.randrange(1, 9)
+    imgset = [
+        "C01.jfif",
+        "C02.jpg",
+        "C03.jpeg",
+        "C04.jfif",
+        "C05.jpg",
+        "C06.jpg",
+        "C07.jpeg",
+        "C08.jpg",
+    ]
+    randomImg = f"../../static/images/{imgset[num]}"
     lst = []
     for i in job_list:
         i = list(i)
@@ -61,6 +73,7 @@ def detail(request, pk):
         "comments_count": CommentCompany.objects.filter(jobs=jobs).count(),
         "comment_form": CommentCompanyForm(),
         "reply_form": ReplyCompanyForm(),
+        "randomimg": randomImg,
     }
 
     return render(request, "articles/detail.html", context)
