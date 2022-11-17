@@ -40,16 +40,22 @@ def index(request):
 def detail(request, pk):
     jobs = get_object_or_404(JobData, pk=pk)
     job_list = list(jobs.pseudo_position.split(","))
-    num = random.randrange(1, 9)
+    num = random.randrange(1, 15)
     imgset = [
-        "C01.jfif",
+        "C01.jpg",
         "C02.jpg",
         "C03.jpeg",
-        "C04.jfif",
+        "C04.jpg",
         "C05.jpg",
         "C06.jpg",
         "C07.jpeg",
         "C08.jpg",
+        "C09.jpg",
+        "C10.jpg",
+        "C11.jpg",
+        "C12.jpg",
+        "C13.jpg",
+        "C14.jpg",
     ]
     randomImg = f"../../static/images/{imgset[num]}"
     lst = []
