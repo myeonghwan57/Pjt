@@ -14,15 +14,19 @@
           <div class="card col-3 ms-1 px-3 g-lg-3" style="width:33%;">
             <div class="card-body">
               <h5 class="card-title fw-bold main_color1">
-                <span><a href="{% url 'articles:detail' job.pk %}" class="main_color1 text-decoration-none">
-                  {{ job.job_name }}
-                </a></span>
+                <span>
+                  <a href="{% url 'articles:detail' job.pk %}" class="main_color1 text-decoration-none">
+                    {{ job.job_name }}
+                  </a>
+                </span>
                 <span>
                   <!-- 북마크버튼 -->
                   {% if request.user in job.bookmark.all %}
-                    <button id='bookmarkbtn' data-jobdata-id='{{job.pk}}' type='button' class='btn bi-bookmark-fill main_color2'> 스크랩</button>
+                    <a href="{% url 'articles:bookmarkindex' job.pk %}" class='btn bi-bookmark-fill main_color2'>북마크</a>
+
                   {% else %}
-                    <button id='bookmarkbtn' data-jobdata-id='{{job.pk}}' type='button' class='btn bi bi-bookmark main_color2'> 스크랩</button>
+                    <a href="{% url 'articles:bookmarkindex' job.pk %}" class='btn bi bi-bookmark main_color2'>북마크</a>
+
                   {% endif %}
                 </span>
               </h5>
