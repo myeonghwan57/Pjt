@@ -173,25 +173,25 @@
       <div class="col-6 ms-5">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
-            <button class="nav-link active text-muted" id="home-article" data-bs-toggle="tab" data-bs-target="#article-tab-pane" type="button" role="tab" aria-controls="article-tab-pane" aria-selected="true">
+            <a href="#posts" class="nav-link active text-muted" id="home-article" data-bs-toggle="tab" data-bs-target="#article-tab-pane" type="button" role="tab" aria-controls="article-tab-pane" aria-selected="true">
               작성 글 <span class="badge text-bg-secondary">{{ user.post_set.count }}</span>
-            </button>
+            </a>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link text-muted" id="comment-tab" data-bs-toggle="tab" data-bs-target="#comment-tab-pane" type="button" role="tab" aria-controls="comment-tab-pane" aria-selected="false">
+            <a href="#comments" class="nav-link text-muted" id="comment-tab" data-bs-toggle="tab" data-bs-target="#comment-tab-pane" type="button" role="tab" aria-controls="comment-tab-pane" aria-selected="false">
               작성 댓글 <span class="badge text-bg-secondary">{{ user.comment_set.count }}</span>
-            </button>
+            </a>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link text-muted" id="bookmark-tab" data-bs-toggle="tab" data-bs-target="#bookmark-tab-pane" type="button" role="tab" aria-controls="bookmark-tab-pane" aria-selected="false">
+            <a href="#likes" class="nav-link text-muted" id="bookmark-tab" data-bs-toggle="tab" data-bs-target="#bookmark-tab-pane" type="button" role="tab" aria-controls="bookmark-tab-pane" aria-selected="false">
               좋아요한 글 <span class="badge text-bg-secondary">{{ like_posts_ls.count }}</span>
-            </button>
+            </a>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link text-muted" id="artbookmark-tab" data-bs-toggle="tab" data-bs-target="#artbookmark-tab-pane" type="button" role="tab" aria-controls="artbookmark-tab-pane" aria-selected="false">
+            <a href="#books" class="nav-link text-muted" id="artbookmark-tab" data-bs-toggle="tab" data-bs-target="#artbookmark-tab-pane" type="button" role="tab" aria-controls="artbookmark-tab-pane" aria-selected="false">
               북마크한 글
               <span class="badge text-bg-secondary">{{ bookmark_articles.count }}</span>
-            </button>
+            </a>
           </li>
         </ul>
 
@@ -243,7 +243,7 @@
             <div class="text-center">
               {% if posts.has_previous %}
                 <span>
-                  <a href="?page={{posts.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a>
+                  <a href="?page1={{posts.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a>
                 </span>
               {% endif %}
               <span class="text-muted">{{posts.number}}</span>
@@ -251,7 +251,7 @@
               <span class="text-muted">{{posts.paginator.num_pages}}</span>
               {% if posts.has_next %}
                 <span>
-                  <a href="?page={{posts.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a>
+                  <a href="?page1={{posts.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a>
                 </span>
               {% endif %}
             </div>
@@ -298,7 +298,7 @@
             <div class="text-center">
               {% if comments.has_previous %}
                 <span>
-                  <a href="?page={{comments.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a>
+                  <a href="?page2={{comments.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a>
                 </span>
               {% endif %}
               <span class="text-muted">{{comments.number}}</span>
@@ -306,7 +306,7 @@
               <span class="text-muted">{{comments.paginator.num_pages}}</span>
               {% if comments.has_next %}
                 <span>
-                  <a href="?page={{comments.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a>
+                  <a href="?page2={{comments.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a>
                 </span>
               {% endif %}
             </div>
@@ -359,7 +359,7 @@
             <div class="text-center">
               {% if like_posts.has_previous %}
                 <span>
-                  <a href="?page={{like_posts.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a>
+                  <a href="?page3={{like_posts.previous_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/left.png'%}"></a>
                 </span>
               {% endif %}
               <span class="text-muted">{{like_posts.number}}</span>
@@ -367,7 +367,7 @@
               <span class="text-muted">{{like_posts.paginator.num_pages}}</span>
               {% if like_posts.has_next %}
                 <span>
-                  <a href="?page={{like_posts.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a>
+                  <a href="?page3={{like_posts.next_page_number}}"><img style='height:20px;width:20px;' src="{% static '/images/right.png'%}"></a>
                 </span>
               {% endif %}
             </div>
@@ -466,7 +466,19 @@
 {% endblock content %}
 
 {% block script %}
-<script>
+<script> // 탭 변경 유지 스크립트
+  $(document).ready(function(){
+    $('a[data-bs-toggle="tab"]').on('show.bs.tab', function(e) {
+      localStorage.setItem('activeTab', $(e.target).attr('href'));
+    });
+    var activeTab = localStorage.getItem('activeTab');
+    if(activeTab){
+      $('#myTab a[href="' + activeTab + '"]').tab('show');
+    }
+  });
+  </script>
+
+<script> // 팔로우 스크립트
 const form = document.querySelector('#follow-form')
 const csrftoken = document
 .querySelector('[name=csrfmiddlewaretoken]')
