@@ -14,6 +14,24 @@ import random
 
 def index(request):
     Joblists = JobData.objects.order_by("id")
+    num = random.randrange(1, 15)
+    imgset = [
+        "C01.jpg",
+        "C02.jpg",
+        "C03.jpeg",
+        "C04.jpg",
+        "C05.jpg",
+        "C06.jpg",
+        "C07.jpeg",
+        "C08.jpg",
+        "C09.jpg",
+        "C10.jpg",
+        "C11.jpg",
+        "C12.jpg",
+        "C13.jpg",
+        "C14.jpg",
+    ]
+    randomImg = f"../../static/images/{imgset[num]}"
 
     for i in range(1, len(Joblists) + 1):
         jobs = JobData.objects.get(pk=i)
@@ -33,6 +51,7 @@ def index(request):
 
     context = {
         "Joblists": Joblists,
+        "randomimg": randomImg,
     }
     return render(request, "articles/index.html", context)
 
