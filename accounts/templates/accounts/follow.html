@@ -2,48 +2,50 @@
 {% load django_bootstrap5 %}
 {% load static %}
 {% block content %}
-<div class="container mt-3" style="width:50%">
-  <ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active text-muted" id="follwing-tab" data-bs-toggle="tab" data-bs-target="#follwing" type="button" role="tab" aria-controls="follwing" aria-selected="false">
-        팔로잉 목록 <span class="badge text-bg-secondary">{{ user.follow.count }}</span>
-      </button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link text-muted" id="follower-tab" data-bs-toggle="tab" data-bs-target="#follower" type="button" role="tab" aria-controls="follower" aria-selected="true">
-        팔로워 목록 <span class="badge text-bg-secondary">{{ user.followers.count }}</span>
-      </button>
-    </li>
-  </ul>
-  <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade" id="follwing" role="tabpanel" aria-labelledby="follwing-tab">
-      <h1>
-        팔로잉
-      </h1>
-      {% for following in followings %}
-        <h3>
-          <a href="{% url 'accounts:detail' following.pk %}">
-            {{following.username}}
-          </a>
-        </h3>
-        <br>
-      {% endfor %}
-    </div>
+  <div class="container mt-3" style="width:50%">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active text-muted" id="follwing-tab" data-bs-toggle="tab" data-bs-target="#follwing" type="button" role="tab" aria-controls="follwing" aria-selected="false">
+          팔로잉 목록
+          <span class="badge text-bg-secondary">{{ user.follow.count }}</span>
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link text-muted" id="follower-tab" data-bs-toggle="tab" data-bs-target="#follower" type="button" role="tab" aria-controls="follower" aria-selected="true">
+          팔로워 목록
+          <span class="badge text-bg-secondary">{{ user.followers.count }}</span>
+        </button>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="follwing" role="tabpanel" aria-labelledby="follwing-tab">
+        <h1>
+          팔로잉
+        </h1>
+        {% for following in followings %}
+          <h3>
+            <a href="{% url 'accounts:detail' following.pk %}">
+              {{following.username}}
+            </a>
+          </h3>
+          <br>
+        {% endfor %}
+      </div>
 
-    <div class="tab-pane fade show active" id="follower" role="tabpanel" aria-labelledby="follower-tab">
-      <h1>
-        팔로워
-      </h1>
-      {% for follower in followers %}
-        <h3>
-          <a href="{% url 'accounts:detail' follower.pk %}">
-            {{follower.username}}
-          </a>
-        </h3>
-        <br>
-      {% endfor %}
-    </div>
+      <div class="tab-pane fade " id="follower" role="tabpanel" aria-labelledby="follower-tab">
+        <h1>
+          팔로워
+        </h1>
+        {% for follower in followers %}
+          <h3>
+            <a href="{% url 'accounts:detail' follower.pk %}">
+              {{follower.username}}
+            </a>
+          </h3>
+          <br>
+        {% endfor %}
+      </div>
 
+    </div>
   </div>
-</div>
 {% endblock content %}

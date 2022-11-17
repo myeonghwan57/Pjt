@@ -14,7 +14,7 @@
 
     <div class="row mt-5">
       <!-- 왼쪽 화면 -->
-      <div class="col-5">
+      <div class="col-lg-5">
         <h4 class="main_color2 mb-3 fw-bold text-center">프로필</h4>
         <p class="text-center">
           {% if user.profile %}
@@ -59,8 +59,8 @@
               {% if note_count.count != 0 %}
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                   {{ note_count.count }}
-                <span class="visually-hidden">unread messages</span>
-              {% endif %}
+                  <span class="visually-hidden">unread messages</span>
+                {% endif %}
               </span>
             </a>
           {% endif %}
@@ -170,7 +170,7 @@
 
       <!-- 오른쪽 화면 -->
 
-      <div class="col-6 ms-5">
+      <div class="col-lg-6 ms-5">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button class="nav-link active text-muted" id="home-article" data-bs-toggle="tab" data-bs-target="#article-tab-pane" type="button" role="tab" aria-controls="article-tab-pane" aria-selected="true">
@@ -455,25 +455,25 @@
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="modal-body text-muted" id="exampleModalLabel">
-          정말로 탈퇴하시겠습니까?<br>
-          탈퇴하시면 이제까지 쌓아온 데이터는 모두 날아가요.😥
-        </div>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="text-center py-3">
-        <button type="button" class="btn login_btn" data-bs-dismiss="modal">아니요</button>
-        {% if request.user.login_method == 'email' %}
-          <a class="btn btn-secondary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
-        {% else %}
-          <a class="btn btn-secondary" href="{% url 'accounts:delete' request.user.pk%}">예</a>
-        {% endif %}
-      </div>
-    </div>
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+  <div class="modal-body text-muted" id="exampleModalLabel">
+    정말로 탈퇴하시겠습니까?<br>
+    탈퇴하시면 이제까지 쌓아온 데이터는 모두 날아가요.😥
   </div>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="text-center py-3">
+  <button type="button" class="btn login_btn" data-bs-dismiss="modal">아니요</button>
+  {% if request.user.login_method == 'email' %}
+    <a class="btn btn-secondary" href="{% url 'accounts:pw_check' request.user.pk%}">예</a>
+  {% else %}
+    <a class="btn btn-secondary" href="{% url 'accounts:delete' request.user.pk%}">예</a>
+  {% endif %}
+</div>
+</div>
+</div>
 </div>
 
 {% endblock content %}
