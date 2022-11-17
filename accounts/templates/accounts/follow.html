@@ -2,48 +2,118 @@
 {% load django_bootstrap5 %}
 {% load static %}
 {% block content %}
-<div class="container mt-3" style="width:50%">
+<div class="container mt-3" style="width:30%">
   <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
       <button class="nav-link active text-muted" id="follwing-tab" data-bs-toggle="tab" data-bs-target="#follwing" type="button" role="tab" aria-controls="follwing" aria-selected="false">
-        팔로잉 목록 <span class="badge text-bg-secondary">{{ user.follow.count }}</span>
+        팔로잉 목록 <span class="badge text-bg-secondary">{{ user.follow.count }}명</span>
       </button>
     </li>
     <li class="nav-item" role="presentation">
       <button class="nav-link text-muted" id="follower-tab" data-bs-toggle="tab" data-bs-target="#follower" type="button" role="tab" aria-controls="follower" aria-selected="true">
-        팔로워 목록 <span class="badge text-bg-secondary">{{ user.followers.count }}</span>
+        팔로워 목록 <span class="badge text-bg-secondary">{{ user.followers.count }}명</span>
       </button>
     </li>
   </ul>
-  <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade" id="follwing" role="tabpanel" aria-labelledby="follwing-tab">
-      <h1>
-        팔로잉
-      </h1>
-      {% for following in followings %}
-        <h3>
-          <a href="{% url 'accounts:detail' following.pk %}">
-            {{following.username}}
-          </a>
-        </h3>
-        <br>
-      {% endfor %}
+  <div class="tab-content mt-3" id="myTabContent">
+    <div class="tab-pane fade show active" id="follwing" role="tabpanel" aria-labelledby="follwing-tab">
+      {% if user.follow.count != 0 %}
+        {% for following in followings %}
+          <div class="d-flex justify-content-between">
+              <div class="mb-3">
+                <a class="text-dark" href="{% url 'accounts:detail' following.pk %}" style="text-decoration: none;">
+                  {% if following.profile %}
+                    <img class='rounded-circle' style='height:50px;width:50px;' src="{{ following.profile.url }}" alt="{{ user.profile }}">
+                  {% else %}
+                    <img class='rounded-circle' style='height:50px;width:50px;' src="{% static '/images/profile/user.png'%}" alt="user">
+                  {% endif %}
+                  <span class="fs-5">{{ following.username }}</span>
+                </a>
+              </div>           
+            <form id='follow-form' data-user-id="{{ following.pk }}" method='POST'>
+              {% csrf_token %}
+              <input type="submit" value="삭제" class='btn btn-sm signup_btn fw-bold'>
+            </form>
+          </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-muted text-center">
+          앗!😐 팔로잉한 사용자가 없어요.
+        </div>
+      {% endif %}
     </div>
 
-    <div class="tab-pane fade show active" id="follower" role="tabpanel" aria-labelledby="follower-tab">
-      <h1>
-        팔로워
-      </h1>
-      {% for follower in followers %}
-        <h3>
-          <a href="{% url 'accounts:detail' follower.pk %}">
-            {{follower.username}}
-          </a>
-        </h3>
-        <br>
-      {% endfor %}
+    <div class="tab-pane fade" id="follower" role="tabpanel" aria-labelledby="follower-tab">
+      {% if user.followers.count != 0 %}
+        {% for follower in followers %}
+          <div class="d-flex justify-content-between">
+            <div class="mb-3">
+              <a class="text-dark" href="{% url 'accounts:detail' follower.pk %}" style="text-decoration: none;">
+                {% if follower.profile %}
+                  <img class='rounded-circle' style='height:50px;width:50px;' src="{{ follower.profile.url }}" alt="{{ user.profile }}">
+                {% else %}
+                  <img class='rounded-circle' style='height:50px;width:50px;' src="{% static '/images/profile/user.png'%}" alt="user">
+                {% endif %}
+                <span class="fs-5">{{ follower.username }}</span>
+              </a>
+            </div>
+            <form id='follow-form' data-user-id="{{ user.pk }}" method='POST'>
+              {% csrf_token %}
+              <input type="submit" value="삭제" class='btn btn-sm signup_btn fw-bold'>
+            </form>
+            </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-muted text-center">
+          앗!😐 팔로워한 사용자가 없어요.
+        </div>
+      {% endif %}
     </div>
 
   </div>
 </div>
 {% endblock content %}
+
+{% comment %} {% block script %}
+<script>
+const form = document.querySelector('#follow-form')
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+
+form.addEventListener('submit', function (event) {
+  event.preventDefault()
+  const userId = event.target.dataset.userId
+
+  axios({
+    method: 'post',
+    url: `/accounts/${userId}/followers/`,
+    headers: {
+      'X-CSRFToken': csrftoken
+    }
+  })
+  .then((response) => {
+    const isFollowed = response.data.is_followed
+    const followBtn = document.querySelector('#follow-form > input[type=submit]')
+    if (isFollowed === true) {
+      followBtn.value = '이 사용자를 UnFollow 하겠어요.';
+      followBtn.classList.add('login_btn');
+      followBtn.classList.remove('signup_btn');
+    } else {
+      followBtn.value = '이 사용자를 Follow 할래요!';
+      followBtn.classList.add('signup_btn');
+      followBtn.classList.remove('login_btn');
+    }
+
+    const followersCountTag = document.querySelector('#followings-count')
+    const followingsCountTag = document.querySelector('#followers-count')
+    const followersCount = response.data.followers_count
+    const followingsCount = response.data.followings_count
+    followersCountTag.innerText = followersCount
+    followingsCountTag.innerText = followingsCount
+  })
+  .catch((error) => {
+    console.log(error.response)
+  })
+})
+</script>
+{% endblock script %} {% endcomment %}

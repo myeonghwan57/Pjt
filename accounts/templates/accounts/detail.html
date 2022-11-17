@@ -18,9 +18,13 @@
         <h4 class="main_color2 mb-3 fw-bold text-center">프로필</h4>
         <p class="text-center">
           {% if user.profile %}
-            <img class='rounded-circle' style='height:180px;width:180px;' src="{{ user.profile.url }}" alt="{{ user.profile }}">
+            <a style="text-decoration:none;" href="{% url 'accounts:update' %}">
+              <img class='rounded-circle' style='height:180px;width:180px;' src="{{ user.profile.url }}" alt="{{ user.profile }}">
+            </a>
           {% else %}
-            <img class='rounded-circle' style='height:180px;width:180px;' src="{% static '/images/profile/user.png'%}" alt="user">
+            <a style="text-decoration:none;" href="{% url 'accounts:update' %}">
+              <img class='rounded-circle' style='height:180px;width:180px;' src="{% static '/images/profile/user.png'%}" alt="user">
+            </a>
           {% endif %}
         </p>
         <div class="text-center mt-3">
