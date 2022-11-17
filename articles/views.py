@@ -14,7 +14,7 @@ from django.template.defaultfilters import linebreaksbr
 def index(request):
     Joblists = JobData.objects.order_by("id")
 
-    for i in range(1, len(Joblists)+1):
+    for i in range(1, len(Joblists) + 1):
         jobs = JobData.objects.get(pk=i)
         job_list = list(jobs.pseudo_position.split(","))
         lst = []
@@ -250,3 +250,15 @@ def bookmark(request, pk):
         "is_bookmarked": is_bookmarked,
     }
     return JsonResponse(data)
+
+
+@login_required
+def bookmarkindex(request, pk):
+    jobdata = JobData.objects.get(pk=pk)
+    if jobdata.bookmark.filter(pk=request.user.pk).exists():
+        jobdata.bookmark.remove(request.user)
+        is_bookmarked = False
+    else:
+        jobdata.bookmark.add(request.user)
+        is_bookmarked = True
+    return redirect("articles:index")
