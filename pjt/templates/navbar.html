@@ -26,6 +26,18 @@
             </form>
           </div>
           {% if request.user.is_authenticated %}
+            <div class="text-center mt-3 mb-3">
+              <a class='btn login_btn ms-auto position-relative' href="{%url 'accounts:note' %}" target="_blank" onclick="window.open(this.href, '', 'width=500, height=430 left=100px,top=100px'); return false;">
+                <i class="bi bi-envelope"></i>
+                  쪽지함 {{ note_count.count }}
+                  {% if note_count.count != 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      {{ note_count.count }}
+                    <span class="visually-hidden">unread messages</span>
+                  {% endif %}
+                </span>
+              </a>
+            </div>
             <a class='btn login_btn ms-auto' href="{%url 'accounts:detail' request.user.pk %}">마이페이지</a>
             <a class='btn signup_btn ms-2' href="{%url 'accounts:logout' %}">로그아웃</a>
           {% else %}

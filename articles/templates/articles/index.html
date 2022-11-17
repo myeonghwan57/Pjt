@@ -42,21 +42,19 @@
           <div class="mt-3 text-center"><img src="{{ job.randomImg }}" class="card-img-top" style="width:80%;"></div>
           <div class="card-body">
             <h5 class="card-title fw-bold main_color1">
-              <span>
+              <div>
                 <a href="{% url 'articles:detail' job.pk %}" class="main_color1 text-decoration-none">
                   {{ job.job_name }}
                 </a>
-              </span>
-              <span>
+              </div>
+              <div>
                 <!-- 북마크버튼 -->
                 {% if request.user in job.bookmark.all %}
                   <a href="{% url 'articles:bookmarkindex' job.pk %}" class='btn bi-bookmark-fill main_color2'> 북마크</a>
-
                 {% else %}
                   <a href="{% url 'articles:bookmarkindex' job.pk %}" class='btn bi bi-bookmark main_color2'> 북마크</a>
-
                 {% endif %}
-              </span>
+              </div>
             </h5>
             <hr>
             <div class="card-subtitle mt-2 mb-2 fw-bold main_color2">{{ job.position }}</div>
