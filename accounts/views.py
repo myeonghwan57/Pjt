@@ -21,7 +21,7 @@ from dotenv import load_dotenv
 from django.urls import reverse
 from posts.models import Post, Comment
 from .models import User, Note
-from datetime import datetime
+from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from django.db.models import Count
 from django.http import HttpResponseForbidden
@@ -59,7 +59,7 @@ def detail(request, pk):
     comments_ls = comments_paginator.get_page(comments_page)
 
     # 커리어 개월수 계산
-    now = datetime.now()
+    now = timezone.now()
     delta = relativedelta(now, user.career)
 
     # user.post 태그 빈도수 높은 순 세개 호출
