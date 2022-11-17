@@ -56,18 +56,17 @@
     <div class='post_list row justify-content-end my-3'>
       <hr>
       <div class='col-lg-3'>
-        <div>검색어 순위</div>
-        <p>1. 취업
-        </p>
-        <p>2. 웹개발
-        </p>
-        <p>3. 이직
-        </p>
-        <p>4. 재택근무
-        </p>
-        <p>5. 연봉
-        </p>
+        <div class='d-flex flex-column align-items-center search_result rounded mx-4 py-3'>
+          <div class='search_ranking my-2 rounded p-1'>검색어 순위</div>
+          <div class='flex-column'>
+            {% for search_word in search_words %}
+              <div>{{forloop.counter}}.
+                {{search_word.word}}</div>
+            {% endfor %}
+          </div>
+        </div>
       </div>
+
       <!--게시글 목록 -->
       <div class='col-lg-9'>
         <div class='custom_select' style="float: right;">

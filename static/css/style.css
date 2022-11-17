@@ -108,6 +108,8 @@ html,body{
   background: #7689DE;
 }
 .search_result{
-
   border: 5px solid #7689DE;
+}
+.search_ranking{
+  background:  #A9DCE3;
 }
