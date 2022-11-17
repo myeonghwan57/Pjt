@@ -12,10 +12,12 @@
       {% for instance in instances %}
         <div class='my-1' style='width:400px'>
           <div class="card" style="">
-            <div class="card-body text-center" style="height:150px;">
-              <h5 class="card-title fw-bold" style="height:60%">
-                <a class='text-decoration-none' href=" {% url 'posts:detail' instance.pk %} ">{{instance.title}}</a>
-              </h5>
+            <div class="card-body" style="height:150px;">
+              <div class="card-title d-flex align-items-center justify-content-center" style="height:60%">
+                <h5>
+                  <a class='text-decoration-none fw-bold text-muted' href=" {% url 'posts:detail' instance.pk %} ">{{instance.title}}</a>
+                </h5>
+              </div>
               <div class='d-flex align-items-center justify-content-end my-3'>
                 {% if instance.user.profile %}
                   <a href="{%url 'accounts:detail' instance.user.pk%}"><img class='post_profile_img mx-1' src="{{ instance.user.profile.url }}" alt=""></a>
@@ -56,17 +58,16 @@
     <div class='post_list row justify-content-end my-3'>
       <hr>
       <div class='col-lg-3'>
-        <div>검색어 순위</div>
-        <p>1. 취업
-        </p>
-        <p>2. 웹개발
-        </p>
-        <p>3. 이직
-        </p>
-        <p>4. 재택근무
-        </p>
-        <p>5. 연봉
-        </p>
+        <div class='d-flex flex-column align-items-center'>
+          <div class='search_ranking rounded-top text-center' style='color:white; width:70%;'>검색어 순위</div>
+          <div class='d-flex flex-column align-items-center search_result rounded-bottom' style='width:70%'>
+            {% for search_word in search_words %}
+              <div class='my-1'>{{forloop.counter}}.
+                {{search_word.word}}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
       </div>
       <!--게시글 목록 -->
       <div class='col-lg-9'>
@@ -94,9 +95,12 @@
                 <p class='post_info'>{{post.created_at}}
                 </p>
                 <p class='post_info'>
-                  <i class="bi bi-eye"></i> {{post.hits}}
-                  <i class="bi bi-hand-thumbs-up"></i> {{post.like.count}}
-                  <i class="bi bi-chat-right-dots"></i> {{post.comment_set.count}}
+                  <i class="bi bi-eye"></i>
+                  {{post.hits}}
+                  <i class="bi bi-hand-thumbs-up"></i>
+                  {{post.like.count}}
+                  <i class="bi bi-chat-right-dots"></i>
+                  {{post.comment_set.count}}
 
                 </p>
               </div>
@@ -106,7 +110,7 @@
         </div>
 
         {% if page_obj.has_next %}
-        <a class="infinite-more-link" href="http://127.0.0.1:8000/posts/scroll/{{tag_name}}?sort={{ sort }}&page={{ page_obj.next_page_number }}">next</a>
+          <a class="infinite-more-link" href="http://127.0.0.1:8000/posts/scroll/{{tag_name}}?sort={{ sort }}&page={{ page_obj.next_page_number }}">next</a>
         {% endif %}
       </div>
     </div>
@@ -173,16 +177,16 @@
   </script>
   <script>
     var infinite = new Waypoint.Infinite({
-        element: $('.infinite-container')[0],
+      element: $('.infinite-container')[0],
 
-        offset: 'bottom-in-view',
+      offset: 'bottom-in-view',
 
-        onBeforePageLoad: function () {
-            $('.loading').show();
-        },
-        onAfterPageLoad: function () {
-            $('.loading').hide();
-        }
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function () {
+        $('.loading').hide();
+      }
 
     });
   </script>

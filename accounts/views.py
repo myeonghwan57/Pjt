@@ -27,6 +27,7 @@ from dateutil.relativedelta import relativedelta
 from django.db.models import Count
 from django.http import HttpResponseForbidden
 from django.utils import timezone
+
 # Create your views here.
 def signup(request):
     if request.method == "POST":
@@ -51,12 +52,12 @@ def detail(request, pk):
     if request.user == user:
         note_count = Note.objects.filter(read_check=None, receive_user=request.user)
     # 페이지네이션
-    posts = user.post_set.all().order_by('-id')
+    posts = user.post_set.all().order_by("-id")
     posts_paginator = Paginator(posts, 6)
     posts_page = request.GET.get("page1")
     posts_ls = posts_paginator.get_page(posts_page)
 
-    comments = user.comment_set.all().order_by('-id')
+    comments = user.comment_set.all().order_by("-id")
     comments_paginator = Paginator(comments, 6)
     comments_page = request.GET.get("page2")
     comments_ls = comments_paginator.get_page(comments_page)
@@ -69,12 +70,15 @@ def detail(request, pk):
     tag_freq = posts.values("tag").annotate(cnt=Count("tag")).order_by("-cnt")[:3]
 
     # like_posts
-    like_posts = user.like_posts.all().order_by('-id')
+    like_posts = user.like_posts.all().order_by("-id")
     like_posts_paginator = Paginator(like_posts, 6)
     like_posts_page = request.GET.get("page3")
     like_posts_ls = like_posts_paginator.get_page(like_posts_page)
     # bookmarked article
-    bookmarked_articles = user.bookmark.all()
+    bookmarked_articles = user.bookmark.all().order_by("-id")
+    bookmarked_paginator = Paginator(bookmarked_articles, 6)
+    bookmarked_page = request.GET.get("page")
+    bookmarked_ls = bookmarked_paginator.get_page(bookmarked_page)
 
     context = {
         "user": user,
@@ -85,7 +89,8 @@ def detail(request, pk):
         "like_posts_ls": like_posts,
         "like_posts": like_posts_ls,
         "bookmark_articles": bookmarked_articles,
-        "note_count":note_count,
+        "bookmarks": bookmarked_ls,
+        "note_count": note_count,
     }
     return render(request, "accounts/detail.html", context)
 
@@ -93,9 +98,12 @@ def detail(request, pk):
 def login(request):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            auth_login(request, form.get_user())
-            return redirect(request.GET.get("next") or "articles:index")
+        if request.user.is_active == 1:
+            if form.is_valid():
+                auth_login(request, form.get_user())
+                return redirect(request.GET.get("next") or "articles:index")
+        else:
+            messages.warning(request, "탈퇴한 계정입니다.")
     else:
         form = AuthenticationForm()
     context = {
@@ -149,7 +157,10 @@ def delete_checker(request, pk):
         password_form = CheckPasswordForm(request.user, request.POST)
 
         if password_form.is_valid():
-            request.user.delete()
+            request.user.is_active = 0
+            request.user.post_set.all().delete()
+            request.user.comment_set.all().delete()
+            request.user.save()
             logout(request)
             messages.success(request, "회원탈퇴완료")
             return redirect("accounts:login")
@@ -165,8 +176,13 @@ def delete_checker(request, pk):
 def social_delete(request, pk):
     user = get_user_model().objects.get(pk=pk)
     if request.user == user:
-        user.delete()
+        user.is_active = 0
+        request.user.post_set.all().delete()
+        request.user.comment_set.all().delete()
+        user.save()
         auth_logout(request)
+        messages.success(request, "회원탈퇴완료")
+
     else:
         messages.warning(request, "삭제는 본인만 가능합니다.")
     return redirect("articles:index")

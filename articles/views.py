@@ -7,6 +7,7 @@ from datetime import timedelta, timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.template.defaultfilters import linebreaksbr
+import random
 
 # Create your views here.
 
@@ -14,22 +15,39 @@ from django.template.defaultfilters import linebreaksbr
 def index(request):
     Joblists = JobData.objects.order_by("id")
 
+    imgset = [
+        "C01.jpg",
+        "C02.jpg",
+        "C03.jpeg",
+        "C04.jpg",
+        "C05.jpg",
+        "C06.jpg",
+        "C07.jpeg",
+        "C08.jpg",
+        "C09.jpg",
+        "C10.jpg",
+        "C11.jpg",
+        "C12.jpg",
+        "C13.jpg",
+        "C14.jpg",
+    ]
+
     for i in range(1, len(Joblists) + 1):
         jobs = JobData.objects.get(pk=i)
         job_list = list(jobs.pseudo_position.split(","))
         lst = []
-        for i in job_list:
-            i = list(i)
+        for j in job_list:
+            j = list(j)
             tmp = []
-            for j in range(len(i)):
-                if str(i[j]) != '"':
-                    tmp.append(str(i[j]))
+            for k in range(len(j)):
+                if str(j[k]) != '"':
+                    tmp.append(str(j[k]))
             lst.append("".join(tmp))
         jobs.pseudo_position = ""
-
         for h in range(len(lst)):
             jobs.pseudo_position += lst[h] + " "
-
+    for jobs in Joblists:
+        jobs.randomImg = f"../../static/images/{imgset[random.randrange(0, 14)]}"
     context = {
         "Joblists": Joblists,
     }
@@ -39,7 +57,24 @@ def index(request):
 def detail(request, pk):
     jobs = get_object_or_404(JobData, pk=pk)
     job_list = list(jobs.pseudo_position.split(","))
-
+    num = random.randrange(0, 14)
+    imgset = [
+        "C01.jpg",
+        "C02.jpg",
+        "C03.jpeg",
+        "C04.jpg",
+        "C05.jpg",
+        "C06.jpg",
+        "C07.jpeg",
+        "C08.jpg",
+        "C09.jpg",
+        "C10.jpg",
+        "C11.jpg",
+        "C12.jpg",
+        "C13.jpg",
+        "C14.jpg",
+    ]
+    randomImg = f"../../static/images/{imgset[num]}"
     lst = []
     for i in job_list:
         i = list(i)
@@ -61,6 +96,7 @@ def detail(request, pk):
         "comments_count": CommentCompany.objects.filter(jobs=jobs).count(),
         "comment_form": CommentCompanyForm(),
         "reply_form": ReplyCompanyForm(),
+        "randomimg": randomImg,
     }
 
     return render(request, "articles/detail.html", context)

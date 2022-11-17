@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
 {% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/btn.css" %}">
+{% endblock css %}
 {% block content %}
   <div class="container">
     <div class="row">
@@ -12,15 +15,6 @@
               <span class="fw-bold">
                 {{ jobs.job_name }}
               </span>
-
-              <!-- 북마크버튼 -->
-              {% if request.user in jobs.bookmark.all %}
-                <!-- <a href="{% url 'articles:bookmark' jobs.pk %}"class='btn btn-warning text-white'>북마크</a> -->
-                <button id='bookmarkbtn' data-jobdata-id='{{jobs.pk}}' type='button' class='btn bi-bookmark-fill main_color2'>bookmark</button>
-              {% else %}
-                <!-- <a href="{% url 'articles:bookmark' jobs.pk %}"class='btn btn-danger text-white'>북마크</a> -->
-                <button id='bookmarkbtn' data-jobdata-id='{{jobs.pk}}' type='button' class='btn bi bi-bookmark main_color2'>bookmark</button>
-              {% endif %}
 
               <span class="fs-3 text-muted d-inline-block text-truncate" style="max-width: 350px;">
                 |
@@ -35,7 +29,7 @@
           </div>
           <hr class="mt-2">
           <div class="d-flex justify-content-center">
-            <img src="{% static 'images/0.png' %}" class="container">
+            <img src="{{ randomimg }}" class="container">
           </div>
           <p class="fs-5 mt-3 mb-5 px-3">
             {% for str in jobs.company_job %}
@@ -43,7 +37,7 @@
             {% endfor %}
           </p>
           <hr>
-
+          <span class='d-flex justify-content-center align-items-center'>
           <!-- 공유 -->
           <div class="d-flex flex-column align-items-center me-3">
             <button class="btn btn-lg p-0 m-0 border-0" data-bs-toggle="modal" data-bs-target="#shareModal">
@@ -71,7 +65,17 @@
               </div>
             </div>
           </div>
-
+              <!-- 북마크버튼 -->
+              <div>
+              {% if request.user in jobs.bookmark.all %}
+                <!-- <a href="{% url 'articles:bookmark' jobs.pk %}"class='btn btn-warning text-white'>북마크</a> -->
+                <button id='bookmarkbtn' data-jobdata-id='{{jobs.pk}}' type='button' class='btn bi-bookmark-fill main_color2'><br>bookmark</button>
+              {% else %}
+                <!-- <a href="{% url 'articles:bookmark' jobs.pk %}"class='btn btn-danger text-white'>북마크</a> -->
+                <button id='bookmarkbtn' data-jobdata-id='{{jobs.pk}}' type='button' class='btn bi bi-bookmark main_color2'><br>bookmark</button>
+              {% endif %}
+              </div>
+            </span>
           <!-- 댓글 -->
           <div class="mt-3 mb-5 p-5 rounded-4 shadow">
             <div class="mb-4">
@@ -158,44 +162,50 @@
         </div>
       </div>
     </div>
-    <!-- container -->
+  </div>
+  <!-- container -->
+  <a class="return-top" href="#" style="font-size:40px;right:50px; bottom:180px; position:fixed; z-index:9999;
+  color:#7689DE;">
+   <i class="bi bi-arrow-up-circle"></i>
+  </a>
+  <!-- 댓글 비동기 -->
+  <script type="text/javascript" src="/static/js/company_comment.js"></script>
+  <!-- 탑 버튼 -->
+  <script type="text/javascript" src="/static/js/topBtn.js"></script>
+{% endblock content %}
 
-    <!-- 댓글 비동기 -->
-    <script type="text/javascript" src="/static/js/company_comment.js"></script>
-  {% endblock content %}
+{% block script %}
+  <script>
+    const bookmark = document.querySelector('#bookmarkbtn')
+    bookmark.addEventListener('click', function (event) {
+      console.log(event.target.dataset)
+      console.log(event.target.dataset.jobdataId)
 
-  {% block script %}
-    <script>
-      const bookmark = document.querySelector('#bookmarkbtn')
-      bookmark.addEventListener('click', function (event) {
-        console.log(event.target.dataset)
-        console.log(event.target.dataset.jobdataId)
+      axios({method: 'get', url: `bookmark/`}).then(response => {
+        is_bookmarked = response.data.is_bookmarked
+        if (is_bookmarked === true) {
+          console.log(response.data.is_bookmarked)
 
-        axios({method: 'get', url: `bookmark/`}).then(response => {
-          is_bookmarked = response.data.is_bookmarked
-          if (is_bookmarked === true) {
-            console.log(response.data.is_bookmarked)
-
-            event
-              .target
-              .classList
-              .remove('btn-danger')
-            event
-              .target
-              .classList
-              .add('btn-warning')
-          } else {
-            console.log(response.data.is_bookmarked)
-            event
-              .target
-              .classList
-              .remove('btn-warning')
-            event
-              .target
-              .classList
-              .add('btn-danger')
-          }
-        })
+          event
+            .target
+            .classList
+            .remove('bi-bookmark')
+          event
+            .target
+            .classList
+            .add('bi-bookmark-fill')
+        } else {
+          console.log(response.data.is_bookmarked)
+          event
+            .target
+            .classList
+            .remove('bi-bookmark-fill')
+          event
+            .target
+            .classList
+            .add('bi-bookmark')
+        }
       })
-    </script>
-  {% endblock script %}
+    })
+  </script>
+{% endblock script %}

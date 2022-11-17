@@ -1,0 +1,27 @@
+.w-btn {
+    border: none;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-family: "paybooc-Light", sans-serif;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s;
+}
+
+.w-btn-gra1 {
+    background: linear-gradient(-45deg, #7689DE 0%, #A9DCE3 100%);
+    color: white;
+}
+
+.w-btn-gra-anim {
+    background-size: 200% 200%;
+    animation: gradient1 5s ease infinite;
+}
+
+.w-btn:hover {
+    letter-spacing: 2px;
+    transform: scale(1.2);
+    cursor: pointer;
+}

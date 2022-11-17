@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from articles.models import JobData
+from articles.models import JobData, CommentCompany
 from .models import Post, Comment, Photo, Ranking
 from .forms import PostForm, CommentForm, ReCommentForm
 from django.http import HttpResponseForbidden, JsonResponse
@@ -66,6 +66,9 @@ def scroll(request,tag_name):
     instances = Post.objects.all().order_by("-hits")[:3]
     sort = request.GET.get("sort", "")  # url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
     posts = Post.objects.filter(tag__contains=tag_name)
+    # 검색어 전체 순위중 상위 5개
+    search_words = Ranking.objects.order_by('-search_count')[:5]
+
 
     if sort == "likes":
         posts_sort = posts.annotate(like_count=Count("like")).order_by(
@@ -92,6 +95,7 @@ def scroll(request,tag_name):
             "page_obj":page_obj,
             "tag_name":tag_name,
             "sort":sort,
+            "search_words" : search_words,
 
         },
     )
@@ -317,7 +321,7 @@ def like(request, post_pk):
     return JsonResponse(data)
 
 def search(request):
-    search = request.GET.get('search',False)
+    search = request.GET.get('search')
     search_already = Ranking.objects.filter(word=search)
     search_words = Ranking.objects.order_by('-search_count')[:5]
 
@@ -326,6 +330,9 @@ def search(request):
         | Q(position__contains = search)
         | Q(pseudo_position__contains = search)
         | Q(company_job__contains = search)
+    )
+    job_comments = CommentCompany.objects.filter(
+        Q(content__contains = search)
     )
     posts = Post.objects.filter(
         Q(title__contains=search)
@@ -340,8 +347,9 @@ def search(request):
         jobs=[]
         posts=[]
         comments=[]
+        job_comments=[]
         text = '검색어를 입력해 주세요.'
-    elif not len(posts) and not len(jobs) and not len(comments):
+    elif not len(posts) and not len(jobs) and not len(comments) and not len(job_comments) :
         text = '검색 결과가 없습니다.'
     else:
         text = "" 
@@ -352,5 +360,13 @@ def search(request):
         search_already_exist.save()
     else:
         Ranking.objects.create(word=search)
-    return render(request, 'posts/search.html',{'search':search,'posts':posts, 'comments':comments, 'jobs':jobs,'text':text,
-    'search_words':search_words,})
+    context={
+        'search':search,
+        'posts':posts, 
+        'comments':comments, 
+        'jobs':jobs,
+        'job_comments':job_comments,
+        'text':text,
+        'search_words':search_words,
+        }
+    return render(request, 'posts/search.html',context)

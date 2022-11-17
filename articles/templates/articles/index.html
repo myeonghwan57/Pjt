@@ -3,35 +3,67 @@
 {% load static %}
 
 {% block content %}
-  <div class="container mt-3">
-    <h1 class="main_color1 fw-bold mt-3 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
-      모집 중인 공고</h1>
+  <!-- 광고배너 캐러셀 -->
+  <div class="bg-light">
+    <div class="container">
+      <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner" style="width:60%; display: block; margin-left: auto; margin-right: auto;">
+          <div class="carousel-item active" data-bs-interval="10000">
+            <img src="../../static/carousel_images/01.jpg" class="d-block w-100">
+          </div>
+          <div class="carousel-item" data-bs-interval="2000">
+            <img src="../../static/carousel_images/02.jpeg" class="d-block w-100">
+          </div>
+          <div class="carousel-item">
+            <img src="../../static/carousel_images/03.jpeg" class="d-block w-100">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
-    <!-- content -->
-    <section class="container">
-      <div class="row d-flex justify-content-between">
-        {% for job in Joblists %}
-          <div class="card col-3 ms-1 px-3 g-lg-3" style="width:33%;">
-            <div class="card-body">
-              <h5 class="card-title fw-bold main_color1">
-                <span>
-                  <a href="{% url 'articles:detail' job.pk %}" class="main_color1 text-decoration-none">
-                    {{ job.job_name }}
-                  </a>
-                </span>
-                <span>
-                  <!-- 북마크버튼 -->
-                  {% if request.user in job.bookmark.all %}
-                    <a href="{% url 'articles:bookmarkindex' job.pk %}" class='btn bi-bookmark-fill main_color2'>북마크</a>
+  <div class="container mt-3">
+    <h1 class="main_color1 fw-bold mt-5 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
+      채용정보</h1>
+
+
+
+  <!-- content -->
+  <section class="container">
+    <div class="row d-flex justify-content-between">
+      {% for job in Joblists %}
+        <div class="card col-3 ms-2 px-3 g-lg-3" style="width:32%;">
+          <div class="mt-3 text-center"><img src="{{ job.randomImg }}" class="card-img-top" style="width:80%;"></div>
+          <div class="card-body">
+            <h5 class="card-title fw-bold main_color1">
+              <div>
+                <a href="{% url 'articles:detail' job.pk %}" class="main_color1 text-decoration-none">
+                  {{ job.job_name }}
+                </a>
+              </div>
+              <div>
+                <!-- 북마크버튼 -->
+                {% if request.user in job.bookmark.all %}
+                  <a href="{% url 'articles:bookmarkindex' job.pk %}" class='btn bi-bookmark-fill main_color2'> 북마크</a>
+
 
                   {% else %}
-                    <a href="{% url 'articles:bookmarkindex' job.pk %}" class='btn bi bi-bookmark main_color2'>북마크</a>
+                    <a href="{% url 'articles:bookmarkindex' job.pk %}" class='btn bi bi-bookmark main_color2'>
+                      북마크</a>
 
                   {% endif %}
                 </span>
               </h5>
               <hr>
-              <div class="card-subtitle mt-2 mb-2 text-muted">{{ job.position }}</div>
+              <div class="card-subtitle mt-2 mb-2 fw-bold main_color2">{{ job.position }}</div>
               <p class="card-text">
                 {{ job.pseudo_position }}
               </p>
@@ -40,9 +72,16 @@
         {% endfor %}
       </div>
     </section>
-
   </div>
+
+  <!-- Top 버튼 -->
+  <a class="return-top" href="#" style="font-size:40px;right:50px; bottom:180px; position:fixed; z-index:9999;
+color:#7689DE;">
+    <i class="bi bi-arrow-up-circle"></i>
+  </a>
+
 {% endblock content %}
+
 {% block script %}
   <script>
     const bookmark = document.querySelector('#bookmarkbtn')
@@ -76,5 +115,30 @@
         }
       })
     })
+  </script>
+
+  <script>
+    $(document).ready(function () {
+
+      $(".return-top").hide(); // 탑 버튼 숨김
+      $(function () {
+
+        $(window).scroll(function () {
+          if ($(this).scrollTop() > 100) { // 스크롤 내릴 표시
+            $('.return-top').fadeIn();
+          } else {
+            $('.return-top').fadeOut();
+          }
+        });
+
+        $('.return-top').click(function () {
+          $('body,html').animate({
+            scrollTop: 0
+          }, 10); // 탑 이동 스크롤 속도
+          return false;
+        });
+      });
+
+    });
   </script>
 {% endblock script %}
