@@ -50,12 +50,12 @@ def detail(request, pk):
     user = get_user_model().objects.get(pk=pk)
 
     # 페이지네이션
-    posts = user.post_set.all()
+    posts = user.post_set.all().order_by("-id")
     posts_paginator = Paginator(posts, 6)
     posts_page = request.GET.get("page")
     posts_ls = posts_paginator.get_page(posts_page)
 
-    comments = user.comment_set.all()
+    comments = user.comment_set.all().order_by("-id")
     comments_paginator = Paginator(comments, 6)
     comments_page = request.GET.get("page")
     comments_ls = comments_paginator.get_page(comments_page)
@@ -68,12 +68,15 @@ def detail(request, pk):
     tag_freq = posts.values("tag").annotate(cnt=Count("tag")).order_by("-cnt")[:3]
 
     # like_posts
-    like_posts = user.like_posts.all()
+    like_posts = user.like_posts.all().order_by("-id")
     like_posts_paginator = Paginator(like_posts, 6)
     like_posts_page = request.GET.get("page")
     like_posts_ls = like_posts_paginator.get_page(like_posts_page)
     # bookmarked article
-    bookmarked_articles = user.bookmark.all()
+    bookmarked_articles = user.bookmark.all().order_by("-id")
+    bookmarked_paginator = Paginator(bookmarked_articles, 6)
+    bookmarked_page = request.GET.get("page")
+    bookmarked_ls = bookmarked_paginator.get_page(bookmarked_page)
 
     context = {
         "user": user,
@@ -84,6 +87,7 @@ def detail(request, pk):
         "like_posts_ls": like_posts,
         "like_posts": like_posts_ls,
         "bookmark_articles": bookmarked_articles,
+        "bookmarks": bookmarked_ls,
     }
     return render(request, "accounts/detail.html", context)
 
