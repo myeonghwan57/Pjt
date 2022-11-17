@@ -51,14 +51,16 @@
         </div>
 
         <!-- 쪽지 보내기 버튼 -->
-        <div class="text-center mb-3">
+        <div class="text-center mt-3 mb-3">
           {% if request.user == user %}
             <a class='btn login_btn ms-auto position-relative' href="{%url 'accounts:note' %}" target="_blank" onclick="window.open(this.href, '', 'width=500, height=430 left=100px,top=100px'); return false;">
               <i class="bi bi-envelope"></i>
               쪽지함
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                {{note_count.count}}
+              {% if note_count.count != 0 %}
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {{ note_count.count }}
                 <span class="visually-hidden">unread messages</span>
+              {% endif %}
               </span>
             </a>
           {% endif %}
