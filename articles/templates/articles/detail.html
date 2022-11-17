@@ -158,44 +158,45 @@
         </div>
       </div>
     </div>
-    <!-- container -->
+  </div>
+  <!-- container -->
 
-    <!-- 댓글 비동기 -->
-    <script type="text/javascript" src="/static/js/company_comment.js"></script>
-  {% endblock content %}
+  <!-- 댓글 비동기 -->
+  <script type="text/javascript" src="/static/js/company_comment.js"></script>
+{% endblock content %}
 
-  {% block script %}
-    <script>
-      const bookmark = document.querySelector('#bookmarkbtn')
-      bookmark.addEventListener('click', function (event) {
-        console.log(event.target.dataset)
-        console.log(event.target.dataset.jobdataId)
+{% block script %}
+  <script>
+    const bookmark = document.querySelector('#bookmarkbtn')
+    bookmark.addEventListener('click', function (event) {
+      console.log(event.target.dataset)
+      console.log(event.target.dataset.jobdataId)
 
-        axios({method: 'get', url: `bookmark/`}).then(response => {
-          is_bookmarked = response.data.is_bookmarked
-          if (is_bookmarked === true) {
-            console.log(response.data.is_bookmarked)
+      axios({method: 'get', url: `bookmark/`}).then(response => {
+        is_bookmarked = response.data.is_bookmarked
+        if (is_bookmarked === true) {
+          console.log(response.data.is_bookmarked)
 
-            event
-              .target
-              .classList
-              .remove('bi-bookmark')
-            event
-              .target
-              .classList
-              .add('bi-bookmark-fill')
-          } else {
-            console.log(response.data.is_bookmarked)
-            event
-              .target
-              .classList
-              .remove('bi-bookmark-fill')
-            event
-              .target
-              .classList
-              .add('bi-bookmark')
-          }
-        })
+          event
+            .target
+            .classList
+            .remove('bi-bookmark')
+          event
+            .target
+            .classList
+            .add('bi-bookmark-fill')
+        } else {
+          console.log(response.data.is_bookmarked)
+          event
+            .target
+            .classList
+            .remove('bi-bookmark-fill')
+          event
+            .target
+            .classList
+            .add('bi-bookmark')
+        }
       })
-    </script>
-  {% endblock script %}
+    })
+  </script>
+{% endblock script %}
