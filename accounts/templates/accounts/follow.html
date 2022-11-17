@@ -2,6 +2,7 @@
 {% load django_bootstrap5 %}
 {% load static %}
 {% block content %}
+
 <div class="container mt-3" style="width:30%">
   <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
@@ -70,50 +71,5 @@
         </div>
       {% endif %}
     </div>
-
+    </div>
   </div>
-</div>
-{% endblock content %}
-
-{% comment %} {% block script %}
-<script>
-const form = document.querySelector('#follow-form')
-const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
-
-form.addEventListener('submit', function (event) {
-  event.preventDefault()
-  const userId = event.target.dataset.userId
-
-  axios({
-    method: 'post',
-    url: `/accounts/${userId}/followers/`,
-    headers: {
-      'X-CSRFToken': csrftoken
-    }
-  })
-  .then((response) => {
-    const isFollowed = response.data.is_followed
-    const followBtn = document.querySelector('#follow-form > input[type=submit]')
-    if (isFollowed === true) {
-      followBtn.value = '이 사용자를 UnFollow 하겠어요.';
-      followBtn.classList.add('login_btn');
-      followBtn.classList.remove('signup_btn');
-    } else {
-      followBtn.value = '이 사용자를 Follow 할래요!';
-      followBtn.classList.add('signup_btn');
-      followBtn.classList.remove('login_btn');
-    }
-
-    const followersCountTag = document.querySelector('#followings-count')
-    const followingsCountTag = document.querySelector('#followers-count')
-    const followersCount = response.data.followers_count
-    const followingsCount = response.data.followings_count
-    followersCountTag.innerText = followersCount
-    followingsCountTag.innerText = followingsCount
-  })
-  .catch((error) => {
-    console.log(error.response)
-  })
-})
-</script>
-{% endblock script %} {% endcomment %}
