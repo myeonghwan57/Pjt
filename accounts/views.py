@@ -106,7 +106,7 @@ def login(request):
             if get_user_model().objects.filter(username=username).exists():
                 messages.warning(request, "탈퇴한 사용자입니다.")
             else:
-                messages.warning(request, "비밀번호 혹은 아이디가 존재하지 않tm")
+                messages.warning(request, "비밀번호 혹은 아이디가 존재하지 않습니다.")
     else:
         form = AuthenticationForm()
     context = {
