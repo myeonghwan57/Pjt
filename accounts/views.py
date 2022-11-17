@@ -54,12 +54,12 @@ def detail(request, pk):
     # 페이지네이션
     posts = user.post_set.all().order_by("-id")
     posts_paginator = Paginator(posts, 6)
-    posts_page = request.GET.get("page")
+    posts_page = request.GET.get("page1")
     posts_ls = posts_paginator.get_page(posts_page)
 
     comments = user.comment_set.all().order_by("-id")
     comments_paginator = Paginator(comments, 6)
-    comments_page = request.GET.get("page")
+    comments_page = request.GET.get("page2")
     comments_ls = comments_paginator.get_page(comments_page)
 
     # 커리어 개월수 계산
@@ -72,7 +72,7 @@ def detail(request, pk):
     # like_posts
     like_posts = user.like_posts.all().order_by("-id")
     like_posts_paginator = Paginator(like_posts, 6)
-    like_posts_page = request.GET.get("page")
+    like_posts_page = request.GET.get("page3")
     like_posts_ls = like_posts_paginator.get_page(like_posts_page)
     # bookmarked article
     bookmarked_articles = user.bookmark.all().order_by("-id")
