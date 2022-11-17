@@ -48,6 +48,7 @@ def index(request):
             "instances": instances,
             "page_obj":page_obj,
             "sort":sort,
+            "search_words" : search_words,
         },
     )
 
