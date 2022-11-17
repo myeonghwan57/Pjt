@@ -34,24 +34,26 @@
     <h1 class="main_color1 fw-bold mt-5 mb-3 text-center"><img src="{% static '/images/logo.png' %}" style="width:58px; height:58px;">
       채용정보</h1>
 
-    <!-- content -->
-    <section class="container">
-      <div class="row d-flex justify-content-between">
-        {% for job in Joblists %}
-          <div class="card col-3 ms-1 px-3 g-lg-3" style="width:33%;">
-            <div class="mt-2 text-center"><img src="{{ randomimg }}" class="card-img-top" style="width:80%;"></div>
-            <div class="card-body">
-              <h5 class="card-title fw-bold main_color1">
-                <span>
-                  <a href="{% url 'articles:detail' job.pk %}" class="main_color1 text-decoration-none">
-                    {{ job.job_name }}
-                  </a>
-                </span>
-                <span>
-                  <!-- 북마크버튼 -->
-                  {% if request.user in job.bookmark.all %}
-                    <a href="{% url 'articles:bookmarkindex' job.pk %}" class='btn bi-bookmark-fill main_color2'>
-                      북마크</a>
+
+
+  <!-- content -->
+  <section class="container">
+    <div class="row d-flex justify-content-between">
+      {% for job in Joblists %}
+        <div class="card col-3 ms-1 px-3 g-lg-3" style="width:33%;">
+          <div class="mt-2 text-center"><img src="{{ job.randomImg }}" class="card-img-top" style="width:80%;"></div>
+          <div class="card-body">
+            <h5 class="card-title fw-bold main_color1">
+              <span>
+                <a href="{% url 'articles:detail' job.pk %}" class="main_color1 text-decoration-none">
+                  {{ job.job_name }}
+                </a>
+              </span>
+              <span>
+                <!-- 북마크버튼 -->
+                {% if request.user in job.bookmark.all %}
+                  <a href="{% url 'articles:bookmarkindex' job.pk %}" class='btn bi-bookmark-fill main_color2'> 북마크</a>
+
 
                   {% else %}
                     <a href="{% url 'articles:bookmarkindex' job.pk %}" class='btn bi bi-bookmark main_color2'>
