@@ -66,6 +66,9 @@ def scroll(request,tag_name):
     instances = Post.objects.all().order_by("-hits")[:3]
     sort = request.GET.get("sort", "")  # url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
     posts = Post.objects.filter(tag__contains=tag_name)
+    # 검색어 전체 순위중 상위 5개
+    search_words = Ranking.objects.order_by('-search_count')[:5]
+
 
     if sort == "likes":
         posts_sort = posts.annotate(like_count=Count("like")).order_by(
@@ -92,6 +95,7 @@ def scroll(request,tag_name):
             "page_obj":page_obj,
             "tag_name":tag_name,
             "sort":sort,
+            "search_words" : search_words,
 
         },
     )
