@@ -14,7 +14,7 @@ import random
 
 def index(request):
     Joblists = JobData.objects.order_by("id")
-    num = random.randrange(1, 15)
+
     imgset = [
         "C01.jpg",
         "C02.jpg",
@@ -31,27 +31,25 @@ def index(request):
         "C13.jpg",
         "C14.jpg",
     ]
-    randomImg = f"../../static/images/{imgset[num]}"
 
     for i in range(1, len(Joblists) + 1):
         jobs = JobData.objects.get(pk=i)
         job_list = list(jobs.pseudo_position.split(","))
         lst = []
-        for i in job_list:
-            i = list(i)
+        for j in job_list:
+            j = list(j)
             tmp = []
-            for j in range(len(i)):
-                if str(i[j]) != '"':
-                    tmp.append(str(i[j]))
+            for k in range(len(j)):
+                if str(j[k]) != '"':
+                    tmp.append(str(j[k]))
             lst.append("".join(tmp))
         jobs.pseudo_position = ""
-
         for h in range(len(lst)):
             jobs.pseudo_position += lst[h] + " "
-
+    for jobs in Joblists:
+        jobs.randomImg = f"../../static/images/{imgset[random.randrange(0, 14)]}"
     context = {
         "Joblists": Joblists,
-        "randomimg": randomImg,
     }
     return render(request, "articles/index.html", context)
 
