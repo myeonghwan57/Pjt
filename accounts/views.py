@@ -74,7 +74,10 @@ def detail(request, pk):
     like_posts_page = request.GET.get("page")
     like_posts_ls = like_posts_paginator.get_page(like_posts_page)
     # bookmarked article
-    bookmarked_articles = user.bookmark.all()
+    bookmarked_articles = user.bookmark.all().order_by("-id")
+    bookmarked_paginator = Paginator(bookmarked_articles, 6)
+    bookmarked_page = request.GET.get("page")
+    bookmarked_ls = bookmarked_paginator.get_page(bookmarked_page)
 
     context = {
         "user": user,
@@ -85,6 +88,7 @@ def detail(request, pk):
         "like_posts_ls": like_posts,
         "like_posts": like_posts_ls,
         "bookmark_articles": bookmarked_articles,
+        "bookmarks": bookmarked_ls,
         "note_count":note_count,
     }
     return render(request, "accounts/detail.html", context)

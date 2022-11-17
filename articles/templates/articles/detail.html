@@ -145,7 +145,7 @@
                           </form>
                         </div>
                       {% endif %}
-                      {% with parent = comment reply_list = comment.reply_set.all %}
+                      {% with parent=comment reply_list=comment.reply_set.all %}
                       {% include 'articles/reply.html' %}
                       {% endwith %}
                     </li>
@@ -179,21 +179,21 @@
             event
               .target
               .classList
-              .remove('btn-danger')
+              .remove('bi-bookmark')
             event
               .target
               .classList
-              .add('btn-warning')
+              .add('bi-bookmark-fill')
           } else {
             console.log(response.data.is_bookmarked)
             event
               .target
               .classList
-              .remove('btn-warning')
+              .remove('bi-bookmark-fill')
             event
               .target
               .classList
-              .add('btn-danger')
+              .add('bi-bookmark')
           }
         })
       })
