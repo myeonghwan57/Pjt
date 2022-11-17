@@ -30,7 +30,6 @@ from django.utils import timezone
 
 # Create your views here.
 def signup(request):
-    # 유저정보는 뭐로 받아오지...고유 유저 정보...pk? 생성 pk는 어떻게 받아오지?
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
