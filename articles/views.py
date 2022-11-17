@@ -40,7 +40,7 @@ def index(request):
 def detail(request, pk):
     jobs = get_object_or_404(JobData, pk=pk)
     job_list = list(jobs.pseudo_position.split(","))
-    num = random.randrange(1, 15)
+    num = random.randrange(0, 14)
     imgset = [
         "C01.jpg",
         "C02.jpg",
