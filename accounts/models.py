@@ -54,3 +54,4 @@ class Note(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     receive_view = models.BooleanField(default=False)
     send_view = models.BooleanField(default=False)
+    read_check = models.CharField(max_length=100, blank=True, null=True)
