@@ -38,7 +38,7 @@
                 </span>
               </a>
             </div>
-            <a class='btn login_btn ms-auto' href="{%url 'accounts:detail' request.user.pk %}">마이페이지</a>
+            <a class='btn login_btn ms-2' href="{%url 'accounts:detail' request.user.pk %}">마이페이지</a>
             <a class='btn signup_btn ms-2' href="{%url 'accounts:logout' %}">로그아웃</a>
           {% else %}
             <a class='btn login_btn ms-auto' href="{%url 'accounts:login' %}">로그인</a>
