@@ -14,10 +14,12 @@
           <div class="card" style="background-color: #A9DCE3;">
             <div class="card-body" style="height:25%;">
               <div class="ms-2">
-                <h6> #{{instance.tag}} <span class="badge bg-secondary bg-opacity-75">New</span></h6>
+                <h6>
+                  #{{instance.tag}}
+                  <span class="badge bg-secondary bg-opacity-75">New</span></h6>
               </div>
               <div class="card-title d-flex align-items-center justify-content-center" style="height:40px;">
-                  <a class='text-decoration-none fw-bold text-dark fs-5' href=" {% url 'posts:detail' instance.pk %} ">{{instance.title|truncatechars:16}}</a>
+                <a class='text-decoration-none fw-bold text-dark fs-5' href=" {% url 'posts:detail' instance.pk %} ">{{instance.title|truncatechars:16}}</a>
               </div>
               <div class='d-flex align-items-center justify-content-end my-1'>
                 {% if instance.user.profile %}
@@ -94,21 +96,22 @@
         <div class='box infinite-container'>
           {% for post in page_obj %}
             <div id='box_item' class='px-4 infinite-item'>
-                {% if post.user.profile %}
-                  <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{{ post.user.profile.url }}" alt=""></a>
-                {% else %}
-                  <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
-                {% endif %}
-                <span>
-                  <a class='text-decoration-none text-muted fw-bold' href="{%url 'accounts:detail' post.user.pk%}">
-                    {{post.user.username}}
-                  </a>
-                </span>
-                <span class="bg-light ms-3">
-                  <a class='text-decoration-none main_color2' href="{%url 'accounts:detail' post.user.pk%}">
-                    # {{post.tag}}
-                  </a>
-                </span>
+              {% if post.user.profile %}
+                <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{{ post.user.profile.url }}" alt=""></a>
+              {% else %}
+                <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
+              {% endif %}
+              <span>
+                <a class='text-decoration-none text-muted fw-bold' href="{%url 'accounts:detail' post.user.pk%}">
+                  {{post.user.username}}
+                </a>
+              </span>
+              <span class="bg-light ms-3">
+                <a class='text-decoration-none main_color2' href="{%url 'accounts:detail' post.user.pk%}">
+                  #
+                  {{post.tag}}
+                </a>
+              </span>
               <p class='post_info ms-5 text-muted'>{{post.created_at}}
               </p>
               <a class='text-decoration-none' href="{% url 'posts:detail' post.pk %}">
@@ -116,15 +119,22 @@
                 <p class='post_content text-muted ms-5'>{{post.content}}</p>
               </a>
               <div class='d-flex justify-content-between'>
-                
+
                 <p class='post_info ms-5'>
-                  <span class="fw-bold text-muted"><i class="bi bi-eye"></i> {{post.hits}}</span>
-                  <span class="ms-2 fw-bold text-muted"><i class="bi bi-hand-thumbs-up"></i> {{post.like.count}}</span>
-                  <span class="ms-2 fw-bold text-muted"><i class="bi bi-chat-right-dots"></i> {{post.comment_set.count}}</span>
+                  <span class="fw-bold text-muted">
+                    <i class="bi bi-eye"></i>
+                    {{post.hits}}</span>
+                  <span class="ms-2 fw-bold text-muted">
+                    <i class="bi bi-hand-thumbs-up"></i>
+                    {{post.like.count}}</span>
+                  <span class="ms-2 fw-bold text-muted">
+                    <i class="bi bi-chat-right-dots"></i>
+                    {{post.comment_set.count}}</span>
                 </p>
               </div>
+              <hr>
             </div>
-            <hr>
+
           {% endfor %}
         </div>
 
