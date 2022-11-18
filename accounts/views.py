@@ -26,7 +26,6 @@ from dateutil.relativedelta import relativedelta
 from django.db.models import Count
 from django.http import HttpResponseForbidden
 from django.utils import timezone
-
 # Create your views here.
 def signup(request):
     if request.method == "POST":
