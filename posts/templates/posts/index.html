@@ -3,7 +3,7 @@
 {% load static %}
 {% block content %}
   <div class='post_index container'>
-    <h2 class='mt-4' style='color:#7689DE'>
+    <h2 class="mt-4 main_color1 fw-bold">
       <img src="{% static '/images/crown.png' %}" alt="" style="width:70px; height:70px;">현재 커뮤니티 인기글
     </h2>
 
@@ -32,11 +32,22 @@
       {% endfor %}
     </div>
     <!--게시글 작성 -->
-    <div class='post_write my-4'>
+    <div class='post_write my-4 text-center align-middle'>
+      <p class="text-center">
+        {% if user.profile %}
+          <a style="text-decoration:none;" href="{% url 'accounts:update' %}">
+            <img class='rounded-circle' style='height:50px;width:50px;' src="{{ user.profile.url }}" alt="{{ user.profile }}">
+          </a>
+        {% else %}
+          <a style="text-decoration:none;" href="{% url 'accounts:update' %}">
+            <img class='rounded-circle' style='height:50px;width:50px;' src="{% static '/images/profile/user.png'%}" alt="user">
+          </a>
+        {% endif %}
+      </p>
       <div class='post_write_box'>
-        <a class="text-decoration-none text-dark" href="{% url 'posts:create' %}">면접 본 후기, 면접 본 회사에 대한 의견을 자유롭게 작성해보세요!</a>
+        <a class="text-decoration-none text-dark ms-5" href="{% url 'posts:create' %}">면접 본 후기, 면접 본 회사에 대한 의견을 자유롭게 작성해보세요!</a>
         <a href="{% url 'posts:create' %}">
-          <i class="bi bi-pencil-fill"></i>
+          <i class="text-dark bi bi-pencil-fill"></i>
         </a>
       </div>
     </div>
@@ -87,7 +98,16 @@
               {% else %}
                 <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
               {% endif %}
-              <a class='text-decoration-none text-muted fw-bold' href="{%url 'accounts:detail' post.user.pk%}">{{post.user.username}}</a>
+              <span>
+                <a class='text-decoration-none text-muted fw-bold' href="{%url 'accounts:detail' post.user.pk%}">
+                  {{post.user.username}}
+                </a>
+              </span>
+              <span class="ms-3 bg-light">
+                <a class='text-decoration-none main_color2' href="{%url 'accounts:detail' post.user.pk%}">
+                  # {{post.tag}}
+                </a>
+              </span>
               <a class='text-decoration-none' href="{% url 'posts:detail' post.pk %}">
                 <h3 class='text-dark mt-3'>{{post.title}}</h3>
                 <p class='post_content text-muted'>{{post.content}}</p>
