@@ -63,7 +63,7 @@ def scroll(request,tag_name):
     if tag_name == '전체':
         return redirect('posts:index')
 
-    instances = Post.objects.all().order_by("-hits")[:3]
+    instances = Post.objects.all().order_by("-hits")[:4]
     sort = request.GET.get("sort", "")  # url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
     posts = Post.objects.filter(tag__contains=tag_name)
     # 검색어 전체 순위중 상위 5개
