@@ -19,7 +19,7 @@ from django.db.models import Q
 @login_required
 def index(request):
     posts = Post.objects.all()
-    instances = Post.objects.all().order_by("-hits")[:3]
+    instances = Post.objects.all().order_by("-hits")[:4]
     sort = request.GET.get("sort", "")  # url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
 
     # 검색어 전체 순위중 상위 5개
