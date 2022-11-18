@@ -2,13 +2,13 @@
 {% load django_bootstrap5 %}
 {% load static %}
 {% block css %}
-<link rel="stylesheet" href="{% static "css/btn.css" %}">
+  <link rel="stylesheet" href="{% static "css/btn.css" %}">
 {% endblock css %}
 {% block content %}
   <div class="container">
     <div class="row">
       <!-- 게시글 -->
-      <div class="<!--col-sm-9-->">
+      <div>
         <div class="container d-flex flex-column justify-content-center mt-5 mb-3 p-5 rounded-4 shadow">
           <div class="d-flex justify-content-between align-middle align-items-end">
             <h2 class="fs-1 text-center">
@@ -28,9 +28,10 @@
             </p>
           </div>
           <hr class="mt-2">
-          <div class="d-flex justify-content-center">
-            <img src="{{ randomimg }}" class="container">
+          <div class="d-flex justify-content-center my-5">
+            <img src="{{ randomimg }}" class="container" style="width:800px">
           </div>
+          <hr>
           <p class="fs-5 mt-3 mb-5 px-3">
             {% for str in jobs.company_job %}
               {{ str }}<br>
@@ -38,35 +39,35 @@
           </p>
           <hr>
           <span class='d-flex justify-content-center align-items-center'>
-          <!-- 공유 -->
-          <div class="d-flex flex-column align-items-center me-3">
-            <button class="btn btn-lg p-0 m-0 border-0" data-bs-toggle="modal" data-bs-target="#shareModal">
-              <i class="bi bi-share fs-4"></i>
-            </button>
-            <p>공유</p>
-          </div>
+            <!-- 공유 -->
+            <div class="d-flex flex-column align-items-center me-3">
+              <button class="btn btn-lg p-0 m-0 border-0" data-bs-toggle="modal" data-bs-target="#shareModal">
+                <i class="bi bi-share fs-4"></i>
+              </button>
+              <p>공유</p>
+            </div>
 
-          <!-- 공유 Modal -->
-          <div class="modal fade" id="shareModal" tabindex="-1">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">공유하기</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <p>다음 링크를 복사해주세요.</p>
-                  <p>{{ request.build_absolute_uri }}</p>
-                  <!-- 절대 링크 -->
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <!-- 공유 Modal -->
+            <div class="modal fade" id="shareModal" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">공유하기</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>다음 링크를 복사해주세요.</p>
+                    <p>{{ request.build_absolute_uri }}</p>
+                    <!-- 절대 링크 -->
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-              <!-- 북마크버튼 -->
-              <div>
+            <!-- 북마크버튼 -->
+            <div>
               {% if request.user in jobs.bookmark.all %}
                 <!-- <a href="{% url 'articles:bookmark' jobs.pk %}"class='btn btn-warning text-white'>북마크</a> -->
                 <button id='bookmarkbtn' data-jobdata-id='{{jobs.pk}}' type='button' class='btn bi-bookmark-fill main_color2'><br>bookmark</button>
@@ -74,8 +75,8 @@
                 <!-- <a href="{% url 'articles:bookmark' jobs.pk %}"class='btn btn-danger text-white'>북마크</a> -->
                 <button id='bookmarkbtn' data-jobdata-id='{{jobs.pk}}' type='button' class='btn bi bi-bookmark main_color2'><br>bookmark</button>
               {% endif %}
-              </div>
-            </span>
+            </div>
+          </span>
           <!-- 댓글 -->
           <div class="mt-3 mb-5 p-5 rounded-4 shadow">
             <div class="mb-4">
@@ -166,7 +167,7 @@
   <!-- container -->
   <a class="return-top" href="#" style="font-size:40px;right:50px; bottom:180px; position:fixed; z-index:9999;
   color:#7689DE;">
-   <i class="bi bi-arrow-up-circle"></i>
+    <i class="bi bi-arrow-up-circle"></i>
   </a>
   <!-- 댓글 비동기 -->
   <script type="text/javascript" src="/static/js/company_comment.js"></script>
