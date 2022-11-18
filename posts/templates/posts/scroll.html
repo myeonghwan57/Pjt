@@ -3,22 +3,25 @@
 {% load static %}
 {% block content %}
   <div class='post_index container'>
-    <h2 class='mt-4' style='color:#7689DE'>
+    <h2 class="mt-4 main_color1 fw-bold">
       <img src="{% static '/images/crown.png' %}" alt="" style="width:70px; height:70px;">현재 커뮤니티 인기글
     </h2>
 
     <!-- 현재 인기 게시글-->
-    <div class='row p-5 rounded' style="width:100%; background-color: #A9DCE3;">
+    <div class='row p-2 rounded' style="width:100%;">
       {% for instance in instances %}
-        <div class='my-1' style='width:400px'>
-          <div class="card" style="">
-            <div class="card-body" style="height:150px;">
-              <div class="card-title d-flex align-items-center justify-content-center" style="height:60%">
-                <h5>
-                  <a class='text-decoration-none fw-bold text-muted' href=" {% url 'posts:detail' instance.pk %} ">{{instance.title}}</a>
-                </h5>
+        <div class='my-1' style='width:25%; --bs-bg-opacity: .5;'>
+          <div class="card" style="background-color: #A9DCE3;">
+            <div class="card-body" style="height:25%;">
+              <div class="ms-2">
+                <h6>
+                  #{{instance.tag}}
+                  <span class="badge bg-secondary bg-opacity-75">New</span></h6>
               </div>
-              <div class='d-flex align-items-center justify-content-end my-3'>
+              <div class="card-title d-flex align-items-center justify-content-center" style="height:40px;">
+                <a class='text-decoration-none fw-bold text-dark fs-5' href=" {% url 'posts:detail' instance.pk %} ">{{instance.title|truncatechars:16}}</a>
+              </div>
+              <div class='d-flex align-items-center justify-content-end my-1'>
                 {% if instance.user.profile %}
                   <a href="{%url 'accounts:detail' instance.user.pk%}"><img class='post_profile_img mx-1' src="{{ instance.user.profile.url }}" alt=""></a>
                 {% else %}
@@ -32,11 +35,22 @@
       {% endfor %}
     </div>
     <!--게시글 작성 -->
-    <div class='post_write my-4'>
+    <div class='post_write my-4 text-center align-middle'>
+      <p class="text-center">
+        {% if user.profile %}
+          <a style="text-decoration:none;" href="{% url 'accounts:update' %}">
+            <img class='rounded-circle' style='height:50px;width:50px;' src="{{ user.profile.url }}" alt="{{ user.profile }}">
+          </a>
+        {% else %}
+          <a style="text-decoration:none;" href="{% url 'accounts:update' %}">
+            <img class='rounded-circle' style='height:50px;width:50px;' src="{% static '/images/profile/user.png'%}" alt="user">
+          </a>
+        {% endif %}
+      </p>
       <div class='post_write_box'>
-        <a class="text-decoration-none text-dark" href="{% url 'posts:create' %}">면접 본 후기, 면접 본 회사에 대한 의견을 자유롭게 작성해보세요!</a>
+        <a class="text-decoration-none text-dark ms-5" href="{% url 'posts:create' %}">면접 본 후기, 면접 본 회사에 대한 의견을 자유롭게 작성해보세요!</a>
         <a href="{% url 'posts:create' %}">
-          <i class="bi bi-pencil-fill"></i>
+          <i class="text-dark bi bi-pencil-fill"></i>
         </a>
       </div>
     </div>
@@ -69,6 +83,7 @@
           </div>
         </div>
       </div>
+
       <!--게시글 목록 -->
       <div class='col-lg-9'>
         <div class='custom_select' style="float: right;">
@@ -86,36 +101,51 @@
               {% else %}
                 <a href="{%url 'accounts:detail' post.user.pk%}"><img class='post_profile_img mx-1' src="{% static '/images/profile/user.png'%}" alt=""></a>
               {% endif %}
-              <a class='text-decoration-none text-muted fw-bold' href="{%url 'accounts:detail' post.user.pk%}">{{post.user.username}}</a>
+              <span>
+                <a class='text-decoration-none text-muted fw-bold' href="{%url 'accounts:detail' post.user.pk%}">
+                  {{post.user.username}}
+                </a>
+              </span>
+              <span class="bg-light ms-3">
+                <a class='text-decoration-none main_color2' href="{%url 'accounts:detail' post.user.pk%}">
+                  #
+                  {{post.tag}}
+                </a>
+              </span>
+              <p class='post_info ms-5 text-muted'>{{post.created_at}}
+              </p>
               <a class='text-decoration-none' href="{% url 'posts:detail' post.pk %}">
-                <h3 class='text-dark mt-3'>{{post.title}}</h3>
-                <p class='post_content text-muted'>{{post.content}}</p>
+                <h3 class='text-dark mt-3 ms-5'>{{post.title}}</h3>
+                <p class='post_content text-muted ms-5'>{{post.content}}</p>
               </a>
               <div class='d-flex justify-content-between'>
-                <p class='post_info'>{{post.created_at}}
-                </p>
-                <p class='post_info'>
-                  <i class="bi bi-eye"></i>
-                  {{post.hits}}
-                  <i class="bi bi-hand-thumbs-up"></i>
-                  {{post.like.count}}
-                  <i class="bi bi-chat-right-dots"></i>
-                  {{post.comment_set.count}}
+
+                <p class='post_info ms-5'>
+                  <span class="fw-bold text-muted">
+                    <i class="bi bi-eye"></i>
+                    {{post.hits}}</span>
+                  <span class="ms-2 fw-bold text-muted">
+                    <i class="bi bi-hand-thumbs-up"></i>
+                    {{post.like.count}}</span>
+                  <span class="ms-2 fw-bold text-muted">
+                    <i class="bi bi-chat-right-dots"></i>
+                    {{post.comment_set.count}}</span>
                 </p>
               </div>
               <hr>
             </div>
+
           {% endfor %}
         </div>
 
         {% if page_obj.has_next %}
-          <a class="infinite-more-link" href="http://127.0.0.1:8000/posts/scroll/{{tag_name}}?sort={{ sort }}&page={{ page_obj.next_page_number }}">next</a>
+          <a class="infinite-more-link" href="http://127.0.0.1:8000/posts/?sort={{ sort }}&page={{ page_obj.next_page_number }}">next</a>
         {% endif %}
       </div>
     </div>
   </div>
   <a class="return-top" href="#" style="font-size:40px;right:50px; bottom:180px; position:fixed; z-index:9999;
-   color:#7689DE;">
+ color:#7689DE;">
     <i class="bi bi-arrow-up-circle"></i>
   </a>
 
