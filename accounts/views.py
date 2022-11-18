@@ -316,6 +316,26 @@ def follow(request, user_pk):
     return JsonResponse(data)
 
 
+@login_required
+def dfollowing(request, pk):
+    # 로그인한 유저가프로필에 해당하는 유저를
+    user = get_object_or_404(get_user_model(), pk=pk)
+    if request.user != user:
+        if user in request.user.follow.all():
+            request.user.follow.remove(user)
+        return redirect("accounts:follow_page", request.user.pk)
+
+
+@login_required
+def dfollow(request, pk):
+    # 로그인한 유저가프로필에 해당하는 유저를
+    user = get_object_or_404(get_user_model(), pk=pk)
+    if request.user != user:
+        if user in request.user.followers.all():
+            request.user.followers.remove(user)
+        return redirect("accounts:follow_page", request.user.pk)
+
+
 def note(request):
 
     notes = Note.objects.filter(receive_user=request.user).order_by("-pk")
@@ -411,7 +431,9 @@ def follow_page(request, pk):
     # follow = follow && followers = following
     followings = user.follow.all()
     followers = user.followers.all()
+
     context = {
+        "user": user,
         "followings": followings,
         "followers": followers,
     }

@@ -2,25 +2,26 @@
 {% load django_bootstrap5 %}
 {% load static %}
 {% block content %}
-
-<div class="container mt-3" style="width:30%">
-  <ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active text-muted" id="follwing-tab" data-bs-toggle="tab" data-bs-target="#follwing" type="button" role="tab" aria-controls="follwing" aria-selected="false">
-        팔로잉 목록 <span class="badge text-bg-secondary">{{ user.follow.count }}명</span>
-      </button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link text-muted" id="follower-tab" data-bs-toggle="tab" data-bs-target="#follower" type="button" role="tab" aria-controls="follower" aria-selected="true">
-        팔로워 목록 <span class="badge text-bg-secondary">{{ user.followers.count }}명</span>
-      </button>
-    </li>
-  </ul>
-  <div class="tab-content mt-3" id="myTabContent">
-    <div class="tab-pane fade show active" id="follwing" role="tabpanel" aria-labelledby="follwing-tab">
-      {% if user.follow.count != 0 %}
-        {% for following in followings %}
-          <div class="d-flex justify-content-between">
+  <div class="container mt-3" style="width:30%">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active text-muted" id="follwing-tab" data-bs-toggle="tab" data-bs-target="#follwing" type="button" role="tab" aria-controls="follwing" aria-selected="false">
+          팔로잉 목록
+          <span class="badge text-bg-secondary">{{ user.follow.count }}명</span>
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link text-muted" id="follower-tab" data-bs-toggle="tab" data-bs-target="#follower" type="button" role="tab" aria-controls="follower" aria-selected="true">
+          팔로워 목록
+          <span class="badge text-bg-secondary">{{ user.followers.count }}명</span>
+        </button>
+      </li>
+    </ul>
+    <div class="tab-content mt-3" id="myTabContent">
+      <div class="tab-pane fade show active" id="follwing" role="tabpanel" aria-labelledby="follwing-tab">
+        {% if user.follow.count != 0 %}
+          {% for following in followings %}
+            <div class="d-flex justify-content-between">
               <div class="mb-3">
                 <a class="text-dark" href="{% url 'accounts:detail' following.pk %}" style="text-decoration: none;">
                   {% if following.profile %}
@@ -30,12 +31,14 @@
                   {% endif %}
                   <span class="fs-5">{{ following.username }}</span>
                 </a>
-              </div>           
-            <form id='follow-form' data-user-id="{{ following.pk }}" method='POST'>
-              {% csrf_token %}
-              <input type="submit" value="삭제" class='btn btn-sm signup_btn fw-bold'>
-            </form>
-          </div>
+              </div>
+              {% if request.user != following %}
+                <form method='POST' action="{% url 'accounts:dfollowing' following.pk%}">
+                  {% csrf_token %}
+                  <input name='dfollowing' type="submit" value="삭제" class='btn btn-sm signup_btn fw-bold'>
+                </form>
+              {% endif %}
+            </div>
           </div>
         {% endfor %}
       {% else %}
@@ -59,11 +62,14 @@
                 <span class="fs-5">{{ follower.username }}</span>
               </a>
             </div>
-            <form id='follow-form' data-user-id="{{ user.pk }}" method='POST'>
-              {% csrf_token %}
-              <input type="submit" value="삭제" class='btn btn-sm signup_btn fw-bold'>
-            </form>
-            </div>
+
+            {% if request.user != follower %}
+              <form method='POST' action="{% url 'accounts:dfollow' follower.pk%}">
+                {% csrf_token %}
+                <input name='dfollower' type="submit" value="삭제" class='btn btn-sm signup_btn fw-bold'>
+              </form>
+            {% endif %}
+          </div>
         {% endfor %}
       {% else %}
         <div class="text-muted text-center">
@@ -71,7 +77,7 @@
         </div>
       {% endif %}
     </div>
-    </div>
   </div>
+</div>
 
-  {% endblock content %}
+{% endblock content %}
