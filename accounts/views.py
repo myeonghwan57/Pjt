@@ -23,7 +23,6 @@ from posts.models import Post, Comment
 from .models import User, Note
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
-
 from django.db.models import Count
 from django.http import HttpResponseForbidden
 from django.utils import timezone
