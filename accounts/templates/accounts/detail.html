@@ -15,7 +15,8 @@
     <div class="row mt-5">
       <!-- 왼쪽 화면 -->
       <div class="col-lg-5">
-        <h4 class="main_color2 mb-3 fw-bold text-center">프로필</h4>
+        <h4 class="main_color2 mb-3 fw-bold text-center">{{user.username}}
+          님의 프로필</h4>
         <p class="text-center">
           {% if user.profile %}
             <a style="text-decoration:none;" href="{% url 'accounts:update' %}">
@@ -178,17 +179,20 @@
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <a href="#posts" class="nav-link active text-muted" id="home-article" data-bs-toggle="tab" data-bs-target="#article-tab-pane" type="button" role="tab" aria-controls="article-tab-pane" aria-selected="true">
-              작성 글 <span class="badge text-bg-secondary">{{ user.post_set.count }}</span>
+              작성 글
+              <span class="badge text-bg-secondary">{{ user.post_set.count }}</span>
             </a>
           </li>
           <li class="nav-item" role="presentation">
             <a href="#comments" class="nav-link text-muted" id="comment-tab" data-bs-toggle="tab" data-bs-target="#comment-tab-pane" type="button" role="tab" aria-controls="comment-tab-pane" aria-selected="false">
-              작성 댓글 <span class="badge text-bg-secondary">{{ user.comment_set.count }}</span>
+              작성 댓글
+              <span class="badge text-bg-secondary">{{ user.comment_set.count }}</span>
             </a>
           </li>
           <li class="nav-item" role="presentation">
             <a href="#likes" class="nav-link text-muted" id="bookmark-tab" data-bs-toggle="tab" data-bs-target="#bookmark-tab-pane" type="button" role="tab" aria-controls="bookmark-tab-pane" aria-selected="false">
-              좋아요한 글 <span class="badge text-bg-secondary">{{ like_posts_ls.count }}</span>
+              좋아요한 글
+              <span class="badge text-bg-secondary">{{ like_posts_ls.count }}</span>
             </a>
           </li>
           <li class="nav-item" role="presentation">
@@ -480,19 +484,21 @@
 {% endblock content %}
 
 {% block script %}
-<script> // 탭 변경 유지 스크립트
-  $(document).ready(function(){
-    $('a[data-bs-toggle="tab"]').on('show.bs.tab', function(e) {
-      localStorage.setItem('activeTab', $(e.target).attr('href'));
-    });
-    var activeTab = localStorage.getItem('activeTab');
-    if(activeTab){
-      $('#myTab a[href="' + activeTab + '"]').tab('show');
-    }
-  });
-  </script>
+<script>
+// 탭 변경 유지 스크립트
+$(document).ready(function () {
+$('a[data-bs-toggle="tab"]').on('show.bs.tab', function (e) {
+localStorage.setItem('activeTab', $(e.target).attr('href'));
+});
+var activeTab = localStorage.getItem('activeTab');
+if (activeTab) {
+$('#myTab a[href="' + activeTab + '"]').tab('show');
+}
+});
+</script>
 
-<script> // 팔로우 스크립트
+<script>
+// 팔로우 스크립트
 const form = document.querySelector('#follow-form')
 const csrftoken = document
 .querySelector('[name=csrfmiddlewaretoken]')

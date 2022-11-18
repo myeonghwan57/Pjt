@@ -32,7 +32,7 @@
                   <span class="fs-5">{{ following.username }}</span>
                 </a>
               </div>
-              {% if request.user != following %}
+              {% if request.user == user %}
                 <form method='POST' action="{% url 'accounts:dfollowing' following.pk%}">
                   {% csrf_token %}
                   <input name='dfollowing' type="submit" value="삭제" class='btn btn-sm signup_btn fw-bold'>
@@ -63,7 +63,7 @@
               </a>
             </div>
 
-            {% if request.user != follower %}
+            {% if request.user == user %}
               <form method='POST' action="{% url 'accounts:dfollow' follower.pk%}">
                 {% csrf_token %}
                 <input name='dfollower' type="submit" value="삭제" class='btn btn-sm signup_btn fw-bold'>
