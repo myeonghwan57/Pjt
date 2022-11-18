@@ -55,3 +55,10 @@ class Note(models.Model):
     receive_view = models.BooleanField(default=False)
     send_view = models.BooleanField(default=False)
     read_check = models.CharField(max_length=100, blank=True, null=True)
+    read_check_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        default="",
+        related_name="read_check_user",
+        null=True,
+    )

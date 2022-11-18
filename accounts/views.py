@@ -350,6 +350,7 @@ def create_note(request):
         if note_form.is_valid():
             note = note_form.save(commit=False)
             note.send_user = request.user
+            note.read_check_user = User.objects.get(username=note.receive_user)
             note.save()
             return redirect("accounts:note")
 
@@ -370,9 +371,9 @@ def detail_note(request, note_pk):
         if request.user.username == note.receive_user:
 
             note.read_check = note.receive_user
+            note.read_check_user = None
             note.save()
 
-        print(note.read_check)
         context = {
             "note": note,
         }
